@@ -233,7 +233,7 @@ def regression_repeat(df, n_repeat):
 
 ################################################################################
 # load the data.
-df = pd.read_csv(r'C:\Users\budac\Desktop\TOR\play_with_data\lifetime_dataset_example.csv')
+df = pd.read_csv(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\lifetime_dataset_example.csv')
 
 # pre processing the data.
 X_train_scaled, X_test_scaled, y_train, y_test = pre_processor(df)
@@ -296,7 +296,9 @@ plt.xlabel('Real weekly sales ($)')
 plt.ylabel('rf predicted weekly sales ($)')
 plt.title('rf predicted vs real')
 plt.show()
-
+# export it as dataframe for plotting with E+ part
+E_minus_reg = pd.DataFrame(np.array([y_test, y_pred_rf]))
+# E_minus_reg.to_csv('Et_reg_minus.csv')
 
 # use neural Network
 # rescale the y_train and y_test as well
