@@ -88,7 +88,7 @@ def pre_processor(df):
     # Therefore, delete: Name Et_eV Sn_cm2 Sp_cm2 k logSn logSp bandgap
     delete_col = ['Name', 'Sn_cm2', 'Sp_cm2', 'k', 'logSn', 'logSp', 'bandgap', 'logk']
     dfk = df.drop(delete_col, axis=1)
-    # we also need to make sure to delete all the rows that has Et < 0:
+    # we also need to make sure to delete all the rows that has Et > 0:
     dfk = dfk[dfk['Et_eV']<0]
 
     # train test split:
@@ -148,13 +148,13 @@ def regression_training(X_train_scaled, X_test_scaled, y_train, y_test):
     # rescale the y_train and y_test as well
     y_train_scaled = y_train/np.max(y_train)
     y_test_scaled = y_test/np.max(y_train)
-    m_nn = MLPRegressor()
-    param_nn = {'activation': ('identity', 'logistic', 'tanh', 'relu')}
-    grid_nn = GridSearchCV(m_nn, param_nn)
-    grid_nn.fit(X_train_scaled, y_train_scaled)
+    m_nn = MLPRegressor(hidden_layer_sizes=(100, 300, 300, 100))
+    # param_nn = {'activation': ('identity', 'logistic', 'tanh', 'relu')}
+    # grid_nn = GridSearchCV(m_nn, param_nn)
+    m_nn.fit(X_train_scaled, y_train_scaled)
     # m_nn.fit(X_train_scaled, y_train)
     # evaluate the models
-    y_pred_nn = grid_nn.predict(X_test_scaled)
+    y_pred_nn = m_nn.predict(X_test_scaled)
     r2_nn = r2_score(y_test_scaled, y_pred_nn)
     meanabs_nn = mean_absolute_error(y_test, y_pred_nn)
 
@@ -238,156 +238,5 @@ df = pd.read_csv(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata
 # pre processing the data.
 X_train_scaled, X_test_scaled, y_train, y_test = pre_processor(df)
 
-
 # train and evaluate the models.
-# knn model.
-mknn = KNeighborsRegressor()
-param_knn = {'n_neighbors':range(1, 50)}
-grid_knn = GridSearchCV(mknn, param_knn)
-# fit the data
-grid_knn.fit(X_train_scaled, y_train)
-# evaluate the knn model
-y_pred_knn = grid_knn.predict(X_test_scaled)
-r2_knn = r2_score(y_test, y_pred_knn)
-meanabs_knn = mean_absolute_error(y_test, y_pred_knn)
-print('The R2 is: ' +str(r2_knn))
-print('The mean absolute error is: ' + str(meanabs_knn))
-plt.figure()
-plt.scatter(y_test, y_pred_knn)
-plt.xlabel('Real weekly sales ($)')
-plt.ylabel('knn predicted weekly sales ($)')
-plt.title('KNN predicted vs real')
-plt.show()
-
-# Linear Regression model.
-# use Linear Regression model now.
-m_ridge = Ridge()
-param_ridge = {'alpha': [0.01, 0.1, 1, 10]}
-# tune the model with parameters using grid search.
-grid_ridge = GridSearchCV(m_ridge, param_ridge)
-grid_ridge.fit(X_train_scaled, y_train)
-# evaluate the linear regression model
-y_pred_ridge = grid_ridge.predict(X_test_scaled)
-r2_ridge = r2_score(y_test, y_pred_ridge)
-meanabs_ridge = mean_absolute_error(y_test, y_pred_ridge)
-print('The R2 is: ' +str(r2_ridge))
-print('The mean absolute error is: ' + str(r2_ridge))
-plt.figure()
-plt.scatter(y_test, y_pred_ridge)
-plt.xlabel('Real weekly sales ($)')
-plt.ylabel('Ridge Linear Regression predicted weekly sales ($)')
-plt.title('Ridge Linear Regression predicted vs real')
-plt.show()
-
-# try random Forest
-m_rf = RandomForestRegressor()
-# grid_rf = GridSearchCV(m_rf, param_rf)
-# train the model with training dataset
-m_rf.fit(X_train_scaled, y_train)
-# evaluate the models
-y_pred_rf = m_rf.predict(X_test_scaled)
-r2_rf = r2_score(y_test, y_pred_rf)
-meanabs_rf = mean_absolute_error(y_test, y_pred_rf)
-print('The R2 is: ' +str(r2_rf))
-print('The mean absolute error is: ' + str(meanabs_rf))
-plt.figure()
-plt.scatter(y_test, y_pred_rf)
-plt.xlabel('Real weekly sales ($)')
-plt.ylabel('rf predicted weekly sales ($)')
-plt.title('rf predicted vs real')
-plt.show()
-# export it as dataframe for plotting with E+ part
-E_minus_reg = pd.DataFrame(np.array([y_test, y_pred_rf]))
-# E_minus_reg.to_csv('Et_reg_minus.csv')
-
-# use neural Network
-# rescale the y_train and y_test as well
-y_train_scaled = y_train/np.max(y_train)*(-1)
-y_test_scaled = y_test/np.max(y_train)*(-1)
-# m_nn = MLPRegressor(hidden_layer_sizes = (100, 300, 300, 100))
-m_nn = MLPRegressor()
-# param_nn = {'activation': ('identity', 'logistic', 'tanh', 'relu')}
-# grid_nn = GridSearchCV(m_nn, param_nn)
-m_nn.fit(X_train_scaled, y_train_scaled)
-# m_nn.fit(X_train_scaled, y_train)
-# evaluate the models
-y_pred_nn = m_nn.predict(X_test_scaled)
-r2_nn = r2_score(y_test_scaled, y_pred_nn)
-meanabs_nn = mean_absolute_error(y_test, y_pred_nn)
-print('The R2 is: ' +str(r2_nn))
-print('The mean absolute error is: ' + str(meanabs_nn))
-plt.figure()
-plt.scatter(y_test, y_pred_nn)
-plt.xlabel('Real Et (eV relative to intrinsic fermi energy)')
-plt.ylabel('nn predicted Et (eV relative to intrinsic fermi energy)')
-plt.title('nn predicted vs real')
-plt.show()
-
-# Try Gradient boosting Regression
-m_gb = GradientBoostingRegressor()
-# param_gb = {'n_estimators':[100, 500, 1e3], 'learning_rate':[0.1, 1, 10], 'max_depth':[1, 5, 10]}
-# grid_gb = GridSearchCV(m_gb, param_gb)
-# train the model
-m_gb.fit(X_train_scaled, y_train)
-# evaluate the models
-y_pred_gb = m_gb.predict(X_test_scaled)
-r2_gb = r2_score(y_test, y_pred_gb)
-meanabs_gb = mean_absolute_error(y_test, y_pred_gb)
-print('The R2 is: ' +str(r2_gb))
-print('The mean absolute error is: ' + str(meanabs_gb))
-plt.figure()
-plt.scatter(y_test, y_pred_gb)
-plt.xlabel('Real weekly sales ($)')
-plt.ylabel('gb predicted weekly sales ($)')
-plt.title('gb predicted vs real')
-plt.show()
-
-
-# Try Adaptive boosting.
-m_ab = AdaBoostRegressor()
-# param_ab = {'n_estimators':[100, 500, 1e3], 'learning_rate':[0.1, 1, 10], 'max_depth':[1, 5, 10]}
-# grid_ab = GridSearchCV(m_ab, param_ab)
-# train the model
-m_ab.fit(X_train_scaled, y_train)
-# evaluate the models
-y_pred_ab = m_ab.predict(X_test_scaled)
-r2_ab = r2_score(y_test, y_pred_ab)
-meanabs_ab = mean_absolute_error(y_test, y_pred_ab)
-print('The R2 is: ' +str(r2_ab))
-print('The mean absolute error is: ' + str(meanabs_ab))
-plt.figure()
-plt.scatter(y_test, y_pred_ab)
-plt.xlabel('Real weekly sales ($)')
-plt.ylabel('ab predicted weekly sales ($)')
-plt.title('ab predicted vs real')
-plt.show()
-
-
-# Try Support vector regression
-m_svr = SVR()
-param_svr = {'C': [0.1, 1, 10], 'epsilon': [1e-2, 0.1, 1]}
-grid_svr = GridSearchCV(m_svr, param_svr)
-# train the model
-grid_svr = GridSearchCV(m_svr, param_svr)
-# train the model
-grid_svr.fit(X_train_scaled, y_train)
-# evaluate the models
-y_pred_svr = grid_svr.predict(X_test_scaled)
-r2_svr = r2_score(y_test, y_pred_svr)
-meanabs_svr = mean_absolute_error(y_test, y_pred_svr)
-print('The R2 is: ' +str(r2_svr))
-print('The mean absolute error is: ' + str(meanabs_svr))
-plt.figure()
-plt.scatter(y_test, y_pred_svr)
-plt.xlabel('Real weekly sales ($)')
-plt.ylabel('svr predicted weekly sales ($)')
-plt.title('svr predicted vs real')
-plt.show()
-
-# compare the positive and negative
-# R2list_positive = [0.7505873918800555,0.3794445048657359,0.9408286973346547,0.8823566005645609,0.8500885966030642,0.6744663245276807,0.6920257138741553]
-R2list_negative = [r2_knn, r2_ridge, r2_rf, r2_nn, r2_gb, r2_ab, r2_svr]
-# R2list_negative = [0.6829118436100834,0.34354530352202883,0.9644099010287739,0.11926836763563664,0.9106302602536831,0.7434483017947948,0.6865936868422244]
-
-labellist = ['KNN', 'Ridge Linear Regression', 'Random Forest', 'Nerual Network', 'Gradient Boost', 'Adaptive Boost', 'Support Vector']
-# just use excel to plot them
+r2scores = regression_repeat(df, 5)
