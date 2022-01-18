@@ -101,144 +101,21 @@ def pre_processor(df):
     return X_train_scaled, X_test_scaled, y_train, y_test
 
 
-def regression_training(X_train_scaled, X_test_scaled, y_train, y_test):
-
-    # knn model.
-    mknn = KNeighborsRegressor()
-    param_knn = {'n_neighbors':range(1, 30)}
-    grid_knn = GridSearchCV(mknn, param_knn)
-    # fit the data
-    grid_knn.fit(X_train_scaled, y_train)
-    # evaluate the knn model
-    y_pred_knn = grid_knn.predict(X_test_scaled)
-    r2_knn = r2_score(y_test, y_pred_knn)
-    # meanabs_knn = mean_absolute_error(y_test, y_pred_knn)
-
-
-    # Linear Regression model.
-    # use Linear Regression model now.
-    m_ridge = Ridge()
-    param_ridge = {'alpha': [0.01, 0.1, 1, 10]}
-    # tune the model with parameters using grid search.
-    grid_ridge = GridSearchCV(m_ridge, param_ridge)
-    grid_ridge.fit(X_train_scaled, y_train)
-    # evaluate the linear regression model
-    y_pred_ridge = grid_ridge.predict(X_test_scaled)
-    r2_ridge = r2_score(y_test, y_pred_ridge)
-    # meanabs_ridge = mean_absolute_error(y_test, y_pred_ridge)
-
-
-    # try random Forest
-    m_rf = RandomForestRegressor()
-    # grid_rf = GridSearchCV(m_rf, param_rf)
-    # train the model with training dataset
-    m_rf.fit(X_train_scaled, y_train)
-    # evaluate the models
-    y_pred_rf = m_rf.predict(X_test_scaled)
-    r2_rf = r2_score(y_test, y_pred_rf)
-    # meanabs_rf = mean_absolute_error(y_test, y_pred_rf)
-
-
-    # use neural Network
-    # rescale the y_train and y_test as well
-    y_train_scaled = y_train/np.max(y_train)
-    y_test_scaled = y_test/np.max(y_train)
-    m_nn = MLPRegressor(hidden_layer_sizes=(100, 300, 300, 100))
-    # param_nn = {'activation': ('identity', 'logistic', 'tanh', 'relu')}
-    # grid_nn = GridSearchCV(m_nn, param_nn)
-    m_nn.fit(X_train_scaled, y_train_scaled)
-    # m_nn.fit(X_train_scaled, y_train)
-    # evaluate the models
-    y_pred_nn = grid_nn.predict(X_test_scaled)
-    r2_nn = r2_score(y_test_scaled, y_pred_nn)
-    meanabs_nn = mean_absolute_error(y_test, y_pred_nn)
-
-
-    # Try Gradient boosting Regression
-    m_gb = GradientBoostingRegressor()
-    # param_gb = {'n_estimators':[100, 500, 1e3], 'learning_rate':[0.1, 1, 10], 'max_depth':[1, 5, 10]}
-    # grid_gb = GridSearchCV(m_gb, param_gb)
-    # train the model
-    m_gb.fit(X_train_scaled, y_train)
-    # evaluate the models
-    y_pred_gb = m_gb.predict(X_test_scaled)
-    r2_gb = r2_score(y_test, y_pred_gb)
-    meanabs_gb = mean_absolute_error(y_test, y_pred_gb)
-
-
-    # Try Adaptive boosting.
-    m_ab = AdaBoostRegressor()
-    # param_ab = {'n_estimators':[100, 500, 1e3], 'learning_rate':[0.1, 1, 10], 'max_depth':[1, 5, 10]}
-    # grid_ab = GridSearchCV(m_ab, param_ab)
-    # train the model
-    m_ab.fit(X_train_scaled, y_train)
-    # evaluate the models
-    y_pred_ab = m_ab.predict(X_test_scaled)
-    r2_ab = r2_score(y_test, y_pred_ab)
-    meanabs_ab = mean_absolute_error(y_test, y_pred_ab)
-
-
-    # Try Support vector regression
-    m_svr = SVR()
-    param_svr = {'C': [0.1, 1, 10], 'epsilon': [1e-2, 0.1, 1]}
-    grid_svr = GridSearchCV(m_svr, param_svr)
-    # train the model
-    grid_svr = GridSearchCV(m_svr, param_svr)
-    # train the model
-    grid_svr.fit(X_train_scaled, y_train)
-    # evaluate the models
-    y_pred_svr = grid_svr.predict(X_test_scaled)
-    r2_svr = r2_score(y_test, y_pred_svr)
-    meanabs_svr = mean_absolute_error(y_test, y_pred_svr)
-
-
-    # this function will return all 2r scores and mean absolute errors
-    return [r2_knn, r2_ridge, r2_rf, r2_nn, r2_gb, r2_ab, r2_svr]
-
-
-def regression_repeat(df, n_repeat):
-    # n_repeat: the number of repetition needed
-    # output:
-    # r2_frame: a dataframe of r2 score.
-    # meanabs_frame: a dataframe for mean absolute error.
-    # set up counter to count the number of repetition
-    counter = 0
-    # create an emptly list to collect the r2 and mean absolute error values for each trials
-    r2_frame = []
-    meanabs_frame = []
-    while counter < n_repeat:
-        # update the counter
-        counter = counter + 1
-        # pro process the data:
-        X_train_scaled, X_test_scaled, y_train, y_test = pre_processor(df)
-        # train the different models and collect the r2 score.
-        r2_frame.append(regression_training(X_train_scaled, X_test_scaled, y_train, y_test))
-
-    # now r2_frame is a list of list containing the values for each trial for each model.
-    # convert it into dataframe for box plot.
-    r2_frame = pd.DataFrame(r2_frame, columns=['KNN', 'Ridge Linear Regression', 'Random Forest', 'Neural Network', 'Gradient Boosting', 'Ada Boosting', 'Support Vector'])
-    # box plot the data.
-    plt.figure()
-    r2_frame.boxplot(vert=False)
-    plt.title('R2score for Sales regression models')
-    plt.show()
-
-    return r2_frame
-
-
-
 ################################################################################
 # firstly, load the data:
 df = pd.read_csv(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\lifetime_dataset_example.csv')
 
 # go through data pre-processing:
 X_train_scaled, X_test_scaled, y_train, y_test = pre_processor(df)
+# have a look at the data:
+# X_train_scaled
+# y_train
 
 ################################################################################
 # model training and evaluation
 # train the ML model: try knn with GridSearchCV varying the number of nearest neighbour
 mknn = KNeighborsClassifier()
-param_knn = {'n_neighbors':range(1, 10)}
+param_knn = {'n_neighbors':range(1, 30)}
 grid_knn = GridSearchCV(mknn, param_knn)
 # train the grid search with mknn.
 grid_knn.fit(X_train_scaled, y_train)
@@ -348,7 +225,9 @@ nb_micro
 # y_ohe_test = ohe.fit_transform(y_test).toarray()
 # y_ohe_test
 m_nn = MLPClassifier(hidden_layer_sizes=(100, 300, 300, 300, 100))
+# param_nn = {'hidden_layer_sizes':((100, 300, 300, 300, 100), (200, 400, 400, 200), (100, 300, 300, 100))}
 # fit the data
+# grid_nn = GridSearchCV(m_nn, param_nn)
 m_nn.fit(X_train_scaled, y_train)
 # model evaluation for neural neural_network
 y_pred_nn = m_nn.predict(X_test_scaled)
