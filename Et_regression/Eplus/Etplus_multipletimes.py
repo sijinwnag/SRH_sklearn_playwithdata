@@ -218,6 +218,8 @@ def regression_repeat(df, n_repeat):
         X_train_scaled, X_test_scaled, y_train, y_test = pre_processor(df)
         # train the different models and collect the r2 score.
         r2_frame.append(regression_training(X_train_scaled, X_test_scaled, y_train, y_test))
+        # print text once finish an iteration
+        print('finish iteration ' + str(counter))
 
     # now r2_frame is a list of list containing the values for each trial for each model.
     # convert it into dataframe for box plot.

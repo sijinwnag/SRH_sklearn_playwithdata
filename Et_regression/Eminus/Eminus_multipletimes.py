@@ -218,6 +218,8 @@ def regression_repeat(df, n_repeat):
         X_train_scaled, X_test_scaled, y_train, y_test = pre_processor(df)
         # train the different models and collect the r2 score.
         r2_frame.append(regression_training(X_train_scaled, X_test_scaled, y_train, y_test))
+        # print text once finish an iteration
+        print('finish iteration ' + str(counter))
 
     # now r2_frame is a list of list containing the values for each trial for each model.
     # convert it into dataframe for box plot.
@@ -240,3 +242,14 @@ X_train_scaled, X_test_scaled, y_train, y_test = pre_processor(df)
 
 # train and evaluate the models.
 r2scores = regression_repeat(df, 5)
+# r2scores.to_csv('Etminus_diffmodels.csv')
+# use r2scores to plot a barchart of average score for each model.
+avr2scores = np.average(r2scores, axis=0)
+# avr2scores
+# create a barchart
+plt.figure()
+models = ('KNN', 'Ridge Linear Regression', 'Random Forest', 'Neural Network', 'Gradient Boosting', 'Ada Boosting', 'Support Vector')
+plt.barh(models, avr2scores)
+plt.ylabel('R2 score')
+plt.title(' average R2 score for Et regression below intrinsic fermi energy')
+plt.show()

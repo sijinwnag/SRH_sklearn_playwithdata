@@ -123,15 +123,13 @@ grid_knn.fit(X_train_scaled, y_train)
 # confusion matrix
 y_pred_knn = grid_knn.predict(X_test_scaled)
 confusion_matrix(y_test, y_pred_knn)
-# macro f1 score.
+# macro f1 score.: 0.584
 knn_macro = f1_score(y_test, y_pred_knn, average='macro')
 knn_macro
-# micro f1 score
+# micro f1 score (also named accuracy): 0.583
 knn_micro = f1_score(y_test, y_pred_knn, average='micro')
 knn_micro
-# accuracy
-knn_accuracy = accuracy_score(y_test, y_pred_knn)
-knn_accuracy
+
 
 # try using Kernalized Support Vector Machines
 msvc = SVC()
@@ -143,10 +141,10 @@ grid_svc.fit(X_train_scaled, y_train)
 y_pred_svc = grid_svc.predict(X_test_scaled)
 # confusion matrix.
 confusion_matrix(y_test, y_pred_svc)
-# macro f1 score.
+# macro f1 score: 0.577
 svc_macro = f1_score(y_test, y_pred_svc, average='macro')
 svc_macro
-# micro f1 score
+# micro f1 score: 0.595
 svc_micro = f1_score(y_test, y_pred_svc, average='micro')
 svc_micro
 
@@ -160,10 +158,10 @@ y_pred_dt = grid_dt.predict(X_test_scaled)
 # model evaluation for decision tree.
 # confusion matrix.
 confusion_matrix(y_test, y_pred_dt)
-# macro f1 score.
+# macro f1 score: 0.601
 dt_macro = f1_score(y_test, y_pred_dt, average='macro')
 dt_macro
-# micro f1 score
+# micro f1 score: 0.601
 dt_micro = f1_score(y_test, y_pred_dt, average='micro')
 dt_micro
 # note that the behaviour of decision tree is identical to knn, the reason behind is unknown
@@ -178,10 +176,10 @@ grid_rf.fit(X_train_scaled, y_train)
 y_pred_rf = grid_rf.predict(X_test_scaled)
 # confusion matrix.
 confusion_matrix(y_test, y_pred_rf)
-# macro f1 score.
+# macro f1 score:0.638
 rf_macro = f1_score(y_test, y_pred_rf, average='macro')
 rf_macro
-# micro f1 score
+# micro f1 score: 0.639
 rf_micro = f1_score(y_test, y_pred_rf, average='micro')
 rf_micro
 
@@ -195,10 +193,10 @@ grid_gb.fit(X_train_scaled, y_train)
 y_pred_gb = grid_gb.predict(X_test_scaled)
 # confusion matrix.
 confusion_matrix(y_test, y_pred_gb)
-# macro f1 score.
+# macro f1 score: 0.618
 gb_macro = f1_score(y_test, y_pred_gb, average='macro')
 gb_macro
-# micro f1 score
+# micro f1 score 0.619
 gb_micro = f1_score(y_test, y_pred_gb, average='micro')
 gb_micro
 
@@ -210,10 +208,10 @@ mnb.fit(X_train_scaled, y_train)
 y_pred_nb = mnb.predict(X_test_scaled)
 # confusion matrix.
 confusion_matrix(y_test, y_pred_nb)
-# macro f1 score.
+# macro f1 score: 0.46
 nb_macro = f1_score(y_test, y_pred_nb, average='macro')
 nb_macro
-# micro f1 score
+# micro f1 score: 0.51
 nb_micro = f1_score(y_test, y_pred_nb, average='micro')
 nb_micro
 
@@ -235,10 +233,11 @@ y_pred_nn = m_nn.predict(X_test_scaled)
 # encode the onehot encoded y back to original y
 # confusion matrix.
 confusion_matrix(y_test, y_pred_nn)
-# macro f1 score.
+confusion_matrix(y_test, y_pred_nn, normalize='all')
+# macro f1 score:0.736
 nn_macro = f1_score(y_test, y_pred_nn, average='macro')
 nn_macro
-# micro f1 score
+# micro f1 score:0.736
 nn_micro = f1_score(y_test, y_pred_nn, average='micro')
 nn_micro
 

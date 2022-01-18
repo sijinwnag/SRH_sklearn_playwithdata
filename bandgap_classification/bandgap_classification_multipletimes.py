@@ -256,8 +256,9 @@ def regression_repeat(df, n_repeat):
         X_train_scaled, X_test_scaled, y_train, y_test = pre_processor(df)
         # train the different models and collect the f1 score.
         f1_frame.append(classification_training(X_train_scaled, X_test_scaled, y_train, y_test))
-        # if counter == 1:
-        #     print('finish first iteration')
+        # print the number of iteration finished after finishing each iteration
+        print('finish iteration ' + str(counter))
+
     # now f1_frame is a list of list containing the values for each trial for each model.
     # convert it into dataframe for box plot.
     f1_frame = pd.DataFrame(f1_frame, columns=['KNN', 'SVC', 'Decision Tree', 'Random Forest', 'Gradient Boosting', 'Naive Bayes', 'Neural Network'])
@@ -282,4 +283,18 @@ X_train_scaled, X_test_scaled, y_train, y_test = pre_processor(df)
 
 ################################################################################
 # model training and evaluation
-f1_frame = regression_repeat(df, 5)
+f1scores = regression_repeat(df, 5)
+
+# create barchart to compare f1 scores.
+avf1scores = np.average(f1scores, axis=0)
+# avf1scores
+# create a barchart
+plt.figure()
+models = ('KNN', 'Ridge Linear Regression', 'Random Forest', 'Neural Network', 'Gradient Boosting', 'Ada Boosting', 'Support Vector')
+plt.barh(models, avf1scores)
+plt.ylabel('f1 score')
+plt.title(' average f1 score for Et regression below intrinsic fermi energy')
+plt.show()
+
+# export the data
+f1scores.to_csv('Etminus_diffmodels.csv')
