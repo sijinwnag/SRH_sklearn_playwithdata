@@ -70,7 +70,7 @@ def outlier_ft_list(df, ft_list, inner_fence=True):
 # data visualization and preprocessing
 
 # load the data.
-df = pd.read_csv(r'C:\Users\sijin wang\Desktop\TOR_dell\literature_review\playing_with_data\lifetime_dataset_example.csv')
+df = pd.read_csv(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\lifetime_dataset_example.csv')
 # view the data.
 df.head()
 # note that there are a lot of featres
@@ -179,21 +179,23 @@ plt.show()
 # rescale the y_train and y_test as well
 y_train_scaled = y_train/np.max(y_train)
 y_test_scaled = y_test/np.max(y_train)
-m_nn = MLPRegressor()
-param_nn = {'activation': ('identity', 'logistic', 'tanh', 'relu')}
-grid_nn = GridSearchCV(m_nn, param_nn)
-grid_nn.fit(X_train_scaled, y_train_scaled)
+m_nn = MLPRegressor(hidden_layer_sizes=(100, 300, 300, 100))
+# param_nn = {'activation': ('identity', 'logistic', 'tanh', 'relu')}
+# grid_nn = GridSearchCV(m_nn, param_nn)
+m_nn.fit(X_train_scaled, y_train_scaled)
 # m_nn.fit(X_train_scaled, y_train)
 # evaluate the models
-y_pred_nn = grid_nn.predict(X_test_scaled)
-r2_nn = r2_score(y_test_scaled, y_pred_nn)
-meanabs_nn = mean_absolute_error(y_test, y_pred_nn)
+y_pred_nn = m_nn.predict(X_test_scaled)
+# scale back the y
+y_pred_nn_origin = y_pred_nn*np.max(y_train)
+r2_nn = r2_score(y_test, y_pred_nn_origin)
+meanabs_nn = mean_absolute_error(y_test, y_pred_nn_origin)
 print('The R2 is: ' +str(r2_nn))
 print('The mean absolute error is: ' + str(meanabs_nn))
 plt.figure()
-plt.scatter(y_test, y_pred_nn)
-plt.xlabel('Real weekly sales ($)')
-plt.ylabel('nn predicted weekly sales ($)')
+plt.scatter(y_test, y_pred_nn_origin)
+plt.xlabel('True logk value')
+plt.ylabel('Predicted logk value')
 plt.title('nn predicted vs real')
 plt.show()
 
