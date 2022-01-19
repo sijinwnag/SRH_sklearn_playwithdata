@@ -88,7 +88,7 @@ def regression_training(X_train_scaled, X_test_scaled, y_train, y_test):
     # meanabs_nn = mean_absolute_error(y_test, y_pred_nn)
     print('finish neural network, the R2 score is: ' + str(r2_nn))
     plt.figure()
-    plt.scatter(y_test, y_pred_nn)
+    plt.scatter(y_test_scaled, y_pred_nn)
     plt.xlabel('real value')
     plt.ylabel('predicted')
     plt.title('NN predicted vs real')
