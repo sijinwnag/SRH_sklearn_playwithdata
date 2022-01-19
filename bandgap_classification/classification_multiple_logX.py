@@ -123,6 +123,7 @@ def classification_training(X_train_scaled, X_test_scaled, y_train, y_test):
     # accuracy
     # knn_accuracy = accuracy_score(y_test, y_pred_knn)
     # knn_accuracy
+    print('finish knn model, the accuracy is: ' + str(knn_micro))
 
     # try using Kernalized Support Vector Machines
     msvc = SVC()
@@ -140,6 +141,7 @@ def classification_training(X_train_scaled, X_test_scaled, y_train, y_test):
     # micro f1 score
     svc_micro = f1_score(y_test, y_pred_svc, average='micro')
     # svc_micro
+    print('finish svc model, the accuracy is: ' + str(svc_micro))
 
     # Try decision tree
     mdt = DecisionTreeClassifier()
@@ -157,7 +159,7 @@ def classification_training(X_train_scaled, X_test_scaled, y_train, y_test):
     # micro f1 score
     dt_micro = f1_score(y_test, y_pred_dt, average='micro')
     # dt_micro
-    # note that the behaviour of decision tree is identical to knn, the reason behind is unknown
+    print('finish decision tree model, the accuracy is: ' + str(knn_dt))
 
     # Try random RandomForestClassifier
     mrf = RandomForestClassifier()
@@ -175,6 +177,7 @@ def classification_training(X_train_scaled, X_test_scaled, y_train, y_test):
     # micro f1 score
     rf_micro = f1_score(y_test, y_pred_rf, average='micro')
     # rf_micro
+    print('finish random forest model, the accuracy is: ' + str(rf_micro))
 
     # Try Gradient boost
     mgb = GradientBoostingClassifier()
@@ -192,6 +195,7 @@ def classification_training(X_train_scaled, X_test_scaled, y_train, y_test):
     # micro f1 score
     gb_micro = f1_score(y_test, y_pred_gb, average='micro')
     # gb_micro
+    print('finish Gradient booster model, the accuracy is: ' + str(gb_micro))
 
     # Try Naïve Bayes Classifiers
     mnb = GaussianNB()
@@ -207,6 +211,7 @@ def classification_training(X_train_scaled, X_test_scaled, y_train, y_test):
     # micro f1 score
     nb_micro = f1_score(y_test, y_pred_nb, average='micro')
     # nb_micro
+    print('finish Naive Bayes model, the accuracy is: ' + str(nb_micro))
 
     # Try Neural netwrok: one hot encoder for neural network classification
     # ohe = OneHotEncoder()
@@ -232,6 +237,7 @@ def classification_training(X_train_scaled, X_test_scaled, y_train, y_test):
     # micro f1 score
     nn_micro = f1_score(y_test, y_pred_nn, average='micro')
     # nn_micro
+    print('finish neural network model, the accuracy is: ' + str(nn_micro))
 
     # collect the f1 scores for each model into a list.
     f1_list = [knn_micro, svc_micro, dt_micro, rf_micro, gb_micro, nb_micro, nn_micro]
