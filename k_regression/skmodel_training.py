@@ -119,7 +119,7 @@ def regression_repeat(df, n_repeat):
         r2_frame: a dataframe, each row correspond to a trial and each column correspond to a model name.
         Also plot a boxplot of different model's R2 score
     """
-
+    from multiple_logX import pre_processor
     # set up counter to count the number of repetition
     counter = 0
     # create an emptly list to collect the r2 and mean absolute error values for each trials
