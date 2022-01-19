@@ -17,6 +17,7 @@ def regression_training(X_train_scaled, X_test_scaled, y_train, y_test):
     """
 
     # knn model.
+        # knn model.
     mknn = KNeighborsRegressor()
     param_knn = {'n_neighbors':range(1, 30)}
     grid_knn = GridSearchCV(mknn, param_knn)
@@ -26,7 +27,13 @@ def regression_training(X_train_scaled, X_test_scaled, y_train, y_test):
     y_pred_knn = grid_knn.predict(X_test_scaled)
     r2_knn = r2_score(y_test, y_pred_knn)
     # meanabs_knn = mean_absolute_error(y_test, y_pred_knn)
-
+    print('finish knn, the R2 score is: ' + str(r2_knn))
+    plt.figure()
+    plt.scatter(y_test, y_pred_knn)
+    plt.xlabel('real value')
+    plt.ylabel('predicted')
+    plt.title('KNN predicted vs real')
+    plt.show()
 
     # Linear Regression model.
     # use Linear Regression model now.
@@ -39,6 +46,13 @@ def regression_training(X_train_scaled, X_test_scaled, y_train, y_test):
     y_pred_ridge = grid_ridge.predict(X_test_scaled)
     r2_ridge = r2_score(y_test, y_pred_ridge)
     # meanabs_ridge = mean_absolute_error(y_test, y_pred_ridge)
+    print('finish ridge regression, the R2 score is: ' + str(r2_ridge))
+    plt.figure()
+    plt.scatter(y_test, y_pred_ridge)
+    plt.xlabel('real value')
+    plt.ylabel('predicted')
+    plt.title('ridge predicted vs real')
+    plt.show()
 
 
     # try random Forest
@@ -50,6 +64,13 @@ def regression_training(X_train_scaled, X_test_scaled, y_train, y_test):
     y_pred_rf = m_rf.predict(X_test_scaled)
     r2_rf = r2_score(y_test, y_pred_rf)
     # meanabs_rf = mean_absolute_error(y_test, y_pred_rf)
+    print('finish random forest, the R2 score is: ' + str(r2_rf))
+    plt.figure()
+    plt.scatter(y_test, y_pred_rf)
+    plt.xlabel('real value')
+    plt.ylabel('predicted')
+    plt.title('rf predicted vs real')
+    plt.show()
 
 
     # use neural Network
@@ -64,7 +85,14 @@ def regression_training(X_train_scaled, X_test_scaled, y_train, y_test):
     # evaluate the models
     y_pred_nn = m_nn.predict(X_test_scaled)
     r2_nn = r2_score(y_test_scaled, y_pred_nn)
-    meanabs_nn = mean_absolute_error(y_test, y_pred_nn)
+    # meanabs_nn = mean_absolute_error(y_test, y_pred_nn)
+    print('finish neural network, the R2 score is: ' + str(r2_nn))
+    plt.figure()
+    plt.scatter(y_test, y_pred_nn)
+    plt.xlabel('real value')
+    plt.ylabel('predicted')
+    plt.title('NN predicted vs real')
+    plt.show()
 
 
     # Try Gradient boosting Regression
@@ -76,7 +104,14 @@ def regression_training(X_train_scaled, X_test_scaled, y_train, y_test):
     # evaluate the models
     y_pred_gb = m_gb.predict(X_test_scaled)
     r2_gb = r2_score(y_test, y_pred_gb)
-    meanabs_gb = mean_absolute_error(y_test, y_pred_gb)
+    # meanabs_gb = mean_absolute_error(y_test, y_pred_gb)
+    print('finish gradient boosting, the R2 score is: ' + str(r2_gb))
+    plt.figure()
+    plt.scatter(y_test, y_pred_gb)
+    plt.xlabel('real value')
+    plt.ylabel('predicted')
+    plt.title('gb predicted vs real')
+    plt.show()
 
 
     # Try Adaptive boosting.
@@ -88,7 +123,14 @@ def regression_training(X_train_scaled, X_test_scaled, y_train, y_test):
     # evaluate the models
     y_pred_ab = m_ab.predict(X_test_scaled)
     r2_ab = r2_score(y_test, y_pred_ab)
-    meanabs_ab = mean_absolute_error(y_test, y_pred_ab)
+    # meanabs_ab = mean_absolute_error(y_test, y_pred_ab)
+    print('finish adaboost Regression, the R2 score is: ' + str(r2_ab))
+    plt.figure()
+    plt.scatter(y_test, y_pred_ab)
+    plt.xlabel('real value')
+    plt.ylabel('predicted')
+    plt.title('ab predicted vs real')
+    plt.show()
 
 
     # Try Support vector regression
@@ -102,7 +144,14 @@ def regression_training(X_train_scaled, X_test_scaled, y_train, y_test):
     # evaluate the models
     y_pred_svr = grid_svr.predict(X_test_scaled)
     r2_svr = r2_score(y_test, y_pred_svr)
-    meanabs_svr = mean_absolute_error(y_test, y_pred_svr)
+    # meanabs_svr = mean_absolute_error(y_test, y_pred_svr)
+    print('finish SVR, the R2 score is: ' + str(r2_svr))
+    plt.figure()
+    plt.scatter(y_test, y_pred_svr)
+    plt.xlabel('real value')
+    plt.ylabel('predicted')
+    plt.title('svr predicted vs real')
+    plt.show()
 
 
     # this function will return all 2r scores and mean absolute errors
@@ -119,7 +168,6 @@ def regression_repeat(df, n_repeat):
         r2_frame: a dataframe, each row correspond to a trial and each column correspond to a model name.
         Also plot a boxplot of different model's R2 score
     """
-    from multiple_logX import pre_processor
     # set up counter to count the number of repetition
     counter = 0
     # create an emptly list to collect the r2 and mean absolute error values for each trials
