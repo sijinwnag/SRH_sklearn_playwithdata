@@ -119,7 +119,61 @@ X_test_scaled = scaler.transform(X_test)
 
 ################################################################################
 # training and evaluating the model.
-# Random forest, adaptive boosting, gradient boosting, neural network, support vector, knn
+# use a for loop to train and evaluate each model:
+model_names = ['KNN', 'Ridge Linear Regression', 'Random Forest', 'Neural Network', 'Gradient Boosting', 'Ada Boosting', 'Support Vector'] # a list of name for each model.
+model_lists = [KNeighborsRegressor(), Ridge(), RandomForestRegressor(), MLPRegressor(), GradientBoostingRegressor(), AdaBoostRegressor(), SVR()]# a list of model improted from sklearn
+gridsearchlist = [True, True, False, True, False, False, True]
+param_list  = [{'n_neighbors':range(1, 30)}, {'alpha': [0.01, 0.1, 1, 10]}, {'n_estimators': [10, 100]}, {'hidden_layer_sizes':((100, 300, 300, 100), (100, 300, 500, 300, 100), (200, 600, 600, 200))}, {'n_estimators':[10, 100]}, {'n_estimators':[10, 100]}, {'C': [0.1, 1, 10], 'epsilon': [1e-2, 0.1, 1]}]# a list of key parameters correspond to the models in the model_lists
+# model_frame = pd.DataFrame([model_names, model_lists, param_list])
+# model_frame.head()
+# np.shape(model_frame)
+# range(np.shape(model_frame)[1])
+# list(range(0, 7))
+plot = True
+# prepare an emtpy list to collect all the R2 scores
+r2_list = []
+# Prepare the y scaled data in case we need for neural network.
+y_train_scaled = y_train/np.max(y_train)
+# train everything in a for loop
+for modelindex in range(np.shape(model_names)[0]):
+    # read the name, model and parameter from the lists
+    name = model_names[modelindex]
+    print(name)
+    model = model_lists[modelindex]
+    print(model)
+    param = param_list[modelindex]
+    print(param)
+    gridsearch = gridsearchlist[modelindex]
+    print('whether use grid search: ' + str(gridsearch))
+    if gridsearch==True:
+        # define the grid search object
+        grid = GridSearchCV(model, param)
+        # train the grid search object: if it is neural network, use the scaled y data
+        grid.fit(X_train_scaled, y_train_scaled)
+        # use the trained model to predict the y
+        y_pred_scaled = grid.predict(X_test_scaled)
+    else:
+        # just use the original model.
+        model.fit(X_train_scaled, y_train_scaled)
+        # predict with the original model using defalt settings
+        y_pred_scaled = model.predict(X_test_scaled)
+
+    # scale the y back to original values
+    y_pred = y_pred_scaled * np.max(y_train)
+    # evaluate the model using R2 score:
+    r2 = r2_score(y_test, y_pred)
+    r2_list.append(r2)
+    # print the output
+    print('finish training ' + name + ', the R2 score is ' + str(r2))
+    # plot the real vs predicted graph if needed
+    if plot==True:
+        plt.figure()
+        plt.scatter(y_test, y_pred)
+        plt.xlabel('real value')
+        plt.ylabel('predicted')
+        plt.title('predicted vs real for ' + name)
+        plt.show()
+
 
 # knn model.
 mknn = KNeighborsRegressor()
@@ -179,13 +233,13 @@ plt.show()
 # rescale the y_train and y_test as well
 y_train_scaled = y_train/np.max(y_train)
 y_test_scaled = y_test/np.max(y_train)
-m_nn = MLPRegressor(hidden_layer_sizes=(100, 300, 300, 100))
-# param_nn = {'activation': ('identity', 'logistic', 'tanh', 'relu')}
-# grid_nn = GridSearchCV(m_nn, param_nn)
-m_nn.fit(X_train_scaled, y_train_scaled)
+m_nn = MLPRegressor()
+param_nn = {'hidden_layer_sizes': ((100, 300, 300, 100), (200, 600, 600, 200), (100, 300, 400, 300, 100))}
+grid_nn = GridSearchCV(m_nn, param_nn)
+grid_nn.fit(X_train_scaled, y_train_scaled)
 # m_nn.fit(X_train_scaled, y_train)
 # evaluate the models
-y_pred_nn = m_nn.predict(X_test_scaled)
+y_pred_nn = grid_nn.predict(X_test_scaled)
 # scale back the y
 y_pred_nn_origin = y_pred_nn*np.max(y_train)
 r2_nn = r2_score(y_test, y_pred_nn_origin)

@@ -7,169 +7,92 @@ classification_repeat: a function to repeat classification for multiples times a
 """
 
 def regression_training(X_train_scaled, X_test_scaled, y_train, y_test, plot=False):
+
     """
-    input: X_train_scaled, X_test_scaled, y_train, y_test
+    input:
+        X_train_scaled, X_test_scaled, y_train, y_test
         plot: a boolean input, if True then it will plot real vs predicted for each model
 
     what it does: use the given data to train different regression algarisms
 
     output: a list of R2 scores for each model corresponding to 'KNN', 'Ridge Linear Regression', 'Random Forest', 'Neural Network', 'Gradient Boosting', 'Ada Boosting', 'Support Vector'
-
     """
+    # import libraries:
+    import pandas as pd
+    import numpy as np
+    import seaborn as sn
+    from sklearn.model_selection import train_test_split, GridSearchCV
+    import matplotlib.pyplot as plt
+    from sklearn.preprocessing import MinMaxScaler
+    from sklearn.neighbors import KNeighborsRegressor
+    from sklearn.metrics import r2_score, mean_absolute_error
+    from sklearn.linear_model import LinearRegression, Ridge
+    import matplotlib.pyplot as plt
+    from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor, AdaBoostRegressor
+    from sklearn.neural_network import MLPRegressor
+    from sklearn.svm import SVR
+    import sys
 
-    # knn model.
-        # knn model.
-    mknn = KNeighborsRegressor()
-    param_knn = {'n_neighbors':range(1, 30)}
-    grid_knn = GridSearchCV(mknn, param_knn)
-    # fit the data
-    grid_knn.fit(X_train_scaled, y_train)
-    # evaluate the knn model
-    y_pred_knn = grid_knn.predict(X_test_scaled)
-    r2_knn = r2_score(y_test, y_pred_knn)
-    # meanabs_knn = mean_absolute_error(y_test, y_pred_knn)
-    print('finish knn, the R2 score is: ' + str(r2_knn))
-    if plot==True:
-        plt.figure()
-        plt.scatter(y_test, y_pred_knn)
-        plt.xlabel('real value')
-        plt.ylabel('predicted')
-        plt.title('KNN predicted vs real')
-        plt.show()
+    # use a for loop to train and evaluate each model:
+    model_names = ['KNN', 'Ridge Linear Regression', 'Random Forest', 'Neural Network', 'Gradient Boosting', 'Ada Boosting', 'Support Vector'] # a list of name for each model.
+    model_lists = [KNeighborsRegressor(), Ridge(), RandomForestRegressor(), MLPRegressor(), GradientBoostingRegressor(), AdaBoostRegressor(), SVR()]# a list of model improted from sklearn
+    gridsearchlist = [True, True, False, True, False, False, True]
+    param_list  = [{'n_neighbors':range(1, 30)}, {'alpha': [0.01, 0.1, 1, 10]}, {'n_estimators': [10, 100]}, {'hidden_layer_sizes':((100, 300, 300, 100), (100, 300, 500, 300, 100), (200, 600, 600, 200))}, {'n_estimators':[10, 100]}, {'n_estimators':[10, 100]}, {'C': [0.1, 1, 10], 'epsilon': [1e-2, 0.1, 1]}]# a list of key parameters correspond to the models in the model_lists
 
-    # Linear Regression model.
-    # use Linear Regression model now.
-    m_ridge = Ridge()
-    param_ridge = {'alpha': [0.01, 0.1, 1, 10]}
-    # tune the model with parameters using grid search.
-    grid_ridge = GridSearchCV(m_ridge, param_ridge)
-    grid_ridge.fit(X_train_scaled, y_train)
-    # evaluate the linear regression model
-    y_pred_ridge = grid_ridge.predict(X_test_scaled)
-    r2_ridge = r2_score(y_test, y_pred_ridge)
-    # meanabs_ridge = mean_absolute_error(y_test, y_pred_ridge)
-    print('finish ridge regression, the R2 score is: ' + str(r2_ridge))
-    if plot==True:
-        plt.figure()
-        plt.scatter(y_test, y_pred_ridge)
-        plt.xlabel('real value')
-        plt.ylabel('predicted')
-        plt.title('ridge predicted vs real')
-        plt.show()
-
-
-    # try random Forest
-    m_rf = RandomForestRegressor()
-    # grid_rf = GridSearchCV(m_rf, param_rf)
-    # train the model with training dataset
-    m_rf.fit(X_train_scaled, y_train)
-    # evaluate the models
-    y_pred_rf = m_rf.predict(X_test_scaled)
-    r2_rf = r2_score(y_test, y_pred_rf)
-    # meanabs_rf = mean_absolute_error(y_test, y_pred_rf)
-    print('finish random forest, the R2 score is: ' + str(r2_rf))
-    if plot==True:
-        plt.figure()
-        plt.scatter(y_test, y_pred_rf)
-        plt.xlabel('real value')
-        plt.ylabel('predicted')
-        plt.title('rf predicted vs real')
-        plt.show()
-
-
-    # use neural Network
-    # rescale the y_train and y_test as well
+    # prepare an emtply list to collect r2 scores:
+    r2_list = []
+    # Prepare the y scaled data in case we need for neural network.
     y_train_scaled = y_train/np.max(y_train)
-    y_test_scaled = y_test/np.max(y_train)
-    m_nn = MLPRegressor(hidden_layer_sizes = (100, 300, 300, 100))
-    # param_nn = {'activation': ('identity', 'logistic', 'tanh', 'relu')}
-    # grid_nn = GridSearchCV(m_nn, param_nn)
-    m_nn.fit(X_train_scaled, y_train_scaled)
-    # m_nn.fit(X_train_scaled, y_train)
-    # evaluate the models
-    y_pred_nn = m_nn.predict(X_test_scaled)
-    r2_nn = r2_score(y_test_scaled, y_pred_nn)
-    # meanabs_nn = mean_absolute_error(y_test, y_pred_nn)
-    print('finish neural network, the R2 score is: ' + str(r2_nn))
-    if plot==True:
-        plt.figure()
-        plt.scatter(y_test_scaled, y_pred_nn)
-        plt.xlabel('real value')
-        plt.ylabel('predicted')
-        plt.title('NN predicted vs real')
-        plt.show()
+    # train everything in a for loop
+    for modelindex in range(np.shape(model_names)[0]):
+        # read the name, model and parameter from the lists
+        name = model_names[modelindex]
+        print(name)
+        model = model_lists[modelindex]
+        # print(model)
+        param = param_list[modelindex]
+        # print(param)
+        gridsearch = gridsearchlist[modelindex]
+        print('whether use grid search: ' + str(gridsearch))
+        if gridsearch==True:
+            # define the grid search object
+            grid = GridSearchCV(model, param)
+            # train the grid search object: if it is neural network, use the scaled y data
+            grid.fit(X_train_scaled, y_train_scaled)
+            # use the trained model to predict the y
+            y_pred_scaled = grid.predict(X_test_scaled)
+        else:
+            # just use the original model.
+            model.fit(X_train_scaled, y_train_scaled)
+            # predict with the original model using defalt settings
+            y_pred_scaled = model.predict(X_test_scaled)
 
-
-    # Try Gradient boosting Regression
-    m_gb = GradientBoostingRegressor()
-    # param_gb = {'n_estimators':[100, 500, 1e3], 'learning_rate':[0.1, 1, 10], 'max_depth':[1, 5, 10]}
-    # grid_gb = GridSearchCV(m_gb, param_gb)
-    # train the model
-    m_gb.fit(X_train_scaled, y_train)
-    # evaluate the models
-    y_pred_gb = m_gb.predict(X_test_scaled)
-    r2_gb = r2_score(y_test, y_pred_gb)
-    # meanabs_gb = mean_absolute_error(y_test, y_pred_gb)
-    print('finish gradient boosting, the R2 score is: ' + str(r2_gb))
-    if plot==True:
-        plt.figure()
-        plt.scatter(y_test, y_pred_gb)
-        plt.xlabel('real value')
-        plt.ylabel('predicted')
-        plt.title('gb predicted vs real')
-        plt.show()
-
-
-    # Try Adaptive boosting.
-    m_ab = AdaBoostRegressor()
-    # param_ab = {'n_estimators':[100, 500, 1e3], 'learning_rate':[0.1, 1, 10], 'max_depth':[1, 5, 10]}
-    # grid_ab = GridSearchCV(m_ab, param_ab)
-    # train the model
-    m_ab.fit(X_train_scaled, y_train)
-    # evaluate the models
-    y_pred_ab = m_ab.predict(X_test_scaled)
-    r2_ab = r2_score(y_test, y_pred_ab)
-    # meanabs_ab = mean_absolute_error(y_test, y_pred_ab)
-    print('finish adaboost Regression, the R2 score is: ' + str(r2_ab))
-    if plot==True:
-        plt.figure()
-        plt.scatter(y_test, y_pred_ab)
-        plt.xlabel('real value')
-        plt.ylabel('predicted')
-        plt.title('ab predicted vs real')
-        plt.show()
-
-
-    # Try Support vector regression
-    m_svr = SVR()
-    param_svr = {'C': [0.1, 1, 10], 'epsilon': [1e-2, 0.1, 1]}
-    grid_svr = GridSearchCV(m_svr, param_svr)
-    # train the model
-    grid_svr = GridSearchCV(m_svr, param_svr)
-    # train the model
-    grid_svr.fit(X_train_scaled, y_train)
-    # evaluate the models
-    y_pred_svr = grid_svr.predict(X_test_scaled)
-    r2_svr = r2_score(y_test, y_pred_svr)
-    # meanabs_svr = mean_absolute_error(y_test, y_pred_svr)
-    print('finish SVR, the R2 score is: ' + str(r2_svr))
-    if plot==True:
-        plt.figure()
-        plt.scatter(y_test, y_pred_svr)
-        plt.xlabel('real value')
-        plt.ylabel('predicted')
-        plt.title('svr predicted vs real')
-        plt.show()
+        # scale the y back to original values
+        y_pred = y_pred_scaled * np.max(y_train)
+        # evaluate the model using R2 score:
+        r2 = r2_score(y_test, y_pred)
+        r2_list.append(r2)
+        # print the output
+        print('finish training ' + name + ', the R2 score is ' + str(r2))
+        # plot the real vs predicted graph if needed
+        if plot==True:
+            plt.figure()
+            plt.scatter(y_test, y_pred)
+            plt.xlabel('real value')
+            plt.ylabel('predicted')
+            plt.title('predicted vs real for ' + name)
+            plt.show()
 
 
     # this function will return all 2r scores and mean absolute errors
-    return [r2_knn, r2_ridge, r2_rf, r2_nn, r2_gb, r2_ab, r2_svr]
+    return r2_list
 
 
-def regression_repeat(df, n_repeat, plot=False):
+def regression_repeat(X, y, n_repeat, plot=False):
     """
     input:
-        df: the dataframe you wanna apply regression on
+        X: the features.
+        y: the target values.
         n_repeat: the number of times you want to repeat training test split and fitting the model.
         plot: if True, then predicted vs real will be plotted for each model after each training. if False, it will not plot anything.
 
@@ -177,21 +100,43 @@ def regression_repeat(df, n_repeat, plot=False):
         r2_frame: a dataframe, each row correspond to a trial and each column correspond to a model name.
         Also plot a boxplot of different model's R2 score
     """
+    # import libraries:
+    import pandas as pd
+    import numpy as np
+    import seaborn as sn
+    from sklearn.model_selection import train_test_split, GridSearchCV
+    import matplotlib.pyplot as plt
+    from sklearn.preprocessing import MinMaxScaler
+    from sklearn.neighbors import KNeighborsRegressor
+    from sklearn.metrics import r2_score, mean_absolute_error
+    from sklearn.linear_model import LinearRegression, Ridge
+    import matplotlib.pyplot as plt
+    from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor, AdaBoostRegressor
+    from sklearn.neural_network import MLPRegressor
+    from sklearn.svm import SVR
+    import sys
+
     # set up counter to count the number of repetition
     counter = 0
     # create an emptly list to collect the r2 and mean absolute error values for each trials
     r2_frame = []
     meanabs_frame = []
+
     while counter < n_repeat:
         # update the counter
         counter = counter + 1
         # pro process the data:
-        X_train_scaled, X_test_scaled, y_train, y_test = pre_processor(df)
+        # make the training size 0.9 and test size 0.1 (this is what was done by the paper)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1)
+        # scale the data:
+        scaler = MinMaxScaler()
+        X_train_scaled = scaler.fit_transform(X_train)
+        # we must apply the scaling to the test set that we computed for the training set
+        X_test_scaled = scaler.transform(X_test)
         # train the different models and collect the r2 score.
         r2_frame.append(regression_training(X_train_scaled, X_test_scaled, y_train, y_test, plot))
         # print the number of iteration finished after finishing each iteration
         print('finish iteration ' + str(counter))
-
     # now r2_frame is a list of list containing the values for each trial for each model.
     # convert it into dataframe for box plot.
     r2_frame = pd.DataFrame(r2_frame, columns=['KNN', 'Ridge Linear Regression', 'Random Forest', 'Neural Network', 'Gradient Boosting', 'Ada Boosting', 'Support Vector'])
