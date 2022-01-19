@@ -13,6 +13,7 @@ import matplotlib.pyplot as plt
 from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor, AdaBoostRegressor
 from sklearn.neural_network import MLPRegressor
 from sklearn.svm import SVR
+from skmodel_training import *
 ################################################################################
 # function definition
 

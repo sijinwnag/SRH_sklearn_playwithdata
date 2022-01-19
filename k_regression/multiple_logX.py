@@ -17,58 +17,8 @@ import matplotlib.pyplot as plt
 from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor, AdaBoostRegressor
 from sklearn.neural_network import MLPRegressor
 from sklearn.svm import SVR
+from skmodel_training import *
 ################################################################################
-# function definition
-
-# define a function called 'outliers' which returns a list of index of outliers
-# IQR = Q3-Q1
-# boundary: +- 1.5*IQR
-def outliers(df, ft, boundary):
-    # input:
-    # df: the data frame where we are looking for outliers
-    # ft: the name of the feature that we are looking for outliers (string)
-    # boundary: a number determine how wide is considered to be outliers, normally 1.5 or 3
-    # output: a list of index of all the outliers.
-
-    # start with calculating the quantiles
-    Q1 = df[ft].quantile(0.25)
-    Q3 = df[ft].quantile(0.75)
-
-    # calcualte the Interquartile range
-    IQR = Q3 - Q1
-
-    # define the upper and lower boundary for outliers.
-    upper_bound = Q3 + boundary * IQR
-    lower_bound = Q1 - boundary * IQR
-
-    # collect the outliers
-    out_list = df.index[(df[ft]<lower_bound) | (df[ft]>upper_bound)]
-
-    return out_list
-
-
-# define a function to find outliers for a list of futures
-def outlier_ft_list(df, ft_list, inner_fence=True):
-    # input:
-    # df: the data frame where we are looking for outliers
-    # ft: the name of the feature that we are looking for outliers (string)
-    # inner_fence: if it is set to be true then the boundary is +-1.5*IQR, otherwise +-3*IQR
-    # output: a list of index of all outliers for any feature in the ft_list.
-
-    # decide whether use inner fence as outlier boundary or the outer fence.
-    if inner_fence==True:
-        boundary = 1.5
-    else:
-        boundary = 3
-
-    out_list = []
-    # find the outliers for each feature in a for loop
-    for ft in ft_list:
-        out_list.extend(outliers(df, ft, boundary))
-
-    # remove the duplications
-    out_list = list(dict.fromkeys(out_list))
-    return out_list
 
 
 def pre_processor(df):
