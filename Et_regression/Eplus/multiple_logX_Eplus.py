@@ -312,15 +312,15 @@ def pre_processor(df):
 
 
 # train and evaluate the models.
-r2scores = regression_repeat(df, 1)
+r2scoreslog = regression_repeat(df, 1)
 # r2scores.to_csv('Etminus_diffmodels.csv')
 # use r2scores to plot a barchart of average score for each model.
-avr2scores = np.average(r2scores, axis=0)
+avr2scoreslog = np.average(r2scoreslog, axis=0)
 # avr2scores
 # create a barchart
 plt.figure()
 models = ('KNN', 'Ridge Linear Regression', 'Random Forest', 'Neural Network', 'Gradient Boosting', 'Ada Boosting', 'Support Vector')
-plt.barh(models, avr2scores)
+plt.barh(models, avr2scoreslog)
 plt.ylabel('R2 score')
 plt.title(' average R2 score for Et regression above intrinsic fermi energy')
 plt.show()
