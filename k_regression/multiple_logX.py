@@ -27,7 +27,7 @@ from function_for_trainings import regression_repeat, regression_training
 # data pre processing:
 
 # load the data.
-df = pd.read_csv(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\lifetime_dataset_example.csv')
+df = pd.read_csv(r'C:\Users\budac\Documents\GitHub\SRH_sklearn_playwithdata\lifetime_dataset_example.csv')
 
 # identify extract the useful columns
 # Name	Et_eV	Sn_cm2	Sp_cm2	k	logSn	logSp	logk	bandgap are all y
@@ -42,8 +42,17 @@ X = dfk.drop(['logk'], axis=1)
 y = dfk['logk']
 
 # send it to regression repeat to train and evaluate the model.
-r2_frame = regression_repeat(X, y, 1)
+r2_frame = regression_repeat(X, y, 5)
 
 # instead of using x, try using logX
 X = np.log(X)
-r2_frame_log = regression_repeat(X, y, 1)
+r2_frame_log = regression_repeat(X, y, 5)
+
+# compare the average r2 score for log and no log:
+r2_av_log = np.average(r2_frame_log, axis=0)
+r2_av = np.average(r2_frame, axis=0)
+models_names = ['KNN', 'Ridge Linear Regression', 'Random Forest', 'Neural Network', 'Gradient Boosting', 'Ada Boosting', 'Support Vector']
+df_plot = pd.DataFrame({'using original X': r2_av, 'using logX': r2_av_log}, index=models_names)
+ax = df_plot.plot.barh()
+ax.legend(bbox_to_anchor=(1.4, 0.55))
+plt.title('the R2 scores for training using original X vs using logX')
