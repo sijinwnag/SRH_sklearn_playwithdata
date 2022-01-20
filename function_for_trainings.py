@@ -47,13 +47,13 @@ def regression_training(X_train_scaled, X_test_scaled, y_train, y_test, plot=Fal
     for modelindex in range(np.shape(model_names)[0]):
         # read the name, model and parameter from the lists
         name = model_names[modelindex]
-        print(name)
+        # print(name)
         model = model_lists[modelindex]
         # print(model)
         param = param_list[modelindex]
         # print(param)
         gridsearch = gridsearchlist[modelindex]
-        print('whether use grid search: ' + str(gridsearch))
+        # print('whether use grid search: ' + str(gridsearch))
         if gridsearch==True:
             # define the grid search object
             grid = GridSearchCV(model, param)
