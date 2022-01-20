@@ -158,6 +158,20 @@ def classification_training(X_train_scaled, X_test_scaled, y_train, y_test, disp
 
     output: a list of accuracy for each model corresponding to 'KNN', 'SVC', 'Decision Tree', 'Random Forest', 'Gradient Boosting', 'Naive Bayes', 'Neural Network'
     """
+    # import the libraries:
+    import numpy as np
+    import pandas as pd
+    import seaborn as sn
+    from sklearn.model_selection import train_test_split, GridSearchCV
+    from sklearn.neighbors import KNeighborsClassifier
+    from sklearn.preprocessing import MinMaxScaler, OneHotEncoder
+    from sklearn.metrics import confusion_matrix, f1_score, accuracy_score
+    from sklearn.svm import SVC
+    from sklearn.tree import DecisionTreeClassifier
+    from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier, AdaBoostClassifier
+    from sklearn.naive_bayes import GaussianNB
+    from sklearn.neural_network import MLPClassifier
+    import matplotlib.pyplot as plt
 
     model_names = ['KNN', 'SVC', 'Decision tree', 'Random Forest',  'Gradient Boosting', 'Adaptive boosting', 'Naive Bayes', 'Neural Network'] # a list of name for each model.
     model_lists = [KNeighborsClassifier(), SVC(), DecisionTreeClassifier(), RandomForestClassifier(), GradientBoostingClassifier(), AdaBoostClassifier(), GaussianNB(), MLPClassifier()]# a list of model improted from sklearn
@@ -195,15 +209,15 @@ def classification_training(X_train_scaled, X_test_scaled, y_train, y_test, disp
         f1 = f1_score(y_test, y_pred)
         f1_list.append(f1)
         # print the output
-        print('finish training ' + name + ', the accuracy is ' + str(r2))
+        print('finish training ' + name + ', the accuracy is ' + str(f1))
         # display the confusion matrix
         if display_confusion_matrix==True:
-            print(confusion_matrix(y_test, y_pred))
+            print(confusion_matrix(y_test, y_pred, normalize='all'))
 
     return f1_list
 
 
-def classification_repeat(df, n_repeat):
+def classification_repeat(X, y, n_repeat, display_confusion_matrix=False):
     """
     input:
         df: the dataframe to work on
@@ -212,6 +226,20 @@ def classification_repeat(df, n_repeat):
         f1_frame: a dataframe of f1 score.
         Also plotted a boxplot of f1 score for each model.
     """
+    # import the libraries:
+    import numpy as np
+    import pandas as pd
+    import seaborn as sn
+    from sklearn.model_selection import train_test_split, GridSearchCV
+    from sklearn.neighbors import KNeighborsClassifier
+    from sklearn.preprocessing import MinMaxScaler, OneHotEncoder
+    from sklearn.metrics import confusion_matrix, f1_score, accuracy_score
+    from sklearn.svm import SVC
+    from sklearn.tree import DecisionTreeClassifier
+    from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
+    from sklearn.naive_bayes import GaussianNB
+    from sklearn.neural_network import MLPClassifier
+    import matplotlib.pyplot as plt
 
     # set up counter to count the number of repetition
     counter = 0
@@ -223,14 +251,12 @@ def classification_repeat(df, n_repeat):
         counter = counter + 1
         # pro process the data:
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1)
-        # train the different models and collect the f1 score.
-        f1_frame.append(classification_training(X_train_scaled, X_test_scaled, y_train, y_test))
         # scale the data:
         scaler = MinMaxScaler()
         X_train_scaled = scaler.fit_transform(X_train)
         # we must apply the scaling to the test set that we computed for the training set
         X_test_scaled = scaler.transform(X_test)
-        r2_frame.append(classification_training(X_train_scaled, X_test_scaled, y_train, y_test, plot))
+        f1_frame.append(classification_training(X_train_scaled, X_test_scaled, y_train, y_test, display_confusion_matrix))
         # print the number of iteration finished after finishing each iteration
         print('finish iteration ' + str(counter))
 
