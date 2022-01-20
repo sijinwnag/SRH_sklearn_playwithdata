@@ -57,3 +57,15 @@ df_plot = pd.DataFrame({'using original X': r2_av, 'using logX': r2_av_log}, ind
 ax = df_plot.plot.barh()
 ax.legend(bbox_to_anchor=(1.4, 0.55))
 plt.title('the R2 scores for training using original X vs using logX')
+
+# do a pair plot to visualize the data better
+df_pairplot = df.drop(['Name', 'Sn_cm2', 'Sp_cm2', 'logSn', 'logSp', 'k'], axis=1)
+df_pairplot = df_pairplot.iloc[: , :4]
+df_pairplot.head()
+df_pairplot = df_pairplot.rename(columns={'200K_5100000000000000.0cm-3_ 10000000000000.0cm-3': 'lifetime data'})
+sn.pairplot(df_pairplot)
+
+# do pairplot to compare the logX
+df_pairplotlog = df_pairplot
+df_pairplotlog.iloc[:, 3:] = np.log(df_pairplotlog.iloc[:, 3:])
+sn.pairplot(df_pairplot)
