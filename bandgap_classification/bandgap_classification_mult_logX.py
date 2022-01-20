@@ -20,7 +20,7 @@ sys.path.append(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata'
 from function_for_trainings import classification_repeat, classification_training
 ##################################################################################
 # firstly, load the data:
-df = pd.read_csv(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\lifetime_dataset_example.csv')
+df = pd.read_csv(r'C:\Users\budac\Documents\GitHub\SRH_sklearn_playwithdata\lifetime_dataset_example.csv')
 
 # identify extract the useful columns
 # delete all the defect information except bandgap
