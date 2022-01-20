@@ -32,18 +32,17 @@ X = dfk.drop(['bandgap'], axis=1)
 y = dfk['bandgap']
 
 # model training and evaluation
-f1scores = classification_repeat(X, y, 1)
-
+f1scores = classification_repeat(X, y, 5)
 # create barchart to compare f1 scores.
 avf1scores = np.average(f1scores, axis=0)
-# avf1scores
-# create a barchart
-plt.figure()
-models = ('KNN', 'Ridge Linear Regression', 'Random Forest', 'Neural Network', 'Gradient Boosting', 'Ada Boosting', 'Support Vector')
-plt.barh(models, avf1scores)
-plt.ylabel('f1 score')
-plt.title(' average f1 score for Et regression below intrinsic fermi energy')
-plt.show()
 
-# export the data
-f1scores.to_csv('Etminus_diffmodels.csv')
+# now, make logX into X and redo the process, compare the f1 scores:
+X = np.log(X)
+f1_scoreslog = classification_repeat(X, y, 5)
+avf1scoreslog = np.average(f1_scoreslog, axis=0)
+
+models_names = ['KNN', 'SVC', 'Decision tree', 'Random Forest',  'Gradient Boosting', 'Adaptive boosting', 'Naive Bayes', 'Neural Network']
+df_plot = pd.DataFrame({'using original X': avf1scores, 'using logX': avf1scoreslog}, index=models_names)
+ax = df_plot.plot.barh()
+ax.legend(bbox_to_anchor=(1.4, 0.55))
+plt.title('the R2 scores for training using original X vs using logX')
