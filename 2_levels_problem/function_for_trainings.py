@@ -266,7 +266,7 @@ def classification_repeat(X, y, n_repeat, display_confusion_matrix=False):
     # box plot the data.
     plt.figure()
     f1_frame.boxplot(vert=False)
-    plt.title('f1score for Sales regression models')
+    plt.title('f1score for classification')
     plt.show()
 
     return f1_frame
