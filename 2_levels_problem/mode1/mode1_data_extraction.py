@@ -1,4 +1,11 @@
-################################################################################
+"""
+Main steps:
+1. Train and a neural network that can identify the mode.
+2. Createa another data set (must be different Et and k, different defects) to avoid data leakage
+3. Use the trained model to predict the mode of new dataset.
+4. Pick the data in new dataset that is in mode 1
+"""
+
 # import the library
 import numpy as np
 import pandas as pd
@@ -15,10 +22,7 @@ from sklearn.neural_network import MLPClassifier
 import matplotlib.pyplot as plt
 import sys
 
-# import the function file from another folder:
-sys.path.append(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata')
-from function_for_trainings import classification_repeat, classification_training
-##################################################################################
+##% Data pre processing before training mode identification:
 # firstly, load the data:
 df = pd.read_csv(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\2level_defects.csv')
 
@@ -32,16 +36,22 @@ dfk['Mode'] = pd.Categorical(dfk['Mode'])
 dfk = pd.get_dummies(dfk)
 # dfk.columns.values.tolist()
 dfk = dfk.drop(['Mode_Two one-level'], axis=1)
-# train test split:
-X = dfk.drop(['Mode_Single two-level'], axis=1)
-y = dfk['Mode_Single two-level']
+# identify X and y
+X_train = dfk.drop(['Mode_Single two-level'], axis=1)
+y_train = dfk['Mode_Single two-level']
 
-# now, make logX into X and redo the process, compare the f1 scores:
-f1_scoreslog = classification_repeat(X, y, 5)
-avf1scoreslog = np.average(f1_scoreslog, axis=0)
-avf1scoreslog
-models_names = ['KNN', 'SVC', 'Decision tree', 'Random Forest',  'Gradient Boosting', 'Adaptive boosting', 'Naive Bayes', 'Neural Network']
-df_plot = pd.DataFrame({'using original X': avf1scores, 'using logX': avf1scoreslog}, index=models_names)
-ax = df_plot.plot.barh()
-ax.legend(bbox_to_anchor=(1.4, 0.55))
-plt.title('the R2 scores for training using original X vs using logX')
+# scale the data:
+scaler = MinMaxScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+# we must apply the scaling to the test set that we computed for the training set
+X_test_scaled = scaler.transform(X_test)
+
+# 1.Train a neural network that can identify the mode
+# Use the best model: Neural network:
+m_nn = MLPClassifier()
+# define the parameters for grid search.
+param_nn = {'hidden_layer_sizes':((100, 300, 300, 100), (100, 300, 500, 300, 100), (200, 600, 600, 200))}
+# apply grid search:
+grid_nn = GridSearchCV(m_nn, param_nn)
+# train the model with the data.
+grid_nn.fit(X_train_scaled, y_train)
