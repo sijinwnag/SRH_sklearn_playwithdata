@@ -6,12 +6,13 @@ classification_training: a function to do classification for single times with d
 classification_repeat: a function to repeat classification for multiples times and plot the boxplot
 """
 
-def regression_training(X_train_scaled, X_test_scaled, y_train, y_test, plot=False):
+def regression_training(X_train_scaled, X_test_scaled, y_train, y_test, plot=False, output_y_pred=False):
 
     """
     input:
         X_train_scaled, X_test_scaled, y_train, y_test
         plot: a boolean input, if True then it will plot real vs predicted for each model
+        output_y_pred: a boolean input, if True then it will output the predicted y
 
     what it does: use the given data to train different regression algarisms
 
@@ -39,6 +40,8 @@ def regression_training(X_train_scaled, X_test_scaled, y_train, y_test, plot=Fal
     gridsearchlist = [True, True, False, True, False, False, True]
     param_list  = [{'n_neighbors':range(1, 30)}, {'alpha': [0.01, 0.1, 1, 10]}, {'n_estimators': [10, 100]}, {'hidden_layer_sizes':((100, 300, 300, 100), (100, 300, 500, 300, 100), (200, 600, 600, 200))}, {'n_estimators':[10, 100]}, {'n_estimators':[10, 100]}, {'C': [0.1, 1, 10], 'epsilon': [1e-2, 0.1, 1]}]# a list of key parameters correspond to the models in the model_lists
 
+    # prepare an emtply list to collect the predicted y
+    y_pred_list = []
     # prepare an emtply list to collect r2 scores:
     r2_list = []
     # Prepare the y scaled data in case we need for neural network.
@@ -69,6 +72,7 @@ def regression_training(X_train_scaled, X_test_scaled, y_train, y_test, plot=Fal
 
         # scale the y back to original values
         y_pred = y_pred_scaled * np.max(y_train)
+        y_pred_list.append(y_pred)
         # evaluate the model using R2 score:
         r2 = r2_score(y_test, y_pred)
         r2_list.append(r2)
@@ -83,9 +87,16 @@ def regression_training(X_train_scaled, X_test_scaled, y_train, y_test, plot=Fal
             plt.title('predicted vs real for ' + name)
             plt.show()
 
-
+    # output the list of list as a datagrame and name them:
+    y_output = pd.DataFrame(np.array(y_pred_list))
+    # put the name on it:
+    y_output.columns = model_names
+    # output hte prediction only if necessary:
+    if output_y_pred == True:
+        return r2_list, y_output
     # this function will return all 2r scores and mean absolute errors
-    return r2_list
+    else:
+        return r2_list
 
 
 def regression_repeat(X, y, n_repeat, plot=False):
