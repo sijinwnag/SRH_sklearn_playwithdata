@@ -154,7 +154,7 @@ def regression_repeat(X, y, n_repeat, plot=False):
     # box plot the data.
     plt.figure()
     r2_frame.boxplot(vert=False)
-    plt.title('R2score for Sales regression models')
+    plt.title('R2 scores for different models')
     plt.show()
 
     return r2_frame
