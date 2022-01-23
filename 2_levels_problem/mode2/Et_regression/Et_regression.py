@@ -36,11 +36,21 @@ dfk = df.drop(delete_col, axis=1)
 dfk = dfk[dfk['Mode']=='Single two-level']
 dfk = dfk.drop(['Mode'], axis=1)
 # extract the defects that have bandgap_1 being 1:
-dfk = dfk[dfk['bandgap_1']==1]
+dfk_plus = dfk[dfk['bandgap_1']==1]
 # define X and y
-X = dfk.drop(['logk_1', 'logk_2', 'bandgap_1', 'bandgap_2', 'Et_eV_1', 'Et_eV_2'], axis=1)
+X = dfk_plus.drop(['logk_1', 'logk_2', 'bandgap_1', 'bandgap_2', 'Et_eV_1', 'Et_eV_2'], axis=1)
 X = np.log(X)
-y = dfk['Et_eV_1']
+y = dfk_plus['Et_eV_1']
+
+# do the regression.
+r2_frame = regression_repeat(X, y, 1, plot=True)
+
+# do the regresssion for the other half of bandgap.
+dfk_minus = dfk[dfk['bandgap_1']==0]
+# define X and y
+X = dfk_minus.drop(['logk_1', 'logk_2', 'bandgap_1', 'bandgap_2', 'Et_eV_1', 'Et_eV_2'], axis=1)
+X = np.log(X)
+y = dfk_minus['Et_eV_1']
 
 # do the regression.
 r2_frame = regression_repeat(X, y, 1, plot=True)
