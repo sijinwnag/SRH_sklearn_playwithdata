@@ -36,7 +36,7 @@ delete_col = delete_col = ['Name', 'Et_eV_1', 'Sn_cm2_1', 'Sp_cm2_1', 'k_1', 'lo
 dfk = df.drop(delete_col, axis=1)
 
 # extract thet ones that are in mode
-dfk = dfk[dfk['Mode']=='Two one-level']
+dfk = dfk[dfk['Mode']=='Single two-level']
 dfk = dfk.drop(['Mode'], axis=1)
 # define X and y
 X = dfk.drop(['logk_1', 'logk_2'], axis=1)
@@ -52,7 +52,7 @@ r2_frame_sum = regression_repeat(X, y, 1, plot=True)
 # 4. Maybe you should do regression for both k1 and k2 together: do regression for sum of logk first then do the regression for difference of log k
 
 # let the program know the logk1 + logk2:
-# X['logk sum'] = dfk['logk_1'] + dfk['logk_2']
+X['logk sum'] = dfk['logk_1'] + dfk['logk_2']
 # try y2 be the difference of the log k1 and log k2
 y2 = dfk['logk_1'] - dfk['logk_2']
 r2_frame_diff = regression_repeat(X, y2, 1, plot=True)
