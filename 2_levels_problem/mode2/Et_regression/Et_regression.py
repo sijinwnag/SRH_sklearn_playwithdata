@@ -40,17 +40,41 @@ dfk_plus = dfk[dfk['bandgap_1']==1]
 # define X and y
 X = dfk_plus.drop(['logk_1', 'logk_2', 'bandgap_1', 'bandgap_2', 'Et_eV_1', 'Et_eV_2'], axis=1)
 X = np.log(X)
-y = dfk_plus['Et_eV_1']
+yplus = dfk_plus['Et_eV_1']
 
-# do the regression.
-r2_frame = regression_repeat(X, y, 1, plot=True)
+# ##
+# we can see that the best behaviour is Random Forest: plot the graph mannually
+X_train, X_test, y_train, y_test_plus = train_test_split(X, yplus, test_size=0.1)
+# scale the data:
+scaler = MinMaxScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+# we must apply the scaling to the test set that we computed for the training set
+X_test_scaled = scaler.transform(X_test)
+# do the training
+r2, prediction_plus = regression_training(X_train_scaled, X_test_scaled, y_train, y_test_plus, plot=True, output_y_pred=True)
 
-# do the regresssion for the other half of bandgap.
+# do the same for Et minus:
 dfk_minus = dfk[dfk['bandgap_1']==0]
 # define X and y
 X = dfk_minus.drop(['logk_1', 'logk_2', 'bandgap_1', 'bandgap_2', 'Et_eV_1', 'Et_eV_2'], axis=1)
 X = np.log(X)
-y = dfk_minus['Et_eV_1']
+yminus = dfk_minus['Et_eV_1']
+# we can see that the best behaviour is Random Forest: plot the graph mannually
+X_train, X_test, y_train, y_test_minus = train_test_split(X, yminus, test_size=0.1)
+# scale the data:
+scaler = MinMaxScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+# we must apply the scaling to the test set that we computed for the training set
+X_test_scaled = scaler.transform(X_test)
+# do the training
+r2, prediction_minus = regression_training(X_train_scaled, X_test_scaled, y_train, y_test_minus, plot=True, output_y_pred=True)
 
-# do the regression.
-r2_frame = regression_repeat(X, y, 1, plot=True)
+# plot the real vs predicted:
+plt.figure()
+realE = np.concatenate(y_test_minus, y_test_plus)
+predictedE = np.concatenate(prediction_minus, prediction_plus)
+plt.scatter(realE, predictedE)
+plt.xlabel('Real Et (eV)')
+plt.ylabel('Predicted Et (eV)')
+plt.title('Real vs predicted for Et1 for single two level defect')
+plt.show()
