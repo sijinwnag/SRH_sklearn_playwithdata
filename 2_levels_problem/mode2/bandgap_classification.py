@@ -1,5 +1,5 @@
 """
-This file do k regression 2 level defects for k_1, Mode: Two one-level.
+This file is for bangap classification for Et1
 """
 
 ################################################################################
@@ -45,3 +45,6 @@ y = dfk['bandgap_1']
 # X.head()
 # send it to regression repeat to train and evaluate the model.
 r2_frame_sum = classification_repeat(X, y, 5, display_confusion_matrix=True)
+
+y2 = dfk['bandgap_2']
+r2_frame_sum = classification_repeat(X, y2, 5, display_confusion_matrix=True)
