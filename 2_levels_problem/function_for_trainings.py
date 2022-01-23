@@ -88,7 +88,7 @@ def regression_training(X_train_scaled, X_test_scaled, y_train, y_test, plot=Fal
             plt.show()
 
     # output the list of list as a datagrame and name them:
-    y_output = pd.DataFrame(np.array(y_pred_list))
+    y_output = pd.DataFrame(np.transpose(np.array(y_pred_list)))
     # put the name on it:
     y_output.columns = model_names
     # output hte prediction only if necessary:
