@@ -40,48 +40,8 @@ dfk = dfk[dfk['Mode']=='Single two-level']
 dfk = dfk.drop(['Mode'], axis=1)
 # define X and y
 X = dfk.drop(['logk_1', 'logk_2'], axis=1)
-y = dfk['logk_1'] + dfk['logk_2']
+y = dfk['logk_1']
 X = np.log(X)
 # X.head()
 # send it to regression repeat to train and evaluate the model.
-r2_frame_sum = regression_repeat(X, y, 1, plot=True)
-# plan:
-# 1. plot the graph see what went wrong (done)
-# 2. Neural network increase complexity (done)
-# 3. play with 2 one level defects equation: see if there is any hint your can get.
-# 4. Maybe you should do regression for both k1 and k2 together: do regression for sum of logk first then do the regression for difference of log k
-
-# let the program know the logk1 + logk2:
-X['logk sum'] = dfk['logk_1'] + dfk['logk_2']
-# try y2 be the difference of the log k1 and log k2
-y2 = dfk['logk_1'] - dfk['logk_2']
-r2_frame_diff = regression_repeat(X, y2, 1, plot=True)
-
-# Thus log k1 and log k2 can be calcualted saperately
-
-# %%: Try to do the prediction separately and then use maths to put them back together.
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1, random_state=0)
-# scale the data:
-scaler = MinMaxScaler()
-X_train_scaled = scaler.fit_transform(X_train)
-# we must apply the scaling to the test set that we computed for the training set
-X_test_scaled = scaler.transform(X_test)
-
-# apply the regression training function again.
-r2_list, y_pred = regression_training(X_train_scaled, X_test_scaled, y_train, y_test, plot=True, output_y_pred=True)
-y_pred_plus = y_pred
-
-# do the same for y minus and collect the prediction
-X_train, X_test, y_train, y_test = train_test_split(X, y2, test_size=0.1, random_state=0)
-# scale the data:
-scaler = MinMaxScaler()
-X_train_scaled = scaler.fit_transform(X_train)
-# we must apply the scaling to the test set that we computed for the training set
-X_test_scaled = scaler.transform(X_test)
-
-# apply the regression training function again.
-r2_list, y_pred_minus = regression_training(X_train_scaled, X_test_scaled, y_train, y_test, plot=True, output_y_pred=True)
-
-# compute the k1 and k2
-logk1 = (y_pred_plus + y_pred_minus)/2
-logk2 = (y_pred_plus - y_pred_minus)/2
+r2_frame_sum = regression_repeat(X, y, 5, plot=True)
