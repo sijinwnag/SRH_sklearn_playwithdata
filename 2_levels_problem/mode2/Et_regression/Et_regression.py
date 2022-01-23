@@ -69,10 +69,10 @@ X_test_scaled = scaler.transform(X_test)
 # do the training
 r2, prediction_minus = regression_training(X_train_scaled, X_test_scaled, y_train, y_test_minus, plot=True, output_y_pred=True)
 
+realE = np.concatenate((np.array(y_test_minus), np.array(y_test_plus)), axis=0)
+predictedE = np.concatenate((prediction_minus['Random Forest'], prediction_plus['Support Vector']))
 # plot the real vs predicted:
 plt.figure()
-realE = np.concatenate(y_test_minus, y_test_plus)
-predictedE = np.concatenate(prediction_minus, prediction_plus)
 plt.scatter(realE, predictedE)
 plt.xlabel('Real Et (eV)')
 plt.ylabel('Predicted Et (eV)')
