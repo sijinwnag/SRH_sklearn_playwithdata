@@ -27,7 +27,7 @@ from function_for_trainings import regression_repeat, regression_training
 # data pre processing:
 
 # load the data.
-df = pd.read_csv(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\2level_defects.csv')
+df = pd.read_csv(r'C:\Users\budac\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\2level_defects.csv')
 # df.head()
 # identify extract the useful columns
 # Drop first column of dataframe
@@ -44,4 +44,4 @@ y = dfk['logk_2']
 X = np.log(X)
 # X.head()
 # send it to regression repeat to train and evaluate the model.
-r2_frame_sum = regression_repeat(X, y, 5, plot=True)
+r2_frame_sum = regression_repeat(X, y, 5)
