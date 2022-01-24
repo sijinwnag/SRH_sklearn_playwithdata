@@ -37,7 +37,7 @@ dfk = dfk[dfk['Mode']=='Single two-level']
 dfk = dfk.drop(['Mode'], axis=1)
 ########################################################################################
 # extract the ones for E plus
-dfk_plus = dfk[dfk['bandgap_1']==1]
+dfk_plus = dfk[dfk['bandgap_2']==1]
 # define X and y
 # define X and y
 X = dfk_plus.drop(['logk_1', 'logk_2', 'bandgap_1', 'bandgap_2', 'Et_eV_1', 'Et_eV_2'], axis=1)
@@ -55,7 +55,7 @@ r2, prediction_plus = regression_training(X_train_scaled, X_test_scaled, y_train
 
 ######################################################################################
 # extract the ones for minus
-dfk_minus = dfk[dfk['bandgap_1']==0]
+dfk_minus = dfk[dfk['bandgap_2']==0]
 # define X and y
 X = dfk_minus.drop(['logk_1', 'logk_2', 'bandgap_1', 'bandgap_2', 'Et_eV_1', 'Et_eV_2'], axis=1)
 X = np.log(X)
@@ -70,6 +70,7 @@ X_test_scaled = scaler.transform(X_test)
 # do the training
 r2, prediction_minus = regression_training(X_train_scaled, X_test_scaled, y_train, y_test_minus, plot=True, output_y_pred=True)
 
+############################################################################################
 realE = np.concatenate((np.array(y_test_minus), np.array(y_test_plus)), axis=0)
 predictedE = np.concatenate((prediction_minus['Random Forest'], prediction_plus['Support Vector']))
 # plot the real vs predicted:
