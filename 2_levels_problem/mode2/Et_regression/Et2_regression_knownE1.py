@@ -22,14 +22,16 @@ from sklearn.svm import SVR
 import sys
 
 # import the function file from another folder:
-sys.path.append(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem')
+sys.path.append(r'C:\Users\budac\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem')
+# sys.path.append(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem')
 from function_for_trainings import regression_repeat, regression_training, classification_training, classification_repeat
 
 ################################################################################
 # data pre processing:
 
 # load the data.
-df = pd.read_csv(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\2level_defects.csv')
+df = pd.read_csv(r'C:\Users\budac\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\2level_defects.csv')
+# df = pd.read_csv(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\2level_defects.csv')
 # df.head()
 # identify extract the useful columns
 # Drop first column of dataframe
