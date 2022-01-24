@@ -73,10 +73,11 @@ r2, prediction_minus = regression_training(X_train_scaled, X_test_scaled, y_trai
 ############################################################################################
 realE = np.concatenate((np.array(y_test_minus), np.array(y_test_plus)), axis=0)
 predictedE = np.concatenate((prediction_minus['Random Forest'], prediction_plus['Support Vector']))
+r2_score(realE, predictedE)
 # plot the real vs predicted:
 plt.figure()
 plt.scatter(realE, predictedE)
 plt.xlabel('Real Et (eV)')
 plt.ylabel('Predicted Et (eV)')
-plt.title('Real vs predicted for Et1 for single two level defect')
+plt.title('Real vs predicted for Et2 for single two level defect')
 plt.show()
