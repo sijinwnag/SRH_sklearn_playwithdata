@@ -22,16 +22,16 @@ from sklearn.svm import SVR
 import sys
 
 # import the function file from another folder:
-sys.path.append(r'C:\Users\budac\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem')
-# sys.path.append(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem')
+# sys.path.append(r'C:\Users\budac\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem')
+sys.path.append(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem')
 from function_for_trainings import regression_repeat, regression_training, classification_training, classification_repeat
 
 ################################################################################
 # data pre processing:
 
 # load the data.
-df = pd.read_csv(r'C:\Users\budac\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\2level_defects.csv')
-# df = pd.read_csv(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\2level_defects.csv')
+# df = pd.read_csv(r'C:\Users\budac\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\2level_defects.csv')
+df = pd.read_csv(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\2level_defects.csv')
 # df.head()
 # identify extract the useful columns
 # Drop first column of dataframe
@@ -45,7 +45,7 @@ dfk = dfk.drop(['Mode'], axis=1)
 # extract the defects that have bandgap_1 being 1:
 dfk_plus = dfk[dfk['bandgap_2']==1]
 # define X and y
-X = dfk_plus.drop(['logk_2', 'bandgap_2', 'Et_eV_2'], axis=1)
+X = dfk_plus.drop(['logk_2', 'bandgap_2', 'Et_eV_2', 'logk_1'], axis=1)
 # X = np.log(X)
 yplus = dfk_plus['Et_eV_2']
 
@@ -64,7 +64,6 @@ r2, prediction_plus = regression_training(X_train_scaled, X_test_scaled, y_train
 dfk_minus = dfk[dfk['bandgap_2']==0]
 # define X and y
 X = dfk_minus.drop(['logk_2', 'bandgap_2', 'Et_eV_2'], axis=1)
-X = np.log(X)
 yminus = dfk_minus['Et_eV_2']
 # we can see that the best behaviour is Random Forest: plot the graph mannually
 X_train, X_test, y_train, y_test_minus = train_test_split(X, yminus, test_size=0.1)
@@ -78,6 +77,7 @@ r2, prediction_minus = regression_training(X_train_scaled, X_test_scaled, y_trai
 
 realE = np.concatenate((np.array(y_test_minus), np.array(y_test_plus)), axis=0)
 predictedE = np.concatenate((prediction_minus['Random Forest'], prediction_plus['Support Vector']))
+r2_score(realE, predictedE)
 # plot the real vs predicted:
 plt.figure()
 plt.scatter(realE, predictedE)
