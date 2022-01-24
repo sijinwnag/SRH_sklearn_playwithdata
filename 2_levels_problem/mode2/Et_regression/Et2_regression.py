@@ -35,14 +35,14 @@ dfk = df.drop(delete_col, axis=1)
 # extract thet ones that are two level defects.
 dfk = dfk[dfk['Mode']=='Single two-level']
 dfk = dfk.drop(['Mode'], axis=1)
-# extract the defects that have bandgap_1 being 1:
+########################################################################################
+# extract the ones for E plus
 dfk_plus = dfk[dfk['bandgap_1']==1]
+# define X and y
 # define X and y
 X = dfk_plus.drop(['logk_1', 'logk_2', 'bandgap_1', 'bandgap_2', 'Et_eV_1', 'Et_eV_2'], axis=1)
 X = np.log(X)
 yplus = dfk_plus['Et_eV_2']
-
-# ##
 # we can see that the best behaviour is Random Forest: plot the graph mannually
 X_train, X_test, y_train, y_test_plus = train_test_split(X, yplus, test_size=0.1)
 # scale the data:
@@ -53,7 +53,8 @@ X_test_scaled = scaler.transform(X_test)
 # do the training
 r2, prediction_plus = regression_training(X_train_scaled, X_test_scaled, y_train, y_test_plus, plot=True, output_y_pred=True)
 
-# do the same for Et minus:
+######################################################################################
+# extract the ones for minus
 dfk_minus = dfk[dfk['bandgap_1']==0]
 # define X and y
 X = dfk_minus.drop(['logk_1', 'logk_2', 'bandgap_1', 'bandgap_2', 'Et_eV_1', 'Et_eV_2'], axis=1)
