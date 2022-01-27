@@ -33,6 +33,7 @@ def regression_training(X_train_scaled, X_test_scaled, y_train, y_test, plot=Fal
     from sklearn.neural_network import MLPRegressor
     from sklearn.svm import SVR
     import sys
+    from sklearn.tree import DecisionTreeRegressor
 
     # use a for loop to train and evaluate each model:
     model_names = ['KNN', 'Ridge Linear Regression', 'Random Forest', 'Neural Network', 'Gradient Boosting', 'Ada Boosting', 'Support Vector'] # a list of name for each model.
