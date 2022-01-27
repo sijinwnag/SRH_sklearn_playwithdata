@@ -36,8 +36,8 @@ def regression_training(X_train_scaled, X_test_scaled, y_train, y_test, plot=Fal
 
     # use a for loop to train and evaluate each model:
     model_names = ['KNN', 'Ridge Linear Regression', 'Random Forest', 'Neural Network', 'Gradient Boosting', 'Ada Boosting', 'Support Vector'] # a list of name for each model.
-    model_lists = [KNeighborsRegressor(), Ridge(), RandomForestRegressor(), MLPRegressor(), GradientBoostingRegressor(), AdaBoostRegressor(), SVR()]# a list of model improted from sklearn
-    gridsearchlist = [True, True, False, True, False, False, True]
+    model_lists = [KNeighborsRegressor(), Ridge(), RandomForestRegressor(n_estimators=100, verbose =2, n_jobs=-1), MLPRegressor((100,100),alpha=0.001, activation = 'relu',verbose=2,learning_rate='adaptive'), GradientBoostingRegressor(verbose=2,loss='ls',max_depth=10), AdaBoostRegressor(base_estimator = DecisionTreeRegressor(), n_estimators=100, loss='linear'), SVR(kernel='rbf',C=5,verbose=2, gamma="auto")]# a list of model improted from sklearn
+    gridsearchlist = [True, True, False, False, False, False, False]
     param_list  = [{'n_neighbors':range(1, 30)}, {'alpha': [0.01, 0.1, 1, 10]}, {'n_estimators': [200, 100], 'verbose':2, 'n_jobs':-1}, {'hidden_layer_sizes':((100, 300, 300, 100), (100, 300, 500, 300, 100), (200, 600, 600, 200), (200, 600, 900, 600, 200)), 'alpha': [0.001], 'learning_rate':['adaptive']}, {'n_estimators':[200, 100]}, {'n_estimators':[50, 100]}, {'C': [0.1, 1, 10], 'epsilon': [1e-2, 0.1, 1]}]# a list of key parameters correspond to the models in the model_lists
 
     # prepare an emtply list to collect the predicted y
