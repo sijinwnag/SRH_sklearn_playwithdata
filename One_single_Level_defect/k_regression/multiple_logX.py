@@ -45,7 +45,7 @@ y = dfk['logk']
 r2_frame = regression_repeat(X, y, 5)
 
 # instead of using x, try using logX
-X = np.log(X)
+X = np.log10(X)
 r2_frame_log = regression_repeat(X, y, 5)
 
 # compare the average r2 score for log and no log:
