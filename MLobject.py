@@ -9,7 +9,7 @@ from sklearn.neighbors import KNeighborsRegressor, KNeighborsClassifier
 from sklearn.metrics import r2_score, mean_absolute_error, confusion_matrix, f1_score, accuracy_score
 from sklearn.linear_model import LinearRegression, Ridge
 import matplotlib.pyplot as plt
-from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor, AdaBoostRegressor, RandomForestClassifier, GradientBoostingClassifier
+from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor, AdaBoostRegressor, RandomForestClassifier, GradientBoostingClassifier, AdaBoostClassifier
 from sklearn.neural_network import MLPRegressor, MLPClassifier
 from sklearn.svm import SVR, SVC
 import sys
@@ -57,7 +57,7 @@ class MyMLdata:
         elif singletask == 'Et_eV':
             y = dfk['Et_eV']
         elif singletask == 'bandgap':
-            y = dfk['Et_eV']
+            y = dfk['bandgap']
 
         # store the X and y to the object.
         return X, y
@@ -206,10 +206,9 @@ class MyMLdata:
 
         output: a list of accuracy for each model corresponding to 'KNN', 'SVC', 'Decision Tree', 'Random Forest', 'Gradient Boosting', 'Naive Bayes', 'Neural Network'
         """
-        print(y_train)
         model_names = ['KNN', 'SVC', 'Decision tree', 'Random Forest',  'Gradient Boosting', 'Adaptive boosting', 'Naive Bayes', 'Neural Network'] # a list of name for each model.
-        model_lists = [KNeighborsClassifier(), SVC(), DecisionTreeClassifier(), RandomForestClassifier(), GradientBoostingClassifier(), AdaBoostClassifier(), GaussianNB(), MLPClassifier()]# a list of model improted from sklearn
-        gridsearchlist = [True, True, False, False, False, False, False, True]
+        model_lists = [KNeighborsClassifier(n_neighbors = 5, weights='distance',n_jobs=-1), SVC(), DecisionTreeClassifier(), RandomForestClassifier(n_estimators=100, verbose =0,n_jobs=-1), GradientBoostingClassifier(verbose=0,loss='deviance'), AdaBoostClassifier(base_estimator = DecisionTreeClassifier(), n_estimators=10), GaussianNB(), MLPClassifier((100,100),alpha=0.001, activation = 'relu',verbose=0,learning_rate='adaptive')]# a list of model improted from sklearn
+        gridsearchlist = [False, True, False, False, False, False, False, False]
         param_list  = [{'n_neighbors':range(1, 30)}, {'C': [0.1, 1, 10], 'kernel': ('linear', 'poly', 'rbf')},  {'max_depth': [10, 100, 1e3]}, {'n_estimators':[10, 100]}, {'n_estimators':[10, 100]},{'n_estimators':[10, 100]}, {'var_smoothing':[1e-9, 1e-3]},{'hidden_layer_sizes':((100, 300, 500, 300, 100), (100, 300, 500, 500, 300, 100), (200, 600, 900, 600, 200))}]# a list of key parameters correspond to the models in the model_lists
 
         # prepare an emtply list to collect f1 scores:
@@ -230,6 +229,7 @@ class MyMLdata:
                 # define the grid search object
                 grid = GridSearchCV(model, param)
                 # train the grid search object: if it is neural network, use the scaled y data
+                y_train = np.array(y_train)
                 grid.fit(X_train_scaled, y_train)
                 # use the trained model to predict the y
                 y_pred = grid.predict(X_test_scaled)
