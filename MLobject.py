@@ -49,12 +49,19 @@ class MyMLdata:
         delete_col = ['Name', 'Sn_cm2', 'Sp_cm2', 'k', 'logSn', 'logSp']
         # drop these columns
         dfk = (pd.DataFrame(self.data)).drop(delete_col, axis=1)
-
+        # if we are doing Et regression, we need to do them for above and below bandgap saperately
+        if singletask == 'Et_plus':
+            dfk = dfk[dfk['Et_eV']>0]
+        elif singletask == 'Et_minus':
+            dfk = dfk[dfk['Et_eV']<0]
         # define X and y based on the task we are doing.
+        dfk = pd.DataFrame(dfk)
         X = np.log(dfk.drop(['logk', 'Et_eV', 'bandgap'], axis=1)) # takes the log of X to make it easier for ML
         if singletask == 'k':
             y = dfk['logk']
-        elif singletask == 'Et_eV':
+        elif singletask == 'Et_plus':
+            y = dfk['Et_eV']
+        elif singletask == 'Et_minus':
             y = dfk['Et_eV']
         elif singletask == 'bandgap':
             y = dfk['bandgap']
