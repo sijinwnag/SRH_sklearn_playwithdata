@@ -329,7 +329,7 @@ class MyMLdata:
         return f1_frame
 
 
-    def perform_ML(self, plot_graphs=False):
+    def perform_singletask_ML(self, plot_graphs=False):
         """
         This is the overall function to perform machine learning using the other functions
 
@@ -377,15 +377,24 @@ class MyMLdata:
                     r2_model.append(r2score)
                 r2_Et.append(r2_model)
             # now we have a list of list.
-            plot_graphs = True
+            # convert the list of list into a dataframe.
+            r2_Et = pd.DataFrame(r2_Et, columns=self.reg_param['model_names'])
+            # plot the r2 scores as a boxplot
+            plt.figure()
+            r2_Et.boxplot(vert=False)
+            plt.title('R2 scores for Et regression')
+            plt.show()
+
             if plot_graphs:
                 # find which one has the largest r2 and plot the real vs predicted for the best prediction.
                 max_position = np.argwhere(r2_Et == np.max(r2_Et))
                 repeat_num = max_position[0][0]
                 model_num = max_position[0][1]
-                # plot the graph
+                # plot the graph for real vs predicted
                 plt.figure()
                 plt.scatter(y_test_together[repeat_num, :], y_pred_together[repeat_num, :, model_num])
                 plt.xlabel('real Et (eV)')
                 plt.ylabel('predicted Et (eV)')
                 plt.title('real vs predicted at trial ' + str(repeat_num + 1) + ' using method ' + str(self.reg_param['model_names'][model_num]))
+
+            return r2_Et
