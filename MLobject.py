@@ -141,7 +141,7 @@ class MyMLdata:
         # box plot the data.
         plt.figure()
         r2_frame.boxplot(vert=False)
-        plt.title('R2 scores for different models')
+        plt.title('R2 scores for ' + str(self.singletask))
         plt.show()
 
         if output_y_pred == False:
