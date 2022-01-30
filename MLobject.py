@@ -388,4 +388,4 @@ class MyMLdata:
                 plt.scatter(y_test_together[repeat_num, :], y_pred_together[repeat_num, :, model_num])
                 plt.xlabel('real Et (eV)')
                 plt.ylabel('predicted Et (eV)')
-                plt.title('real vs predicted at trial ' + str(repeat_num) + ' using method ' + str(model_num))
+                plt.title('real vs predicted at trial ' + str(repeat_num + 1) + ' using method ' + str(self.reg_param['model_names'][model_num]))
