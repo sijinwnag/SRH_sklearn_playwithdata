@@ -22,16 +22,27 @@ class MyMLdata:
     """
     MyMLdata is an object that is a panda dataframe containing the lifetime data.
     """
-    def __init__(self, path, task):
+
+    def __init__(self, path, task, repeat):
         """
         1.  Load the data through the inputting path.
         2.  Define the task:  input as a string.
             k: do regression on k (ratio of the capture cross sectional area.)
             Et_eV: do regression on Et
             bandgap: identify if Et is above or below Ei
+        3.  define default parameters for machine learinng
         """
+        # define the default maching learning setting for both regression and classification.
+        regression_default_param = {
+        'model_names': ['KNN', 'Ridge Linear Regression', 'Random Forest', 'Neural Network', 'Gradient Boosting', 'Ada Boosting', 'Support Vector'], # a list of name for each model.
+        'model_lists': [KNeighborsRegressor(), Ridge(), RandomForestRegressor(n_estimators=100, verbose =0, n_jobs=-1), MLPRegressor((100,100),alpha=0.001, activation = 'relu',verbose=0,learning_rate='adaptive'), GradientBoostingRegressor(verbose=0,loss='ls',max_depth=10), AdaBoostRegressor(base_estimator = DecisionTreeRegressor(), n_estimators=100, loss='linear'), SVR(kernel='rbf',C=5,verbose=0, gamma="auto")],# a list of model improted from sklearn
+        'gridsearchlist': [True, True, False, False, False, False, False], # each element in this list corspond to a particular model, if True, then we will do grid search while training the model, if False, we will not do Gridsearch for this model.
+        'param_list': [{'n_neighbors':range(1, 30)}, {'alpha': [0.01, 0.1, 1, 10]}, {'n_estimators': [200, 100], 'verbose':0, 'n_jobs':-1}, {'hidden_layer_sizes':((100, 300, 300, 100), (100, 300, 500, 300, 100), (200, 600, 600, 200), (200, 600, 900, 600, 200)), 'alpha': [0.001], 'learning_rate':['adaptive']}, {'n_estimators':[200, 100]}, {'n_estimators':[50, 100]}, {'C': [0.1, 1, 10], 'epsilon': [1e-2, 0.1, 1]}]# a list of key parameters correspond to the models in the model_lists if we are going to do grid searching
+        }
         self.data = pd.read_csv(path)
         self.task = task
+        self.repetition = repeat
+        self.reg_param = regression_default_param
 
 
     def pre_processor(self):
@@ -44,7 +55,7 @@ class MyMLdata:
         output:
         X, y for maching learning purposes (before train test split and scaling)
         """
-        singletask = self.task # for now we make single taks same as task, in the future, we make task capable of doing multiple task.
+        singletask = self.singletask # for now we make single taks same as task, in the future, we make task capable of doing multiple task.
         # define the columns to be deleted for ML purposes
         delete_col = ['Name', 'Sn_cm2', 'Sp_cm2', 'k', 'logSn', 'logSp']
         # drop these columns
@@ -70,9 +81,11 @@ class MyMLdata:
         return X, y
 
 
-    def regression_repeat(self, n_repeat, plot=False):
+    def regression_repeat(self, plot=False, output_y_pred=False):
         # extract the X and y from previous step.
         X, y = self.pre_processor()
+        # n_repeat is the number of reeptition for this task
+        n_repeat = self.repetition
         """
         What it does:
         1. do the train test split for X and y
@@ -98,7 +111,8 @@ class MyMLdata:
         # create an emptly list to collect the r2 and mean absolute error values for each trials
         r2_frame = []
         meanabs_frame = []
-
+        y_prediction_frame = []
+        y_test_frame = []
         while counter < n_repeat:
             # update the counter
             counter = counter + 1
@@ -111,7 +125,14 @@ class MyMLdata:
             # we must apply the scaling to the test set that we computed for the training set
             X_test_scaled = scaler.transform(X_test)
             # train the different models and collect the r2 score.
-            r2_frame.append(self.regression_training(X_train_scaled=X_train_scaled, X_test_scaled=X_test_scaled, y_train=y_train, y_test=y_test, plot=plot))
+            if output_y_pred == True: # if we plan to collect the y predction
+                r2score, y_prediction, y_test = self.regression_training(X_train_scaled=X_train_scaled, X_test_scaled=X_test_scaled, y_train=y_train, y_test=y_test, plot=plot, output_y_pred=True)
+                r2_frame.append(r2score)
+                y_prediction_frame.append(y_prediction)
+                y_test_frame.append(y_test)
+            else: # when we do not need to collect the y prediction
+                r2score = self.regression_training(X_train_scaled=X_train_scaled, X_test_scaled=X_test_scaled, y_train=y_train, y_test=y_test, plot=plot)
+                r2_frame.append(r2score)
             # print the number of iteration finished after finishing each iteration
             print('finish iteration ' + str(counter))
         # now r2_frame is a list of list containing the values for each trial for each model.
@@ -123,7 +144,10 @@ class MyMLdata:
         plt.title('R2 scores for different models')
         plt.show()
 
-        return r2_frame
+        if output_y_pred == False:
+            return r2_frame
+        else:
+            return r2_frame, y_prediction_frame, y_test_frame
 
 
     def regression_training(self, X_train_scaled, X_test_scaled, y_train, y_test, plot=False, output_y_pred=False):
@@ -140,11 +164,13 @@ class MyMLdata:
         """
 
         # use a for loop to train and evaluate each model:
-        model_names = ['KNN', 'Ridge Linear Regression', 'Random Forest', 'Neural Network', 'Gradient Boosting', 'Ada Boosting', 'Support Vector'] # a list of name for each model.
-        model_lists = [KNeighborsRegressor(), Ridge(), RandomForestRegressor(n_estimators=100, verbose =0, n_jobs=-1), MLPRegressor((100,100),alpha=0.001, activation = 'relu',verbose=0,learning_rate='adaptive'), GradientBoostingRegressor(verbose=0,loss='ls',max_depth=10), AdaBoostRegressor(base_estimator = DecisionTreeRegressor(), n_estimators=100, loss='linear'), SVR(kernel='rbf',C=5,verbose=0, gamma="auto")]# a list of model improted from sklearn
-        gridsearchlist = [True, True, False, False, False, False, False] # each element in this list corspond to a particular model, if True, then we will do grid search while training the model, if False, we will not do Gridsearch for this model.
-        param_list  = [{'n_neighbors':range(1, 30)}, {'alpha': [0.01, 0.1, 1, 10]}, {'n_estimators': [200, 100], 'verbose':0, 'n_jobs':-1}, {'hidden_layer_sizes':((100, 300, 300, 100), (100, 300, 500, 300, 100), (200, 600, 600, 200), (200, 600, 900, 600, 200)), 'alpha': [0.001], 'learning_rate':['adaptive']}, {'n_estimators':[200, 100]}, {'n_estimators':[50, 100]}, {'C': [0.1, 1, 10], 'epsilon': [1e-2, 0.1, 1]}]# a list of key parameters correspond to the models in the model_lists if we are going to do grid searching
+        model_names = self.reg_param['model_names']
+        model_lists = self.reg_param['model_lists']
+        gridsearchlist = self.reg_param['gridsearchlist']
+        param_list  = self.reg_param['param_list']
 
+        # prepare an empty list to collect the test y
+        y_test_list = []
         # prepare an emtply list to collect the predicted y
         y_pred_list = []
         # prepare an emtply list to collect r2 scores:
@@ -178,6 +204,7 @@ class MyMLdata:
             # scale the y back to original values
             y_pred = y_pred_scaled * np.max(y_train)
             y_pred_list.append(y_pred)
+            y_test_list.append(y_test)
             # evaluate the model using R2 score:
             r2 = r2_score(y_test, y_pred)
             r2_list.append(r2)
@@ -198,7 +225,7 @@ class MyMLdata:
         y_output.columns = model_names
         # output hte prediction only if necessary:
         if output_y_pred == True:
-            return r2_list, y_output
+            return r2_list, y_output, y_test
         # this function will return all 2r scores and mean absolute errors
         else:
             return r2_list
@@ -258,7 +285,7 @@ class MyMLdata:
         return f1_list
 
 
-    def classification_repeat(self, n_repeat, display_confusion_matrix=False):
+    def classification_repeat(self, display_confusion_matrix=False):
         """
         input:
             df: the dataframe to work on
@@ -269,6 +296,8 @@ class MyMLdata:
         """
         # use the pre processor to get X and y
         X, y = self.pre_processor()
+        # n_repeat is the number of repetition for this task.
+        n_repeat = self.repetition
         # set up counter to count the number of repetition
         counter = 0
         # create an emptly list to collect the f1 and mean absolute error values for each trials
@@ -298,3 +327,65 @@ class MyMLdata:
         plt.show()
 
         return f1_frame
+
+
+    def perform_ML(self, plot_graphs=False):
+        """
+        This is the overall function to perform machine learning using the other functions
+
+        Input: plot_graphs a boolean input, if true then the function will plot more detail graph after each training.
+
+        What it does:
+        1. identify what job is it doing.
+        2. perform the maching learning process.
+        3. print the evaluation
+        """
+
+        if self.task == 'k':
+            # if the task is to do regression using k
+            # apply the regression repeat function for k
+            self.singletask = self.task
+            self.regression_repeat(plot=plot_graphs)
+
+        elif self.task == 'Et_eV':
+            # if the task is to do regression for Et
+            # apply the regression for Et plus and Et minus separately
+            self.singletask = 'Et_plus'
+            # collect the best Et_plus y prediction.
+            r2_scores_plus, y_pred_plus, y_test_plus = self.regression_repeat(plot=plot_graphs, output_y_pred=True)
+            print('finish training upper bandgap')
+            # do the same for Et_minus
+            self.singletask = 'Et_minus'
+            # collect the best Et_plus y prediction.
+            r2_scores_minus, y_pred_minus, y_test_minus = self.regression_repeat(plot=plot_graphs, output_y_pred=True)
+            print('finish training lower bandgap')
+            # then plot the prediction on both positive and negative side of Et on the same plot.
+            # put the upper and lower band data together
+            y_pred_together = np.concatenate((y_pred_plus, y_pred_minus), axis=1)
+            y_test_together = np.concatenate((y_test_plus, y_test_minus), axis=1)
+            # since y_pred_together include an extra dimension for each model, we tile y test to make it has the same shape
+            # prepare a list to collect the r2 r2_scores.
+            r2_Et = []
+            # use a for loop to loopt at each repeatition plot the real vs predicted
+            for n in range(np.shape(y_test_together)[0]):
+                # prepare a list to collect r2 scores for each model
+                r2_model = []
+                # loop around each machine learning method as well
+                for k in range(np.shape(y_pred_together)[-1]):
+                    # calculate the r2 score for each trials
+                    r2score = r2_score(y_test_together[n, :], y_pred_together[n, :, k])
+                    r2_model.append(r2score)
+                r2_Et.append(r2_model)
+            # now we have a list of list.
+            plot_graphs = True
+            if plot_graphs:
+                # find which one has the largest r2 and plot the real vs predicted for the best prediction.
+                max_position = np.argwhere(r2_Et == np.max(r2_Et))
+                repeat_num = max_position[0][0]
+                model_num = max_position[0][1]
+                # plot the graph
+                plt.figure()
+                plt.scatter(y_test_together[repeat_num, :], y_pred_together[repeat_num, :, model_num])
+                plt.xlabel('real Et (eV)')
+                plt.ylabel('predicted Et (eV)')
+                plt.title('real vs predicted at trial ' + str(repeat_num) + ' using method ' + str(model_num))
