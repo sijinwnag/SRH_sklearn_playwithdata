@@ -40,10 +40,18 @@ class MyMLdata:
         'gridsearchlist': [True, True, False, False, False, False, False], # each element in this list corspond to a particular model, if True, then we will do grid search while training the model, if False, we will not do Gridsearch for this model.
         'param_list': [{'n_neighbors':range(1, 30)}, {'alpha': [0.01, 0.1, 1, 10]}, {'n_estimators': [200, 100], 'verbose':0, 'n_jobs':-1}, {'hidden_layer_sizes':((100, 300, 300, 100), (100, 300, 500, 300, 100), (200, 600, 600, 200), (200, 600, 900, 600, 200)), 'alpha': [0.001], 'learning_rate':['adaptive']}, {'n_estimators':[200, 100]}, {'n_estimators':[50, 100]}, {'C': [0.1, 1, 10], 'epsilon': [1e-2, 0.1, 1]}]# a list of key parameters correspond to the models in the model_lists if we are going to do grid searching
         }
+        classification_default_param = {
+        'model_names': ['KNN', 'SVC', 'Decision tree', 'Random Forest',  'Gradient Boosting', 'Adaptive boosting', 'Naive Bayes', 'Neural Network'], # a list of name for each model.
+        'model_lists': [KNeighborsClassifier(n_neighbors = 5, weights='distance',n_jobs=-1), SVC(), DecisionTreeClassifier(), RandomForestClassifier(n_estimators=100, verbose =0,n_jobs=-1), GradientBoostingClassifier(verbose=0,loss='deviance'), AdaBoostClassifier(base_estimator = DecisionTreeClassifier(), n_estimators=10), GaussianNB(), MLPClassifier((100,100),alpha=0.001, activation = 'relu',verbose=0,learning_rate='adaptive')],# a list of model improted from sklearn
+        'gridsearchlist': [False, True, False, False, False, False, False, False],
+        'param_list': [{'n_neighbors':range(1, 30)}, {'C': [0.1, 1, 10], 'kernel': ('linear', 'poly', 'rbf')},  {'max_depth': [10, 100, 1e3]}, {'n_estimators':[10, 100]}, {'n_estimators':[10, 100]},{'n_estimators':[10, 100]}, {'var_smoothing':[1e-9, 1e-3]},{'hidden_layer_sizes':((100, 300, 500, 300, 100), (100, 300, 500, 500, 300, 100), (200, 600, 900, 600, 200))}]# a list of key parameters correspond to the models in the model_lists
+        }
+
         self.data = pd.read_csv(path)
         self.task = task
         self.repetition = repeat
         self.reg_param = regression_default_param
+        self.cla_param = classification_default_param
 
 
     def pre_processor(self):
@@ -232,7 +240,7 @@ class MyMLdata:
             return r2_list
 
 
-    def classification_training(self, X_train_scaled, X_test_scaled, y_train, y_test, display_confusion_matrix=False):
+    def classification_training(self, X_train_scaled, X_test_scaled, y_train, y_test, display_confusion_matrix=False, output_y_pred=False):
         """
         This function is only capable for binary classification yet.
         input:
@@ -241,14 +249,17 @@ class MyMLdata:
 
         output: a list of accuracy for each model corresponding to 'KNN', 'SVC', 'Decision Tree', 'Random Forest', 'Gradient Boosting', 'Naive Bayes', 'Neural Network'
         """
-        model_names = ['KNN', 'SVC', 'Decision tree', 'Random Forest',  'Gradient Boosting', 'Adaptive boosting', 'Naive Bayes', 'Neural Network'] # a list of name for each model.
-        model_lists = [KNeighborsClassifier(n_neighbors = 5, weights='distance',n_jobs=-1), SVC(), DecisionTreeClassifier(), RandomForestClassifier(n_estimators=100, verbose =0,n_jobs=-1), GradientBoostingClassifier(verbose=0,loss='deviance'), AdaBoostClassifier(base_estimator = DecisionTreeClassifier(), n_estimators=10), GaussianNB(), MLPClassifier((100,100),alpha=0.001, activation = 'relu',verbose=0,learning_rate='adaptive')]# a list of model improted from sklearn
-        gridsearchlist = [False, True, False, False, False, False, False, False]
-        param_list  = [{'n_neighbors':range(1, 30)}, {'C': [0.1, 1, 10], 'kernel': ('linear', 'poly', 'rbf')},  {'max_depth': [10, 100, 1e3]}, {'n_estimators':[10, 100]}, {'n_estimators':[10, 100]},{'n_estimators':[10, 100]}, {'var_smoothing':[1e-9, 1e-3]},{'hidden_layer_sizes':((100, 300, 500, 300, 100), (100, 300, 500, 500, 300, 100), (200, 600, 900, 600, 200))}]# a list of key parameters correspond to the models in the model_lists
-
+        # use a for loop to train and evaluate each model:
+        model_names = self.cla_param['model_names']
+        model_lists = self.cla_param['model_lists']
+        gridsearchlist = self.cla_param['gridsearchlist']
+        param_list  = self.cla_param['param_list']
         # prepare an emtply list to collect f1 scores:
         f1_list = []
-
+        # prepare list to collect y test
+        y_test_list = []
+        # prepare an emtply list to collect the predicted y
+        y_pred_list = []
         # train everything in a for loop
         for modelindex in range(np.shape(model_names)[0]):
             # read the name, model and parameter from the lists
@@ -277,16 +288,21 @@ class MyMLdata:
             # evaluate the model using micro f1 score (accuracy):
             f1 = f1_score(y_test, y_pred)
             f1_list.append(f1)
+            y_pred_list.append(y_pred)
+            y_test_list.append(y_test)
             # print the output
             print('finish training ' + name + ', the accuracy is ' + str(f1))
             # display the confusion matrix
             if display_confusion_matrix==True:
                 print(confusion_matrix(y_test, y_pred, normalize='all'))
 
-        return f1_list
+        if output_y_pred == True:
+            return f1_list, y_pred_list, y_test_list
+        else:
+            return f1_list
 
 
-    def classification_repeat(self, display_confusion_matrix=False):
+    def classification_repeat(self, display_confusion_matrix=False, output_y_pred=False):
         """
         input:
             df: the dataframe to work on
@@ -303,7 +319,8 @@ class MyMLdata:
         counter = 0
         # create an emptly list to collect the f1 and mean absolute error values for each trials
         f1_frame = []
-        meanabs_frame = []
+        y_prediction_frame = []
+        y_test_frame = []
         while counter < n_repeat:
             # update the counter
             counter = counter + 1
@@ -314,7 +331,11 @@ class MyMLdata:
             X_train_scaled = scaler.fit_transform(X_train)
             # we must apply the scaling to the test set that we computed for the training set
             X_test_scaled = scaler.transform(X_test)
-            f1_frame.append(self.classification_training(X_train_scaled, X_test_scaled, y_train, y_test, display_confusion_matrix))
+            f1_score, y_pred, y_test= self.classification_training(X_train_scaled, X_test_scaled, y_train, y_test, output_y_pred = output_y_pred)
+            f1_frame.append(f1_score)
+            if output_y_pred == True:
+                y_prediction_frame.append(y_pred)
+                y_test_frame.append(y_test)
             # print the number of iteration finished after finishing each iteration
             print('finish iteration ' + str(counter))
 
@@ -327,7 +348,10 @@ class MyMLdata:
         plt.title('f1score for classification')
         plt.show()
 
-        return f1_frame
+        if output_y_pred == False:
+            return f1_frame
+        else:
+            return f1_frame, y_prediction_frame, y_test_frame
 
 
     def perform_singletask_ML(self, plot_graphs=False):
@@ -413,7 +437,14 @@ class MyMLdata:
 
         elif self.task == 'bandgap':
             self.singletask = self.task
-            self.classification_repeat(display_confusion_matrix=plot_graphs)
+            f1_score, y_pred_bg, y_test_bg = self.classification_repeat(display_confusion_matrix=plot_graphs, output_y_pred=True)
+            # fine the best f1 score position.
+            f1_score = np.array(f1_score)
+            max_position = np.argwhere(f1_score == np.max(f1_score))
+            repeat_num = int(max_position[0][0])
+            model_num = int(max_position[0][1])
+            # display the confusion matrix.
+            print(confusion_matrix(np.array(y_test_bg)[repeat_num, model_num, :], np.array(y_pred_bg)[repeat_num,  model_num, :], normalize='all'))
 
 
     def perform_alltasks_ML(self, plot_graphs=False):
@@ -432,4 +463,4 @@ class MyMLdata:
             print('finish predicting ' + tasks)
 
         # play a reminder sound after finishing
-        playsound()
+        playsound('spongbob.mp3')
