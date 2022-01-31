@@ -378,10 +378,12 @@ class MyMLdata:
             model_num = int(max_position[0][1])
             # plot the graph for real vs predicted
             plt.figure()
-            plt.scatter(np.array(y_test_k)[repeat_num, :], np.array(y_pred_k)[repeat_num, :, model_num])
+            plt.scatter(np.array(y_test_k)[repeat_num, :], np.array(y_pred_k)[repeat_num, :, model_num], label=('R2=' + str(round(np.max(r2_score_k), 3))))
             plt.xlabel('real k')
             plt.ylabel('predicted k')
             plt.title('real vs predicted at trial ' + str(repeat_num + 1) + ' using method ' + str(self.reg_param['model_names'][model_num]))
+            plt.legend()
+            plt.show()
 
         elif self.task == 'Et_eV':
             # if the task is to do regression for Et
@@ -423,15 +425,18 @@ class MyMLdata:
 
             # if plot_graphs:
             # find which one has the largest r2 and plot the real vs predicted for the best prediction.
+            r2_Et = np.array(r2_Et)
             max_position = np.argwhere(r2_Et == np.max(r2_Et))
             repeat_num = max_position[0][0]
             model_num = max_position[0][1]
             # plot the graph for real vs predicted
             plt.figure()
-            plt.scatter(y_test_together[repeat_num, :], y_pred_together[repeat_num, :, model_num])
+            plt.scatter(y_test_together[repeat_num, :], y_pred_together[repeat_num, :, model_num], label=('R2=' + str(round(np.max(r2_Et), 3))))
             plt.xlabel('real Et (eV)')
             plt.ylabel('predicted Et (eV)')
             plt.title('real vs predicted at trial ' + str(repeat_num + 1) + ' using method ' + str(self.reg_param['model_names'][model_num]))
+            plt.legend()
+            plt.show()
 
             return r2_Et
 
@@ -444,6 +449,7 @@ class MyMLdata:
             repeat_num = int(max_position[0][0])
             model_num = int(max_position[0][1])
             # display the confusion matrix.
+            print('The best accuracy is ' + str(round(np.max(f1_score), 3)))
             print(confusion_matrix(np.array(y_test_bg)[repeat_num, model_num, :], np.array(y_pred_bg)[repeat_num,  model_num, :], normalize='all'))
 
 
