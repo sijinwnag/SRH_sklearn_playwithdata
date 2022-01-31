@@ -15,6 +15,7 @@ from sklearn.svm import SVR, SVC
 import sys
 from sklearn.tree import DecisionTreeRegressor, DecisionTreeClassifier
 from sklearn.naive_bayes import GaussianNB
+from playsound import playsound
 
 
 class MyMLdata:
@@ -345,7 +346,18 @@ class MyMLdata:
             # if the task is to do regression using k
             # apply the regression repeat function for k
             self.singletask = self.task
-            self.regression_repeat(plot=plot_graphs)
+            r2_score_k, y_pred_k, y_test_k = self.regression_repeat(plot=plot_graphs, output_y_pred=True)
+            # find the position which has the best R2 score.
+            r2_score_k = np.array(r2_score_k)
+            max_position = np.argwhere(r2_score_k == np.max(r2_score_k))
+            repeat_num = int(max_position[0][0])
+            model_num = int(max_position[0][1])
+            # plot the graph for real vs predicted
+            plt.figure()
+            plt.scatter(np.array(y_test_k)[repeat_num, :], np.array(y_pred_k)[repeat_num, :, model_num])
+            plt.xlabel('real k')
+            plt.ylabel('predicted k')
+            plt.title('real vs predicted at trial ' + str(repeat_num + 1) + ' using method ' + str(self.reg_param['model_names'][model_num]))
 
         elif self.task == 'Et_eV':
             # if the task is to do regression for Et
@@ -418,3 +430,6 @@ class MyMLdata:
             self.task = tasks
             self.perform_singletask_ML(plot_graphs=plot_graphs)
             print('finish predicting ' + tasks)
+
+        # play a reminder sound after finishing
+        playsound()
