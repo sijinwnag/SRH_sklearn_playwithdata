@@ -372,6 +372,7 @@ class MyMLdata:
             self.singletask = self.task
             r2_score_k, y_pred_k, y_test_k = self.regression_repeat(plot=plot_graphs, output_y_pred=True)
             # find the position which has the best R2 score.
+            r2_score_k_output = r2_score_k
             r2_score_k = np.array(r2_score_k)
             max_position = np.argwhere(r2_score_k == np.max(r2_score_k))
             repeat_num = int(max_position[0][0])
@@ -384,6 +385,8 @@ class MyMLdata:
             plt.title('real vs predicted at trial ' + str(repeat_num + 1) + ' using method ' + str(self.reg_param['model_names'][model_num]))
             plt.legend()
             plt.show()
+
+            return r2_score_k_output
 
         elif self.task == 'Et_eV':
             # if the task is to do regression for Et
@@ -425,6 +428,7 @@ class MyMLdata:
 
             # if plot_graphs:
             # find which one has the largest r2 and plot the real vs predicted for the best prediction.
+            r2_Et_output = r2_Et
             r2_Et = np.array(r2_Et)
             max_position = np.argwhere(r2_Et == np.max(r2_Et))
             repeat_num = max_position[0][0]
@@ -438,12 +442,13 @@ class MyMLdata:
             plt.legend()
             plt.show()
 
-            return r2_Et
+            return r2_Et_output
 
         elif self.task == 'bandgap':
             self.singletask = self.task
             f1_score, y_pred_bg, y_test_bg = self.classification_repeat(display_confusion_matrix=plot_graphs, output_y_pred=True)
             # fine the best f1 score position.
+            f1_output = f1_score
             f1_score = np.array(f1_score)
             max_position = np.argwhere(f1_score == np.max(f1_score))
             repeat_num = int(max_position[0][0])
@@ -451,6 +456,8 @@ class MyMLdata:
             # display the confusion matrix.
             print('The best accuracy is ' + str(round(np.max(f1_score), 3)))
             print(confusion_matrix(np.array(y_test_bg)[repeat_num, model_num, :], np.array(y_pred_bg)[repeat_num,  model_num, :], normalize='all'))
+
+            return f1_output
 
 
     def perform_alltasks_ML(self, plot_graphs=False):
@@ -461,12 +468,15 @@ class MyMLdata:
 
         What it does: perform single task ML for each task
         """
-
+        score_list = []
         for tasks in ['k', 'Et_eV', 'bandgap']:
             print('performing prediction for ' + tasks)
             self.task = tasks
-            self.perform_singletask_ML(plot_graphs=plot_graphs)
+            score = self.perform_singletask_ML(plot_graphs=plot_graphs)
+            score_list.append(score)
             print('finish predicting ' + tasks)
 
         # play a reminder sound after finishing
         playsound('spongbob.mp3')
+
+        return score_list
