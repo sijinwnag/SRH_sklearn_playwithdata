@@ -476,7 +476,7 @@ class MyMLdata:
             score_list.append(score)
             print('finish predicting ' + tasks)
 
-        # play a reminder sound after finishing
+        # play a nice reminder music after finishing
         playsound('spongbob.mp3')
 
         return score_list
