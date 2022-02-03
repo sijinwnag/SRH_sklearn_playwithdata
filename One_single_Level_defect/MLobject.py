@@ -126,13 +126,11 @@ class MyMLdata:
             # update the counter
             counter = counter + 1
             # pro process the data:
-            # make the training size 0.9 and test size 0.1 (this is what was done by the paper)
-            X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1)
             # scale the data:
-            scaler = MinMaxScaler()
-            X_train_scaled = scaler.fit_transform(X_train)
-            # we must apply the scaling to the test set that we computed for the training set
-            X_test_scaled = scaler.transform(X_test)
+            for col in X.columns:
+                X[col] = MinMaxScaler().fit_transform(X[col].values.reshape(-1, 1))
+            # make the training size 0.9 and test size 0.1 (this is what was done by the paper)
+            X_train_scaled, X_test_scaled, y_train, y_test = train_test_split(X, y, test_size=0.1)
             # train the different models and collect the r2 score.
             if output_y_pred == True: # if we plan to collect the y predction
                 r2score, y_prediction, y_test = self.regression_training(X_train_scaled=X_train_scaled, X_test_scaled=X_test_scaled, y_train=y_train, y_test=y_test, plot=plot, output_y_pred=True)
