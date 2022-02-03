@@ -129,6 +129,8 @@ class MyMLdata:
             # scale the data:
             for col in X.columns:
                 X[col] = MinMaxScaler().fit_transform(X[col].values.reshape(-1, 1))
+            if self.singletask != 'Et_minus':
+                y = y/np.abs(np.max(y))
             # make the training size 0.9 and test size 0.1 (this is what was done by the paper)
             X_train_scaled, X_test_scaled, y_train, y_test = train_test_split(X, y, test_size=0.1)
             # train the different models and collect the r2 score.
@@ -182,8 +184,6 @@ class MyMLdata:
         y_pred_list = []
         # prepare an emtply list to collect r2 scores:
         r2_list = []
-        # Prepare the y scaled data in case we need for neural network.
-        y_train_scaled = y_train/np.max(y_train)
         # train everything in a for loop
         for modelindex in range(np.shape(model_names)[0]):
             # read the name, model and parameter from the lists
@@ -199,17 +199,16 @@ class MyMLdata:
                 # define the grid search object
                 grid = GridSearchCV(model, param)
                 # train the grid search object: if it is neural network, use the scaled y data
-                grid.fit(X_train_scaled, y_train_scaled)
+                grid.fit(X_train_scaled, y_train)
                 # use the trained model to predict the y
-                y_pred_scaled = grid.predict(X_test_scaled)
+                y_pred = grid.predict(X_test_scaled)
             else:
                 # just use the original model.
-                model.fit(X_train_scaled, y_train_scaled)
+                model.fit(X_train_scaled, y_train)
                 # predict with the original model using defalt settings
-                y_pred_scaled = model.predict(X_test_scaled)
+                y_pred = model.predict(X_test_scaled)
 
             # scale the y back to original values
-            y_pred = y_pred_scaled * np.max(y_train)
             y_pred_list.append(y_pred)
             y_test_list.append(y_test)
             # evaluate the model using R2 score:
