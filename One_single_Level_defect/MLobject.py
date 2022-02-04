@@ -90,6 +90,7 @@ class MyMLdata:
         return X, y
 
 
+# %%--- The training and repeatition for regression task
     def regression_repeat(self, plot=False, output_y_pred=False):
         # extract the X and y from previous step.
         X, y = self.pre_processor()
@@ -235,8 +236,10 @@ class MyMLdata:
         # this function will return all 2r scores and mean absolute errors
         else:
             return r2_list
+# %%-
 
 
+# %%--- The training an repeatition for classification task
     def classification_training(self, X_train_scaled, X_test_scaled, y_train, y_test, display_confusion_matrix=False, output_y_pred=False):
         """
         This function is only capable for binary classification yet.
@@ -349,6 +352,7 @@ class MyMLdata:
             return f1_frame
         else:
             return f1_frame, y_prediction_frame, y_test_frame
+# %%-
 
 
     def perform_singletask_ML(self, plot_graphs=False):
