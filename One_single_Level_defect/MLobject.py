@@ -158,7 +158,8 @@ class MyMLdata:
         # append the data label for the boxplot
         for k in range(len(r2_av)):
             y = 8.5/(len(r2_av) + 1)*k + 0.5
-            plt.text(x=0.91, y=y, s=str(round(r2_av[k], 3)) + '+-' + str(round(r2_std[k], 3)))
+            # x=0.92
+            plt.text(x=0.99, y=y, s=str(round(r2_av[k], 3)) + '+-' + str(round(r2_std[k], 3)))
         plt.show()
 
         if output_y_pred == False:
