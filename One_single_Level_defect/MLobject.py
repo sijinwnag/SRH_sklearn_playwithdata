@@ -1,4 +1,4 @@
-# import libraries:
+# %%---import libraries:
 import pandas as pd
 import numpy as np
 import seaborn as sn
@@ -16,6 +16,7 @@ import sys
 from sklearn.tree import DecisionTreeRegressor, DecisionTreeClassifier
 from sklearn.naive_bayes import GaussianNB
 from playsound import playsound
+# %%-
 
 
 class MyMLdata:
