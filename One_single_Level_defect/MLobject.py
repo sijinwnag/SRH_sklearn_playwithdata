@@ -151,15 +151,17 @@ class MyMLdata:
         r2_frame = pd.DataFrame(r2_frame, columns=['KNN', 'Ridge Linear Regression', 'Random Forest', 'Neural Network', 'Gradient Boosting', 'Ada Boosting', 'Support Vector'])
         r2_av = np.average(r2_frame, axis=0)
         r2_std = np.std(r2_frame, axis=0)
+        for k in range(len(r2_av)):
+            print(str(r2_frame.columns[k] + str(round(r2_av[k], 3)) + '+-' + str(round(r2_std[k], 3))))
         # box plot the data.
         plt.figure()
         r2_frame.boxplot(vert=False)
         plt.title('R2 scores for ' + str(self.singletask))
         # append the data label for the boxplot
-        for k in range(len(r2_av)):
-            y = 8.5/(len(r2_av) + 1)*k + 0.5
-            # x=0.92
-            plt.text(x=0.99, y=y, s=str(round(r2_av[k], 3)) + '+-' + str(round(r2_std[k], 3)))
+        # for k in range(len(r2_av)):
+        #     y = 8.5/(len(r2_av) + 1)*k + 0.5
+        #     # x=0.99
+        #     plt.text(x=0.98, y=y, s=str(round(r2_av[k], 3)) + '+-' + str(round(r2_std[k], 3)))
         plt.show()
 
         if output_y_pred == False:
