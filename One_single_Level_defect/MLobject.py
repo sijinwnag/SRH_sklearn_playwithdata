@@ -131,8 +131,8 @@ class MyMLdata:
             # scale the data:
             for col in X.columns:
                 X[col] = MinMaxScaler().fit_transform(X[col].values.reshape(-1, 1))
-            if self.singletask != 'Et_minus':
-                y = y/np.abs(np.max(y))
+            # if self.singletask != 'Et_minus':
+            #     y = y/np.abs(np.max(y))
             # make the training size 0.9 and test size 0.1 (this is what was done by the paper)
             X_train_scaled, X_test_scaled, y_train, y_test = train_test_split(X, y, test_size=0.1)
             # train the different models and collect the r2 score.
@@ -153,7 +153,7 @@ class MyMLdata:
         r2_std = np.std(r2_frame, axis=0)
         labels = []
         for k in range(len(r2_av)):
-            labels.append(str(r2_frame.columns[k] +' ('+ str(round(r2_av[k], 3)) + '+-' + str(round(r2_std[k], 3)) + ')'))
+            labels.append(str(r2_frame.columns[k] +' ('+ str(round(r2_av[k], 3)) + '$\pm\$' + str(round(r2_std[k], 3)) + ')'))
         # box plot the data.
         plt.figure()
         plt.boxplot(r2_frame, vert=False, labels=labels)
@@ -357,7 +357,7 @@ class MyMLdata:
         f1_std = np.std(f1_frame, axis=0)
         labels = []
         for k in range(len(f1_av)):
-            labels.append(str(f1_frame.columns[k] +' ('+ str(round(f1_av[k], 3)) + '+-' + str(round(f1_std[k], 3)) + ')'))
+            labels.append(str(f1_frame.columns[k] +' ('+ str(round(f1_av[k], 3)) + '$\pm\$' + str(round(f1_std[k], 3)) + ')'))
         # box plot the data.
         plt.figure()
         plt.boxplot(f1_frame, vert=False, labels=labels)
@@ -441,7 +441,7 @@ class MyMLdata:
             r2_std = np.std(r2_Et, axis=0)
             labels = []
             for k in range(len(r2_av)):
-                labels.append(str(r2_Et.columns[k] +' ('+ str(round(r2_av[k], 3)) + '+-' + str(round(r2_std[k], 3)) + ')'))
+                labels.append(str(r2_Et.columns[k] +' ('+ str(round(r2_av[k], 3)) + '$\pm\$' + str(round(r2_std[k], 3)) + ')'))
             # plot the r2 scores as a boxplot
             plt.figure()
             plt.boxplot(r2_Et, vert=False, labels=labels)
