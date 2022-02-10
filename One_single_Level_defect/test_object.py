@@ -12,14 +12,3 @@ scores = df1.perform_alltasks_ML()
 # scores[2].to_csv('bandgap_classification.csv')
 df1.singletask = 'Et_plus'
 scores = df1.regression_repeat()
-# scores
-# scores.to_csv('Et_minus_regression.csv')
-# %%--- Testing lines
-import pandas as pd
-import matplotlib.pyplot as plt
-dataframe = pd.DataFrame([[1, 2], [3, 4]], columns=['1', '2'])
-
-plt.figure()
-plt.boxplot(dataframe, vert=False, labels=['s', 'd'])
-plt.show()
-# %%-
