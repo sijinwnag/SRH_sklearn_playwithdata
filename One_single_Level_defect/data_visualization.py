@@ -69,3 +69,4 @@ plot_sci_col.append('Et_eV')
 dfplotT.columns = plot_sci_col
 sn.set(font_scale=0.8)
 figure = sn.pairplot(dfplotT)
+# %%-
