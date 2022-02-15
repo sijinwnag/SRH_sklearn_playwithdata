@@ -70,3 +70,6 @@ dfplotT.columns = plot_sci_col
 sn.set(font_scale=0.8)
 figure = sn.pairplot(dfplotT)
 # %%-
+
+# %%--- Do the plotting using object funcions.
+df1.mypairplot(plot_col = ['200K_1000000000000000.0cm-3_ 10000000000000.0cm-3', '250K_1000000000000000.0cm-3_ 10000000000000.0cm-3', '300K_1000000000000000.0cm-3_ 10000000000000.0cm-3', '350K_1000000000000000.0cm-3_ 10000000000000.0cm-3', '400K_1000000000000000.0cm-3_ 10000000000000.0cm-3', 'Et_eV'])

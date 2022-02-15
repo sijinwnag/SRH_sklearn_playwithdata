@@ -371,6 +371,7 @@ class MyMLdata:
 # %%-
 
 
+# %%--- The functions to perform single or all machine learning tasks
     def perform_singletask_ML(self, plot_graphs=False):
         """
         This is the overall function to perform machine learning for a single task using the other functions
@@ -502,3 +503,40 @@ class MyMLdata:
         playsound('spongbob.mp3')
 
         return score_list
+# %%-
+
+
+# %%--- The functions for data visualization
+
+    def mypairplot(self, plot_col):
+        '''
+        This file will plot the pariplot for the chosen data frame and the label will be in mathematical text
+
+        input: plot_col, a list of text containing the colume names that we wonna plot.
+
+        '''
+        # load the data from the object
+        df = pd.DataFrame(self.data)
+        print(np.shape(df))
+        print(df)
+        dfplot = df[plot_col]
+        # to convert the numbers into scientific notation to be displayed during plotting, prepare an emptly list to collect the text after conversion
+        plot_sci_col = []
+        for text in plot_col[:-1]:
+            # we need to write the numbers in scientific notation
+            # first we split hte text with _
+            temp, doping_density, excess_carrier_density = text.split('_')
+            # for the converting ones, get rid of the unit
+            doping_density = doping_density.split('c')[0]
+            excess_carrier_density = excess_carrier_density.split('c')[0]
+            # convert the doping and excess carrier density into scientific notation
+            doping_sce = "{0:.2E}".format(Decimal(doping_density))
+            excess_sce = "{0:.2E}".format(Decimal(doping_density))
+            # now put all the text back together and put into the new text list.
+            plot_sci_col.append(str(temp) + str(doping_sce) + '$cm^{-3}$' + str(excess_sce) +'$cm^{-3}$')
+        # now we got a list of name to display columns for X, add the Et
+        plot_sci_col.append('Et_eV')
+        dfplotT.columns = plot_sci_col
+        sn.set(font_scale=0.8)
+        figure = sn.pairplot(dfplotT)
+# %%-
