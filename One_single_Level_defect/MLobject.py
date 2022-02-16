@@ -55,6 +55,8 @@ class MyMLdata:
         self.cla_param = classification_default_param
 
 
+# %%--- The training and repeatition for regression task
+
     def pre_processor(self):
         """
         This function do the data pre processing according to the task we wonna do
@@ -91,7 +93,6 @@ class MyMLdata:
         return X, y
 
 
-# %%--- The training and repeatition for regression task
     def regression_repeat(self, plot=False, output_y_pred=False):
         # extract the X and y from previous step.
         X, y = self.pre_processor()
@@ -157,7 +158,7 @@ class MyMLdata:
         # box plot the data.
         plt.figure()
         plt.boxplot(r2_frame, vert=False, labels=labels)
-        plt.title('R2 scores for ' + str(self.singletask))
+        plt.title('$R^2$ scores for ' + '$str(self.singletask)$')
         # append the data label for the boxplot
         # for k in range(len(r2_av)):
         #     y = 8.5/(len(r2_av) + 1)*k + 0.5
@@ -227,7 +228,7 @@ class MyMLdata:
             r2 = r2_score(y_test, y_pred)
             r2_list.append(r2)
             # print the output
-            print('finish training ' + name + ', the R2 score is ' + str(r2))
+            print('finish training ' + name + ', the ' + '$R^2$' + ' score is ' + str(r2))
             # plot the real vs predicted graph if needed
             if plot==True:
                 plt.figure()
@@ -361,7 +362,7 @@ class MyMLdata:
         # box plot the data.
         plt.figure()
         plt.boxplot(f1_frame, vert=False, labels=labels)
-        plt.title('f1score for classification')
+        plt.title('$F_1$' + 'score for classification')
         plt.show()
 
         if output_y_pred == False:
@@ -397,7 +398,7 @@ class MyMLdata:
             model_num = int(max_position[0][1])
             # plot the graph for real vs predicted
             plt.figure()
-            plt.scatter(np.array(y_test_k)[repeat_num, :], np.array(y_pred_k)[repeat_num, :, model_num], label=('R2=' + str(round(np.max(r2_score_k), 3))))
+            plt.scatter(np.array(y_test_k)[repeat_num, :], np.array(y_pred_k)[repeat_num, :, model_num], label=('$R^2$' + '=' + str(round(np.max(r2_score_k), 3))))
             plt.xlabel('real k')
             plt.ylabel('predicted k')
             plt.title('real vs predicted at trial ' + str(repeat_num + 1) + ' using method ' + str(self.reg_param['model_names'][model_num]))
@@ -405,6 +406,7 @@ class MyMLdata:
             plt.show()
 
             return r2_score_k_output
+
 
         elif self.task == 'Et_eV':
             # if the task is to do regression for Et
@@ -446,7 +448,7 @@ class MyMLdata:
             # plot the r2 scores as a boxplot
             plt.figure()
             plt.boxplot(r2_Et, vert=False, labels=labels)
-            plt.title('R2 scores for Et regression')
+            plt.title('$R^2$ scores for $E_t$ regression')
             plt.show()
 
             # if plot_graphs:
@@ -458,9 +460,9 @@ class MyMLdata:
             model_num = max_position[0][1]
             # plot the graph for real vs predicted
             plt.figure()
-            plt.scatter(y_test_together[repeat_num, :], y_pred_together[repeat_num, :, model_num], label=('R2=' + str(round(np.max(r2_Et), 3))))
-            plt.xlabel('real Et (eV)')
-            plt.ylabel('predicted Et (eV)')
+            plt.scatter(y_test_together[repeat_num, :], y_pred_together[repeat_num, :, model_num], label=('$R^2$' + '=' + str(round(np.max(r2_Et), 3))))
+            plt.xlabel('real ' + '$E_t$' + ' (eV)')
+            plt.ylabel('predicted' + '$E_t$' + ' (eV)')
             plt.title('real vs predicted at trial ' + str(repeat_num + 1) + ' using method ' + str(self.reg_param['model_names'][model_num]))
             plt.legend()
             plt.show()
