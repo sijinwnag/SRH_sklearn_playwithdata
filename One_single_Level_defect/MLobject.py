@@ -158,7 +158,7 @@ class MyMLdata:
         # box plot the data.
         plt.figure()
         plt.boxplot(r2_frame, vert=False, labels=labels)
-        plt.title('$R^2$ scores for ' + '$str(self.singletask)$')
+        plt.title('$R^2$ scores for ' + '${str(self.singletask)}$')
         # append the data label for the boxplot
         # for k in range(len(r2_av)):
         #     y = 8.5/(len(r2_av) + 1)*k + 0.5
