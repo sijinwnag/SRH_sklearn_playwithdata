@@ -228,7 +228,7 @@ class MyMLdata:
             r2 = r2_score(y_test, y_pred)
             r2_list.append(r2)
             # print the output
-            print('finish training ' + name + ', the ' + '$R^2$' + ' score is ' + str(r2))
+            print('finish training ' + name + ', the ' + 'R2' + ' score is ' + str(r2))
             # plot the real vs predicted graph if needed
             if plot==True:
                 plt.figure()
