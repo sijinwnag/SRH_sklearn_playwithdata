@@ -542,3 +542,54 @@ class MyMLdata:
         sn.set(font_scale=0.8)
         figure = sn.pairplot(dfplotT)
 # %%-
+
+
+# %%--- The functions for trying multiply lifetime with (dn+doping)
+    def reader_heading(self):
+        """
+        This function takes the loaded dataframe then return four lists:
+        variable_type: a list containing string X or y, if it is X that means this column is lifetime data, if it is y this column is the target values
+        temp_list: a list of temperature (string, with units) for each column that labeled X
+        dopiong_level: a list of doping levels (string, with units) for each column that labeled X
+        excess_dn: a list of excess carrier concentration (string, with units) for each column that labeled X.
+        """
+        # extract the heading.
+        headings = list(self.data.columns)
+        # extract the information from headings
+        # prepare the empty list to collect temperatures, doping levels and excess carrier concentration
+        temp_list = []
+        doping_level = []
+        excess_dn = []
+        variable_type = [] # it will be a list of X and y, if it is X means it is a variable if it is y it means that is the target value we want to predict
+        for string in headings:
+            # if the first element of the string is not a number, then we know it is a part of y rather than lifetime data:
+            if string[0].isdigit() == False:
+                variable_type.append('y')
+                temp_list.append('Nan')
+                doping_level.append('Nan')
+                excess_dn.append('Nan')
+            else: # else, we know that it is a lifetime data, read the temprature, doping and dn from the title
+                variable_type.append('X')
+                temp, doping, dn = string.split('_')
+                temp_list.append(temp)
+                doping_level.append(doping)
+                excess_dn.append(dn)
+        return variable_type, temp_list, doping_level, excess_dn
+
+
+    def pre_processor2(self):
+        """
+        This function takes original data frame and multiply each lifetime data with (doping+dn)
+        """
+        # read off the doping and excess carrier concentration off the headings:
+        variable_type, temp_list, doping_level, excess_dn = self.reader_heading()
+        # for each column:
+        for column_index in range(len(list(self.data.columns))):
+            # if that column is a variable instead of y
+            if variable_type[column_index] == 'X':
+                # convert the readed text into numbers for dn and doping:
+                doping_level[column_index] = float(doping_level[column_index].split('c')[0])
+                excess_dn[column_index] = float(excess_dn[column_index].split('c')[0])
+                # multiply the lifetime in that column by (doping+dn)
+                columnname = list(self.data.columns)[column_index]
+                self.data[columnname] = self.data[columnname]*(doping_level[column_index] + excess_dn[column_index])
