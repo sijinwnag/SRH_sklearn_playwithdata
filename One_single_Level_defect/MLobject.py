@@ -90,6 +90,7 @@ class MyMLdata:
             y = dfk['bandgap']
 
         # store the X and y to the object.
+        # print(X)
         return X, y
 
 
@@ -131,6 +132,7 @@ class MyMLdata:
             # pro process the data:
             # scale the data:
             for col in X.columns:
+                # print(X[col])
                 X[col] = MinMaxScaler().fit_transform(X[col].values.reshape(-1, 1))
             # if self.singletask != 'Et_minus':
             #     y = y/np.abs(np.max(y))
@@ -158,7 +160,7 @@ class MyMLdata:
         # box plot the data.
         plt.figure()
         plt.boxplot(r2_frame, vert=False, labels=labels)
-        plt.title('$R^2$ scores for ' + '${str(self.singletask)}$')
+        plt.title('$R^2$ scores for ' + str(self.singletask))
         # append the data label for the boxplot
         # for k in range(len(r2_av)):
         #     y = 8.5/(len(r2_av) + 1)*k + 0.5
@@ -378,6 +380,7 @@ class MyMLdata:
         This is the overall function to perform machine learning for a single task using the other functions
 
         Input: plot_graphs a boolean input, if true then the function will plot more detail graph after each training.
+        Output: three list containing the score for overall, plus and minus.
 
         What it does:
         1. identify what job is it doing.
@@ -406,6 +409,7 @@ class MyMLdata:
             plt.show()
 
             return r2_score_k_output
+
 
 
         elif self.task == 'Et_eV':
@@ -467,7 +471,7 @@ class MyMLdata:
             plt.legend()
             plt.show()
 
-            return r2_Et_output
+            return r2_Et_output, r2_scores_plus, r2_scores_minus
 
         elif self.task == 'bandgap':
             self.singletask = self.task
@@ -544,7 +548,7 @@ class MyMLdata:
 # %%-
 
 
-# %%--- The functions for trying multiply lifetime with (dn+doping)
+# %%--- The extra per-processor for improving behaviour
     def reader_heading(self):
         """
         This function takes the loaded dataframe then return four lists:
@@ -577,7 +581,7 @@ class MyMLdata:
         return variable_type, temp_list, doping_level, excess_dn
 
 
-    def pre_processor2(self):
+    def pre_processor_dividX(self):
         """
         This function takes original data frame and multiply each lifetime data with (doping+dn)
         """
@@ -592,4 +596,44 @@ class MyMLdata:
                 excess_dn[column_index] = float(excess_dn[column_index].split('c')[0])
                 # multiply the lifetime in that column by (doping+dn)
                 columnname = list(self.data.columns)[column_index]
-                self.data[columnname] = self.data[columnname]*(doping_level[column_index] + excess_dn[column_index])
+                self.data[columnname] = self.data[columnname]*(doping_level[column_index] + excess_dn[column_index])/excess_dn[column_index]
+
+
+    def pre_processor_insert_dtal(self):
+        """
+        This function takes the original data frame from the object itself and add extra columns that is the difference between adjacent columns
+        """
+        # the plan for differentialtion is to add one column of zero on the left,one column of zero on the right
+        # substract these two dataframes
+        # delete the extra columns on the left and right
+        # cascade original dataframe with this new one.
+
+        # read the data from the object itself
+        dataframe1 = self.data
+        dataframe2 = self.data
+        # only use the X part of the data:
+        variable_type, temp_list, doping_level, excess_dn = self.reader_heading()
+        dataframe1 = pd.DataFrame(dataframe1.iloc[:, np.array(variable_type)=='X'])
+        dataframe2 = dataframe2.iloc[:, np.array(variable_type)=='X']
+        # insert the zero columns:
+        dataframe1['zeros']=0
+        dataframe2.insert(0, 'zeros', np.zeros(np.shape(dataframe2.iloc[:,0])), allow_duplicates=True)
+        # make the substraction
+        difference = np.array(dataframe1) - np.array(dataframe2)
+        # print(np.shape(dataframe1))
+        # delete the first and last column:
+        difference = difference[:, 1:-1] + np.finfo(np.float32).eps
+        # cascade into new columns
+        lifetimedata = self.data
+        # make headings for the differences:
+        columns = []
+        for column in range(np.shape(difference)[1]):
+            columns.append('differences' + str(column))
+        difference = pd.DataFrame(difference, columns = columns)
+        # print(difference)
+        # print(np.shape(difference))
+        combineddata = pd.concat([lifetimedata, np.abs(difference)], axis=1, join='inner')
+        # update the processed data:
+        self.data = combineddata
+
+# %%-
