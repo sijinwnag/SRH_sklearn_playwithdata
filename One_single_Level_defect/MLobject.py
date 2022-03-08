@@ -16,6 +16,8 @@ import sys
 from sklearn.tree import DecisionTreeRegressor, DecisionTreeClassifier
 from sklearn.naive_bayes import GaussianNB
 from playsound import playsound
+from sklearn.model_selection import cross_val_score, RepeatedKFold
+from sklearn.multioutput import RegressorChain
 # %%-
 
 
@@ -24,7 +26,7 @@ class MyMLdata:
     """
     MyMLdata is an object that is a panda dataframe containing the lifetime data.
     """
-
+# %%--- Initialize the object
     def __init__(self, path, task, repeat):
         """
         1.  Load the data through the inputting path.
@@ -53,47 +55,10 @@ class MyMLdata:
         self.repetition = repeat
         self.reg_param = regression_default_param
         self.cla_param = classification_default_param
+# %%-
 
 
-# %%--- The training and repeatition for regression task
-
-    def pre_processor(self):
-        """
-        This function do the data pre processing according to the task we wonna do
-
-        input:
-        the object itself (which is the lifetimedata) dataframe.
-
-        output:
-        X, y for maching learning purposes (before train test split and scaling)
-        """
-        singletask = self.singletask # for now we make single taks same as task, in the future, we make task capable of doing multiple task.
-        # define the columns to be deleted for ML purposes
-        delete_col = ['Name', 'Sn_cm2', 'Sp_cm2', 'k', 'logSn', 'logSp']
-        # drop these columns
-        dfk = (pd.DataFrame(self.data)).drop(delete_col, axis=1)
-        # if we are doing Et regression, we need to do them for above and below bandgap saperately
-        if singletask == 'Et_plus':
-            dfk = dfk[dfk['Et_eV']>0]
-        elif singletask == 'Et_minus':
-            dfk = dfk[dfk['Et_eV']<0]
-        # define X and y based on the task we are doing.
-        dfk = pd.DataFrame(dfk)
-        X = np.log(dfk.drop(['logk', 'Et_eV', 'bandgap'], axis=1)) # takes the log of X to make it easier for ML
-        if singletask == 'k':
-            y = dfk['logk']
-        elif singletask == 'Et_plus':
-            y = dfk['Et_eV']
-        elif singletask == 'Et_minus':
-            y = dfk['Et_eV']
-        elif singletask == 'bandgap':
-            y = dfk['bandgap']
-
-        # store the X and y to the object.
-        # print(X)
-        return X, y
-
-
+# %%--- Regression machine learning tasks.
     def regression_repeat(self, plot=False, output_y_pred=False):
         # extract the X and y from previous step.
         X, y = self.pre_processor()
@@ -187,7 +152,7 @@ class MyMLdata:
         output: a list of R2 scores for each model corresponding to 'KNN', 'Ridge Linear Regression', 'Random Forest', 'Neural Network', 'Gradient Boosting', 'Ada Boosting', 'Support Vector'
         """
 
-        # use a for loop to train and evaluate each model:
+        # use a for loop to train and evaluate each model: firstly read the setting from the object itself.
         model_names = self.reg_param['model_names']
         model_lists = self.reg_param['model_lists']
         gridsearchlist = self.reg_param['gridsearchlist']
@@ -223,7 +188,7 @@ class MyMLdata:
                 # predict with the original model using defalt settings
                 y_pred = model.predict(X_test_scaled)
 
-            # scale the y back to original values
+            # collect hte y values
             y_pred_list.append(y_pred)
             y_test_list.append(y_test)
             # evaluate the model using R2 score:
@@ -253,7 +218,7 @@ class MyMLdata:
 # %%-
 
 
-# %%--- The training an repeatition for classification task
+# %%--- Classification machine learning tasks.
     def classification_training(self, X_train_scaled, X_test_scaled, y_train, y_test, display_confusion_matrix=False, output_y_pred=False):
         """
         This function is only capable for binary classification yet.
@@ -374,7 +339,7 @@ class MyMLdata:
 # %%-
 
 
-# %%--- The functions to perform single or all machine learning tasks
+# %%--- The functions to perform machine learning tasks (the function you will end up calling in another file)
     def perform_singletask_ML(self, plot_graphs=False):
         """
         This is the overall function to perform machine learning for a single task using the other functions
@@ -513,18 +478,32 @@ class MyMLdata:
 
 
 # %%--- The functions for data visualization
-
     def mypairplot(self, plot_col):
+        """
+        This file will plot the pairplot for the chosen data given by plot_col.
+
+        input: plot_col is a list of text containing the column names that we wonna plot.
+        """
+        # load the data from object.
+        df = pd.DataFrame(self.data)
+        # extract the ones we wonna plot.
+        dfplot = df[plot_col]
+        # do the pairplot:
+        figure = sn.pairplot(dfplot)
+
+
+    def mypairplotX(self, plot_col):
         '''
         This file will plot the pariplot for the chosen data frame and the label will be in mathematical text
+        note: this function only works for plotting X data against another X data.
 
         input: plot_col, a list of text containing the colume names that we wonna plot.
 
         '''
         # load the data from the object
         df = pd.DataFrame(self.data)
-        print(np.shape(df))
-        print(df)
+        # print(np.shape(df))
+        # print(df)
         dfplot = df[plot_col]
         # to convert the numbers into scientific notation to be displayed during plotting, prepare an emptly list to collect the text after conversion
         plot_sci_col = []
@@ -548,7 +527,7 @@ class MyMLdata:
 # %%-
 
 
-# %%--- The extra per-processor for improving behaviour
+# %%--- The per-processors before machine learning tasks
     def reader_heading(self):
         """
         This function takes the loaded dataframe then return four lists:
@@ -636,4 +615,97 @@ class MyMLdata:
         # update the processed data:
         self.data = combineddata
 
+
+    def pre_processor(self):
+        """
+        This function do the data pre processing according to the task we wonna do
+
+        input:
+        the object itself (which is the lifetimedata) dataframe.
+
+        output:
+        X, y for maching learning purposes (before train test split and scaling)
+        only work for single y output.
+        """
+        singletask = self.singletask # for now we make single taks same as task, in the future, we make task capable of doing multiple task.
+        # define the columns to be deleted for ML purposes
+        delete_col = ['Name', 'Sn_cm2', 'Sp_cm2', 'k', 'logSn', 'logSp']
+        # drop these columns
+        dfk = (pd.DataFrame(self.data)).drop(delete_col, axis=1)
+        # if we are doing Et regression, we need to do them for above and below bandgap saperately
+        if singletask == 'Et_plus':
+            dfk = dfk[dfk['Et_eV']>0]
+        elif singletask == 'Et_minus':
+            dfk = dfk[dfk['Et_eV']<0]
+        # define X and y based on the task we are doing.
+        dfk = pd.DataFrame(dfk)
+        X = np.log(dfk.drop(['logk', 'Et_eV', 'bandgap'], axis=1)) # takes the log of X to make it easier for ML
+        if singletask == 'k':
+            y = dfk['logk']
+        elif singletask == 'Et_plus':
+            y = dfk['Et_eV']
+        elif singletask == 'Et_minus':
+            y = dfk['Et_eV']
+        elif singletask == 'bandgap':
+            y = dfk['bandgap']
+
+        # store the X and y to the object.
+        # print(X)
+        return X, y
+# %%-
+
+
+# %%--- The functions for chain multi-output regressor
+    """
+    note that multi-output only works for regression, not classification.
+    The plan is to build the chain regressor instead of direct multi-output regressor
+    The reason being is that: we have done the direct multi-output regression already using for loop
+    """
+    def chain_regression_once(self, X_train_scaled, X_test_scaled, y_train, y_test, regression_order):
+        """
+        This function perform chain regression on each parameter once.
+
+        input:
+            1. regression_order: a list to spesify the order of which one to predict first.
+            for example [0, 1] means predict the first column of y first then the second column.
+
+            2. X_train_scaled, X_test_scaled, y_train, y_test.
+
+        output:
+            r2list: a list of r2 score from evaluating using chain regressor, each element correspond to a y column.
+        """
+        # read the parameter setting from the object itself:
+        model_names = self.reg_param['model_names']
+        model_lists = self.reg_param['model_lists']
+        gridsearchlist = self.reg_param['gridsearchlist']
+        param_list  = self.reg_param['param_list']
+        # iterate for each model:
+        for model in model_lists:
+            # define the chained multioutput wrapper model
+            wrapper = RegressorChain(model, order = regression_order)
+            # fit the model on the whole dataset
+            wrapper.fit(X_train_scaled, y_train)
+            # make the prediction:
+            y_pred = wrapper.predict(X_test_scaled)
+            # y_pred should be a list and the element correspond to the y prediction based on the input order.
+            # for single level case it is just Et or k
+            # reorder the column of y_pred based on the input order:
+            y_pred_ordered = np.zeros_like(y_pred)
+            index2 = 0
+            for number in regression_order:
+                # put the column into the right position.
+                y_pred_ordered[:, number] = y_pred[:, index2]
+                # update the index.
+                index2 = index2 + 1
+            # now the y_pred_ordered is the y_pred with the correct order as y_test.
+            # notice that now y_test and y_pred are 2D matrix.
+            # evaluate the matrix using r2 score:
+            y_test = np.array(y_test)
+            # prepare a list to collect the r2 values
+            r2list = []
+            # iterate for each variable:
+            for k in range(np.shape(y_test)[1]):
+                r2list.append(r2_score(y_test[:, k], y_pred_ordered[:, k]))
+
+            return r2list
 # %%-
