@@ -661,7 +661,7 @@ class MyMLdata:
     The plan is to build the chain regressor instead of direct multi-output regressor
     The reason being is that: we have done the direct multi-output regression already using for loop
     """
-    def chain_regression_once(self, X_train_scaled, X_test_scaled, y_train, y_test, regression_order):
+    def chain_regression_once(self, regression_order, band):
         """
         This function perform chain regression on each parameter once.
 
@@ -671,32 +671,39 @@ class MyMLdata:
 
             2. X_train_scaled, X_test_scaled, y_train, y_test.
 
+            3. band: a string input being either plus or minus, if it is plus that means Et is above Ei if minus then Et is below Et
+
         output:
-            r2list: a list of r2 score from evaluating using chain regressor, each element correspond to a y column.
+            r2matrix: a matrix of r2 score, the columns correspond to different task and the row correspond to different ML models
         """
+        X_train_scaled, X_test_scaled, y_train, y_test = self.preprocessor_chain_regression(band)
         # read the parameter setting from the object itself:
         model_names = self.reg_param['model_names']
         model_lists = self.reg_param['model_lists']
         gridsearchlist = self.reg_param['gridsearchlist']
         param_list  = self.reg_param['param_list']
         # iterate for each model:
+        r2_matrix = []
+        modelcount = 0
         for model in model_lists:
             # define the chained multioutput wrapper model
             wrapper = RegressorChain(model, order = regression_order)
             # fit the model on the whole dataset
             wrapper.fit(X_train_scaled, y_train)
+            print('finish training chain regressor for ' + model_names[modelcount])
             # make the prediction:
             y_pred = wrapper.predict(X_test_scaled)
             # y_pred should be a list and the element correspond to the y prediction based on the input order.
             # for single level case it is just Et or k
             # reorder the column of y_pred based on the input order:
-            y_pred_ordered = np.zeros_like(y_pred)
-            index2 = 0
-            for number in regression_order:
+            y_pred_ordered = y_pred
+            # y_pred_ordered = np.zeros_like(y_pred)
+            # index2 = 0
+            # for number in regression_order:
                 # put the column into the right position.
-                y_pred_ordered[:, number] = y_pred[:, index2]
+            #     y_pred_ordered[:, number] = y_pred[:, index2]
                 # update the index.
-                index2 = index2 + 1
+            #     index2 = index2 + 1
             # now the y_pred_ordered is the y_pred with the correct order as y_test.
             # notice that now y_test and y_pred are 2D matrix.
             # evaluate the matrix using r2 score:
@@ -705,7 +712,83 @@ class MyMLdata:
             r2list = []
             # iterate for each variable:
             for k in range(np.shape(y_test)[1]):
-                r2list.append(r2_score(y_test[:, k], y_pred_ordered[:, k]))
+                r2 = (r2_score(y_test[:, k], y_pred_ordered[:, k]))
+                r2list.append(r2)
+                if k == 0:
+                    print('the R2 score for logk is ' + str(r2))
+                else:
+                    print('the R2 score for Et is ' + str(r2))
+            r2_matrix.append(r2list)
+            modelcount = modelcount + 1
+        return r2_matrix
 
-            return r2list
+
+    def preprocessor_chain_regression(self, band):
+        """
+        input:
+        band: a string input being either plus or minus.
+        output:
+        X_train_scaled, X_test_scaled, y_train, y_test
+        """
+        # for now we make single taks same as task, in the future, we make task capable of doing multiple task.
+        # define the columns to be deleted for ML purposes
+        delete_col = ['Name', 'Sn_cm2', 'Sp_cm2', 'k', 'logSn', 'logSp']
+        # drop these columns
+        dfk = (pd.DataFrame(self.data)).drop(delete_col, axis=1)
+        # if we are doing Et regression, we need to do them for above and below bandgap saperately
+        if band == 'plus':
+            dfk = dfk[dfk['Et_eV']>0]
+        else:
+            dfk = dfk[dfk['Et_eV']<0]
+        # define X and y based on the task we are doing.
+        dfk = pd.DataFrame(dfk)
+        X = np.log(dfk.drop(['logk', 'Et_eV', 'bandgap'], axis=1))
+        # scale the data:
+        for col in X.columns:
+            # print(X[col])
+            X[col] = MinMaxScaler().fit_transform(X[col].values.reshape(-1, 1))
+        y = dfk[['logk', 'Et_eV']]
+        X_train_scaled, X_test_scaled, y_train, y_test = train_test_split(X, y, test_size=0.1)
+
+        return X_train_scaled, X_test_scaled, y_train, y_test
+
+
+    def repeat_chain_regressor(self, repeat_num, regression_order):
+        """
+        repeat the chain regressor for both plus and minus Et for multiple times
+        input:
+        repeat_num, number of repeat to do to
+        output:
+        a list of 3 tables: k regression mark, Et regression mark above Ei, Et regression mark below Ei
+        """
+        # prepare an empty list to collect different tasks r2 scores.
+        r2fork = []
+        r2forEplus = []
+        r2forEminus = []
+        # iterate for each repeatition
+        for k in range(repeat_num):
+            # iterate for upper and lower bandgap
+            matrix_plus = np.array(self.chain_regression_once(regression_order=regression_order, band='plus'))
+            matrix_minus = np.array(self.chain_regression_once(regression_order=regression_order, band='minus'))
+            # print(matrix_minus)
+            # print(matrix_plus)
+            # the row of the matrix correspond to different y we are predicting: logk and Et
+            # the column of hte matrix correspond to the machine learning model we are using.
+            # we want to put the same task into the same table
+            kcolumn = (matrix_plus[:, 0] + matrix_minus[:, 0])/2
+            Eplus_column = matrix_plus[:, 1]
+            Eminus_column = matrix_minus[:, 1]
+            r2fork.append(kcolumn)
+            r2forEplus.append(Eplus_column)
+            r2forEminus.append(Eminus_column)
+            print('finish repeatition ' + str(k+1))
+        # add title the three tables
+        # convert to dataframe:
+        model_names = self.reg_param['model_names']
+        r2fork = pd.DataFrame(np.array(r2fork), columns = model_names)
+        r2forEplus = pd.DataFrame(np.array(r2forEplus), columns = model_names)
+        r2forEminus = pd.DataFrame(np.array(r2forEminus), columns=model_names)
+        # play a nice reminder music after finishing
+        playsound('spongbob.mp3')
+        return [r2fork, r2forEplus, r2forEminus]
 # %%-

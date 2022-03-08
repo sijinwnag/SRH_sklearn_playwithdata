@@ -29,25 +29,8 @@ df1 = MyMLdata(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\O
 # %%-
 
 # %%--- chain regressor.
-singletask = 'Et_plus'
-# for now we make single taks same as task, in the future, we make task capable of doing multiple task.
-# define the columns to be deleted for ML purposes
-delete_col = ['Name', 'Sn_cm2', 'Sp_cm2', 'k', 'logSn', 'logSp']
-# drop these columns
-dfk = (pd.DataFrame(df1.data)).drop(delete_col, axis=1)
-# if we are doing Et regression, we need to do them for above and below bandgap saperately
-if singletask == 'Et_plus':
-    dfk = dfk[dfk['Et_eV']>0]
-# define X and y based on the task we are doing.
-dfk = pd.DataFrame(dfk)
-X = np.log(dfk.drop(['logk', 'Et_eV', 'bandgap'], axis=1))
-# scale the data:
-for col in X.columns:
-    # print(X[col])
-    X[col] = MinMaxScaler().fit_transform(X[col].values.reshape(-1, 1))
-y = dfk[['logk', 'Et_eV']]
-X_train_scaled, X_test_scaled, y_train, y_test = train_test_split(X, y, test_size=0.1)
-df1.chain_regression_once(X_train_scaled, X_test_scaled, y_train, y_test, regression_order=[0, 1])
+
+df1.repeat_chain_regressor(repeat_num=2, regression_order=[0, 1])
 # %%-
 
 # %%--- Data visualization
