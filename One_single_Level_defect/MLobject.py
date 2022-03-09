@@ -769,7 +769,9 @@ class MyMLdata:
         for k in range(repeat_num):
             # iterate for upper and lower bandgap
             matrix_plus = np.array(self.chain_regression_once(regression_order=regression_order, band='plus'))
+            print('finish training upper band data')
             matrix_minus = np.array(self.chain_regression_once(regression_order=regression_order, band='minus'))
+            print('finish training lower band data')
             # print(matrix_minus)
             # print(matrix_plus)
             # the row of the matrix correspond to different y we are predicting: logk and Et
