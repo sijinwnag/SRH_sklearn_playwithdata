@@ -29,8 +29,14 @@ df1 = MyMLdata(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\O
 # %%-
 
 # %%--- chain regressor.
-
-df1.repeat_chain_regressor(repeat_num=2, regression_order=[0, 1])
+# chain_scores = df1.repeat_chain_regressor(repeat_num=5, regression_order=[0, 1])
+# chain_scores[0].to_csv('k_chain1_kfirst.csv')
+# chain_scores[1].to_csv('Eplus_chain1_kfirst.csv')
+# chain_scores[2].to_csv('Eminus_chain1_kfirst.csv')
+chain_scores = df1.repeat_chain_regressor(repeat_num=5, regression_order=[1, 0])
+chain_scores[0].to_csv('k_chain1_Efirst.csv')
+chain_scores[1].to_csv('Eplus_chain1_Efirst.csv')
+chain_scores[2].to_csv('Eminus_chain1_Efirst.csv')
 # %%-
 
 # %%--- Data visualization
