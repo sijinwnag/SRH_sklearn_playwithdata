@@ -14,7 +14,6 @@ df1 = MyMLdata_2level(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwit
 df1.singletask='bandgap_1'
 # try svc by itself
 # X, y = df1.pre_processor()
-
-f1scores = df1.classification_repeat(display_confusion_matrix=False, output_y_pred=True)
+f1scores, y_prediction_frame, y_test_frame = df1.classification_repeat(display_confusion_matrix=False, output_y_pred=True)
 playsound('spongbob.mp3')
 # %%-
