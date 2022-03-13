@@ -46,7 +46,7 @@ class MyMLdata_2level:
         classification_default_param = {
         'model_names': ['KNN', 'SVC', 'Decision tree', 'Random Forest',  'Gradient Boosting', 'Adaptive boosting', 'Naive Bayes', 'Neural Network'], # a list of name for each model.
         'model_lists': [KNeighborsClassifier(n_neighbors = 5, weights='distance',n_jobs=-1), SVC(), DecisionTreeClassifier(), RandomForestClassifier(n_estimators=100, verbose =0,n_jobs=-1), GradientBoostingClassifier(verbose=0,loss='deviance'), AdaBoostClassifier(base_estimator = DecisionTreeClassifier(), n_estimators=10), GaussianNB(), MLPClassifier((100,100),alpha=0.001, activation = 'relu',verbose=0,learning_rate='adaptive')],# a list of model improted from sklearn
-        'gridsearchlist': [False, True, False, False, False, False, False, False],
+        'gridsearchlist': [False, True, False, False, False, False, False, True],
         'param_list': [{'n_neighbors':range(1, 30)}, {'C': [0.1, 1, 10], 'kernel': ('linear', 'poly', 'rbf')},  {'max_depth': [10, 100, 1e3]}, {'n_estimators':[10, 100]}, {'n_estimators':[10, 100]},{'n_estimators':[10, 100]}, {'var_smoothing':[1e-9, 1e-3]},{'hidden_layer_sizes':((100, 300, 500, 300, 100), (100, 300, 500, 500, 300, 100), (200, 600, 900, 600, 200))}]# a list of key parameters correspond to the models in the model_lists
         }
         # classification_default_param = {
@@ -101,14 +101,15 @@ class MyMLdata_2level:
             # update the counter
             counter = counter + 1
             # pro process the data:
-            # scale the data:
-            for col in X.columns:
-                # print(X[col])
-                X[col] = MinMaxScaler().fit_transform(X[col].values.reshape(-1, 1))
             # if self.singletask != 'Et_minus':
             #     y = y/np.abs(np.max(y))
             # make the training size 0.9 and test size 0.1 (this is what was done by the paper)
-            X_train_scaled, X_test_scaled, y_train, y_test = train_test_split(X, y, test_size=0.1)
+            X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1)
+            # scale the data:
+            scaler = MinMaxScaler()
+            X_train_scaled = scaler.fit_transform(X_train)
+            # we must apply the scaling to the test set that we computed for the training set
+            X_test_scaled = scaler.transform(X_test)
             # train the different models and collect the r2 score.
             if output_y_pred == True: # if we plan to collect the y predction
                 r2score, y_prediction, y_test = self.regression_training(X_train_scaled=X_train_scaled, X_test_scaled=X_test_scaled, y_train=y_train, y_test=y_test, plot=plot, output_y_pred=True)
@@ -645,8 +646,16 @@ class MyMLdata_2level:
         dfk = pd.DataFrame(dfk)
         X = dfk.drop(['logk_1', 'Et_eV_1', 'bandgap_1', 'logk_2', 'Et_eV_2', 'bandgap_2'], axis=1) # take the lifetime as X
         X = np.log(X) # take the log of lifetime data.
-        y = dfk[singletask]
-
+        # in case we want to do some combination
+        if singletask == 'logk_1+logk_2':
+            y = dfk['logk_1'] + dfk['logk_2']
+        elif singletask == 'Et_eV_1+Et_eV_2':
+            y = dfk['Et_eV_1'] + dfk['Et_eV_2']
+        elif singletask == 'Et_eV_1_known_bandgap1':
+            y = dfk['Et_eV_1']
+            X['bandgap_1'] = dfk['bandgap_1']
+        else:
+            y = dfk[singletask]
         # store the X and y to the object.
         # print(X)
         return X, y
