@@ -46,7 +46,7 @@ class MyMLdata_2level:
         classification_default_param = {
         'model_names': ['KNN', 'SVC', 'Decision tree', 'Random Forest',  'Gradient Boosting', 'Adaptive boosting', 'Naive Bayes', 'Neural Network'], # a list of name for each model.
         'model_lists': [KNeighborsClassifier(n_neighbors = 5, weights='distance',n_jobs=-1), SVC(), DecisionTreeClassifier(), RandomForestClassifier(n_estimators=100, verbose =0,n_jobs=-1), GradientBoostingClassifier(verbose=0,loss='deviance'), AdaBoostClassifier(base_estimator = DecisionTreeClassifier(), n_estimators=10), GaussianNB(), MLPClassifier((100,100),alpha=0.001, activation = 'relu',verbose=0,learning_rate='adaptive')],# a list of model improted from sklearn
-        'gridsearchlist': [False, True, False, False, False, False, False, True],
+        'gridsearchlist': [False, False, False, False, False, False, False, False],
         'param_list': [{'n_neighbors':range(1, 30)}, {'C': [0.1, 1, 10], 'kernel': ('linear', 'poly', 'rbf')},  {'max_depth': [10, 100, 1e3]}, {'n_estimators':[10, 100]}, {'n_estimators':[10, 100]},{'n_estimators':[10, 100]}, {'var_smoothing':[1e-9, 1e-3]},{'hidden_layer_sizes':((100, 300, 500, 300, 100), (100, 300, 500, 500, 300, 100), (200, 600, 900, 600, 200))}]# a list of key parameters correspond to the models in the model_lists
         }
         # classification_default_param = {
@@ -158,7 +158,7 @@ class MyMLdata_2level:
 
         output: a list of R2 scores for each model corresponding to 'KNN', 'Ridge Linear Regression', 'Random Forest', 'Neural Network', 'Gradient Boosting', 'Ada Boosting', 'Support Vector'
         """
-
+        print(X_train_scaled)
         # use a for loop to train and evaluate each model: firstly read the setting from the object itself.
         model_names = self.reg_param['model_names']
         model_lists = self.reg_param['model_lists']
@@ -226,7 +226,7 @@ class MyMLdata_2level:
 
 
 # %%--- Classification machine learning tasks.
-    def classification_training(self, X_train_scaled, X_test_scaled, y_train, y_test, display_confusion_matrix=False, output_y_pred=True):
+    def classification_training(self, X_train_scaled, X_test_scaled, y_train, y_test, display_confusion_matrix=False, return_model=False):
         """
         This function is only capable for binary classification yet.
         input:
@@ -247,6 +247,8 @@ class MyMLdata_2level:
         # prepare an emtply list to collect the predicted y
         y_pred_list = []
         # train everything in a for loop
+        # try to find the best model
+        bestmodel = model_lists[0]
         for modelindex in range(np.shape(model_names)[0]):
             # read the name, model and parameter from the lists
             name = model_names[modelindex]
@@ -259,10 +261,10 @@ class MyMLdata_2level:
             # print('whether use grid search: ' + str(gridsearch))
             if gridsearch==True:
                 # define the grid search object
-                grid = GridSearchCV(model, param)
+                model = GridSearchCV(model, param)
                 # train the grid search object: if it is neural network, use the scaled y data
                 y_train = np.array(y_train)
-                grid.fit(X_train_scaled, y_train)
+                model.fit(X_train_scaled, y_train)
                 # use the trained model to predict the y
                 y_pred = grid.predict(X_test_scaled)
             else:
@@ -272,7 +274,7 @@ class MyMLdata_2level:
                 y_pred = model.predict(X_test_scaled)
 
             # evaluate the model using micro f1 score (accuracy):
-            f1 = f1_score(y_test, y_pred)
+            f1 = f1_score(y_test, y_pred, average='macro')
             f1_list.append(f1)
             y_pred_list.append(y_pred)
             y_test_list.append(y_test)
@@ -281,14 +283,19 @@ class MyMLdata_2level:
             # display the confusion matrix
             if display_confusion_matrix==True:
                 print(confusion_matrix(y_test, y_pred, normalize='all'))
+            # update the best model.
+            if f1 == np.max(f1_list):
+                bestmodel = model
 
-        if output_y_pred == True:
-            return f1_list, y_pred_list, y_test_list
+        if return_model == True:
+            # return the model of the best performance
+            return bestmodel, f1_list, y_pred_list, y_test_list
         else:
-            return f1_list
+            return f1_list, y_pred_list, y_test_list
 
 
-    def classification_repeat(self, display_confusion_matrix=False, output_y_pred=False):
+
+    def classification_repeat(self, display_confusion_matrix=False, return_model=False):
         """
         input:
             df: the dataframe to work on
@@ -317,11 +324,10 @@ class MyMLdata_2level:
             X_train_scaled = scaler.fit_transform(X_train)
             # we must apply the scaling to the test set that we computed for the training set
             X_test_scaled = scaler.transform(X_test)
-            f1_score, y_pred, y_test= self.classification_training(X_train_scaled, X_test_scaled, y_train, y_test, output_y_pred = output_y_pred)
+            bestmodel, f1_score, y_pred, y_test= self.classification_training(X_train_scaled, X_test_scaled, y_train, y_test, return_model=True)
             f1_frame.append(f1_score)
-            if output_y_pred == True:
-                y_prediction_frame.append(y_pred)
-                y_test_frame.append(y_test)
+            y_prediction_frame.append(y_pred)
+            y_test_frame.append(y_test)
             # print the number of iteration finished after finishing each iteration
             print('finish iteration ' + str(counter))
 
@@ -339,8 +345,8 @@ class MyMLdata_2level:
         plt.title('$F_1$' + 'score for classification')
         plt.show()
 
-        if output_y_pred == False:
-            return f1_frame
+        if return_model == True:
+            return f1_frame, y_prediction_frame, y_test_frame, bestmodel, scaler
         else:
             return f1_frame, y_prediction_frame, y_test_frame
 # %%-
@@ -644,7 +650,12 @@ class MyMLdata_2level:
         dfk = (pd.DataFrame(self.data)).drop(delete_col, axis=1)
         # define X and y based on the task we are doing.
         dfk = pd.DataFrame(dfk)
-        X = dfk.drop(['logk_1', 'Et_eV_1', 'bandgap_1', 'logk_2', 'Et_eV_2', 'bandgap_2'], axis=1) # take the lifetime as X
+        # create a list to select X columns: if the column string contains cm, then identify it as X.
+        select_X_list = []
+        for string in dfk.columns.tolist():
+            if string.find('cm')!=-1:
+                select_X_list.append(string)
+        X = dfk[select_X_list] # take the lifetime as X, delete any column that does not start with a number.
         X = np.log(X) # take the log of lifetime data.
         # in case we want to do some combination
         if singletask == 'logk_1+logk_2':
@@ -654,6 +665,9 @@ class MyMLdata_2level:
         elif singletask == 'Et_eV_1_known_bandgap1':
             y = dfk['Et_eV_1']
             X['bandgap_1'] = dfk['bandgap_1']
+        elif singletask == 'Et_eV_1_known_predicted_bandgap_1':
+            X['predicted_bandgap_1'] = dfk['predicted_bandgap_1']
+            y = dfk['Et_eV_1']
         else:
             y = dfk[singletask]
         # store the X and y to the object.
@@ -800,4 +814,53 @@ class MyMLdata_2level:
         # play a nice reminder music after finishing
         playsound('spongbob.mp3')
         return [r2fork, r2forEplus, r2forEminus]
+# %%-
+
+
+# %%--- The functions for classification->regression
+    def dataset_splitter(self, size=0.5):
+        """
+        When doing two different machine learning algarsim, to avoid data leakage, we need two different data frame for each task.
+        this function will split the given dataframe into two dataframes
+        input:
+        size: is the size of the second set, 0.5 means divide half
+        """
+        set1, set2 = train_test_split(self.data, test_size=size)
+        return set1, set2
+
+
+    def apply_given_model(self, dataset, task, model, scaler):
+        """
+        This function aims to apply a given model on a dataset given the macine learning task.
+        input:
+        task: a string input that can be k,
+        dataset: the dataset to perform the task on,
+        model: the machine learning model to apply,
+        scaler: the scaler used corresponding to this machine learning model.
+        output:
+        the prediction from model.
+        """
+        if task == 'bandgap_1':
+            # do the same pre processing steps for bandgap 1 on the given dataset.
+            self.singletask = task
+            # define the columns to be deleted for ML purposes
+            delete_col = ['Name', 'Sn_cm2_1', 'Sp_cm2_1', 'k_1', 'logSn_1', 'logSp_1', 'Sn_cm2_2', 'Sp_cm2_2', 'k_2', 'logSn_2', 'logSp_2', 'Mode', 'Label']
+            # drop these columns
+            dfk = (pd.DataFrame(self.data)).drop(delete_col, axis=1)
+            # define X and y based on the task we are doing.
+            dfk = pd.DataFrame(dfk)
+            # create a list to select X columns: if the column string contains cm, then identify it as X.
+            select_X_list = []
+            for string in dfk.columns.tolist():
+                if string.find('cm')!=-1:
+                    select_X_list.append(string)
+            X = dfk[select_X_list] # take the lifetime as X, delete any column that does not start with a number.
+            X = np.log(X) # take the log of lifetime data.
+            y = dfk['Et_eV_1']
+            # do the scaling: but make sure you only do scaling to the lifetime
+            X_scaled = scaler.transform(X)
+            # perform the prediction.
+            y_pred = model.predict(X_scaled)
+            return y_pred
+
 # %%-
