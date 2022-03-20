@@ -46,7 +46,7 @@ class MyMLdata:
         classification_default_param = {
         'model_names': ['KNN', 'SVC', 'Decision tree', 'Random Forest',  'Gradient Boosting', 'Adaptive boosting', 'Naive Bayes', 'Neural Network'], # a list of name for each model.
         'model_lists': [KNeighborsClassifier(n_neighbors = 5, weights='distance',n_jobs=-1), SVC(), DecisionTreeClassifier(), RandomForestClassifier(n_estimators=100, verbose =0,n_jobs=-1), GradientBoostingClassifier(verbose=0,loss='deviance'), AdaBoostClassifier(base_estimator = DecisionTreeClassifier(), n_estimators=10), GaussianNB(), MLPClassifier((100,100),alpha=0.001, activation = 'relu',verbose=0,learning_rate='adaptive')],# a list of model improted from sklearn
-        'gridsearchlist': [False, False, False, False, False, False, False, False],
+        'gridsearchlist': [True, False, False, False, False, False, False, False],
         'param_list': [{'n_neighbors':range(1, 30)}, {'C': [0.1, 1, 10], 'kernel': ('linear', 'poly', 'rbf')},  {'max_depth': [10, 100, 1e3]}, {'n_estimators':[10, 100]}, {'n_estimators':[10, 100]},{'n_estimators':[10, 100]}, {'var_smoothing':[1e-9, 1e-3]},{'hidden_layer_sizes':((100, 300, 500, 300, 100), (100, 300, 500, 500, 300, 100), (200, 600, 900, 600, 200))}]# a list of key parameters correspond to the models in the model_lists
         }
 
@@ -249,7 +249,7 @@ class MyMLdata:
 
 
 # %%--- Classification machine learning tasks.
-    def classification_training(self, X_train_scaled, X_test_scaled, y_train, y_test, display_confusion_matrix=False, output_y_pred=False):
+    def classification_training(self, X_train_scaled, X_test_scaled, y_train, y_test, display_confusion_matrix=False):
         """
         This function is only capable for binary classification yet.
         input:
@@ -265,6 +265,7 @@ class MyMLdata:
         param_list  = self.cla_param['param_list']
         # prepare an emtply list to collect f1 scores:
         f1_list = []
+        f1_list_training = []
         # prepare list to collect y test
         y_test_list = []
         # prepare an emtply list to collect the predicted y
@@ -288,27 +289,30 @@ class MyMLdata:
                 grid.fit(X_train_scaled, y_train)
                 # use the trained model to predict the y
                 y_pred = grid.predict(X_test_scaled)
+                f1_training = grid.score(X_train_scaled, y_train)
             else:
                 # just use the original model.
                 model.fit(X_train_scaled, y_train)
                 # predict with the original model using defalt settings
                 y_pred = model.predict(X_test_scaled)
+                # record the training accuracy.
+                # however, we need to calculate the accuracy based on the sample, so the weight should be calculated saperately
+                weights = self.sample_weight_generator(y_train)
+                f1_training = model.score(X_train_scaled, y_train, sample_weight=weights)
 
             # evaluate the model using micro f1 score (accuracy):
-            f1 = f1_score(y_test, y_pred)
+            f1 = f1_score(y_test, y_pred, average='macro')
             f1_list.append(f1)
+            f1_list_training.append(f1_training)
             y_pred_list.append(y_pred)
             y_test_list.append(y_test)
             # print the output
-            print('finish training ' + name + ', the accuracy is ' + str(f1))
+            print('finish training ' + name + ', the accuracy in validation set is ' + str(f1)  + ', the accuracy in training set is ' + str(float(f1_training)))
             # display the confusion matrix
             if display_confusion_matrix==True:
                 print(confusion_matrix(y_test, y_pred, normalize='all'))
 
-        if output_y_pred == True:
-            return f1_list, y_pred_list, y_test_list
-        else:
-            return f1_list
+        return f1_list, y_pred_list, y_test_list, f1_list_training
 
 
     def classification_repeat(self, display_confusion_matrix=False, output_y_pred=False):
@@ -328,6 +332,7 @@ class MyMLdata:
         counter = 0
         # create an emptly list to collect the f1 and mean absolute error values for each trials
         f1_frame = []
+        f1_train_frame = []
         y_prediction_frame = []
         y_test_frame = []
         while counter < n_repeat:
@@ -340,11 +345,11 @@ class MyMLdata:
             X_train_scaled = scaler.fit_transform(X_train)
             # we must apply the scaling to the test set that we computed for the training set
             X_test_scaled = scaler.transform(X_test)
-            f1_score, y_pred, y_test= self.classification_training(X_train_scaled, X_test_scaled, y_train, y_test, output_y_pred = output_y_pred)
+            f1_score, y_pred, y_test, f1_list_training = self.classification_training(X_train_scaled, X_test_scaled, y_train, y_test)
             f1_frame.append(f1_score)
-            if output_y_pred == True:
-                y_prediction_frame.append(y_pred)
-                y_test_frame.append(y_test)
+            f1_train_frame.append(f1_list_training)
+            y_prediction_frame.append(y_pred)
+            y_test_frame.append(y_test)
             # print the number of iteration finished after finishing each iteration
             print('finish iteration ' + str(counter))
 
@@ -362,10 +367,64 @@ class MyMLdata:
         plt.title('$F_1$' + 'score for classification')
         plt.show()
 
+        # plot another column plot for comparing trnaing and testing set.
+        plt.figure()
+        # define the bar width.
+        barwidth = 0.3
+        f1_av_train = np.average(f1_train_frame, axis=0)
+        f1_std_train = np.std(f1_train_frame, axis=0)
+        # define the x position of bars.
+        r1 = np.arange(len(f1_av))
+        r2 = [x + barwidth for x in r1]
+        # create bars for testing r2
+        plt.bar(r1, f1_av, width=barwidth, label='validation set score', yerr=f1_std)
+        plt.bar(r2, f1_av_train, width=barwidth, label='tranining set score', yerr=f1_std_train)
+        plt.xticks([r + barwidth for r in range(len(f1_av))], f1_frame.columns.tolist(), fontsize=6)
+        plt.ylabel('$F1$ macro score')
+        plt.legend(loc='lower right')
+        plt.show()
+
+        # print hte confusion matrix for the best trial.
+        f1_score = np.array(f1_frame)
+        max_position = np.argwhere(f1_score == np.max(f1_score))
+        repeat_num = int(max_position[0][0])
+        model_num = int(max_position[0][1])
+        # display the confusion matrix.
+        print('The best accuracy is ' + str(round(np.max(f1_score), 3)))
+        # print(y_test_frame)
+        # print(y_prediction_frame)
+        print(confusion_matrix(np.array(y_test_frame)[repeat_num, model_num, :], np.array(y_prediction_frame)[repeat_num,  model_num, :], normalize='all'))
+
         if output_y_pred == False:
             return f1_frame
         else:
             return f1_frame, y_prediction_frame, y_test_frame
+
+
+    def sample_weight_generator(self, y_train):
+        """
+        This function aims to calculate the weight of each sample for classification scoring based on each class rather than each sample
+        input: the training y
+        output: a list of weight corresponding to each sample.
+        """
+        # first: calcualte sum of each class:
+        total_num = len(y_train)
+        positive_num = sum(y_train)
+        negative_num = total_num-positive_num
+        # calculate the weight positive class should be:
+        positive_weight = positive_num/total_num
+        # calculate the negative weight:
+        negative_weight = 1-positive_weight
+        # set up the empty list to collect weight for each sample:
+        weights = []
+        for k in y_train:
+            if k == 1:
+                weights.append(positive_weight)
+            else:
+                weights.append(negative_weight)
+        # rescalse the weights:
+        weights = weights/sum(weights)
+        return weights
 # %%-
 
 
@@ -682,6 +741,8 @@ class MyMLdata:
         # store the X and y to the object.
         # print(X)
         return X, y
+
+
 # %%-
 
 
