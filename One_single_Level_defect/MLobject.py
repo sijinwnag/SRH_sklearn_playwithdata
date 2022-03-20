@@ -40,13 +40,13 @@ class MyMLdata:
         regression_default_param = {
         'model_names': ['KNN', 'Ridge Linear Regression', 'Random Forest', 'Neural Network', 'Gradient Boosting', 'Ada Boosting', 'Support Vector'], # a list of name for each model.
         'model_lists': [KNeighborsRegressor(), Ridge(), RandomForestRegressor(n_estimators=100, verbose =0, n_jobs=-1), MLPRegressor((100,100),alpha=0.001, activation = 'relu',verbose=0,learning_rate='adaptive'), GradientBoostingRegressor(verbose=0,loss='ls',max_depth=10), AdaBoostRegressor(base_estimator = DecisionTreeRegressor(), n_estimators=100, loss='linear'), SVR(kernel='rbf',C=5,verbose=0, gamma="auto")],# a list of model improted from sklearn
-        'gridsearchlist': [True, True, False, False, False, False, False], # each element in this list corspond to a particular model, if True, then we will do grid search while training the model, if False, we will not do Gridsearch for this model.
+        'gridsearchlist': [False, False, False, False, False, False, False], # each element in this list corspond to a particular model, if True, then we will do grid search while training the model, if False, we will not do Gridsearch for this model.
         'param_list': [{'n_neighbors':range(1, 30)}, {'alpha': [0.01, 0.1, 1, 10]}, {'n_estimators': [200, 100], 'verbose':0, 'n_jobs':-1}, {'hidden_layer_sizes':((100, 300, 300, 100), (100, 300, 500, 300, 100), (200, 600, 600, 200), (200, 600, 900, 600, 200)), 'alpha': [0.001], 'learning_rate':['adaptive']}, {'n_estimators':[200, 100]}, {'n_estimators':[50, 100]}, {'C': [0.1, 1, 10], 'epsilon': [1e-2, 0.1, 1]}]# a list of key parameters correspond to the models in the model_lists if we are going to do grid searching
         }
         classification_default_param = {
         'model_names': ['KNN', 'SVC', 'Decision tree', 'Random Forest',  'Gradient Boosting', 'Adaptive boosting', 'Naive Bayes', 'Neural Network'], # a list of name for each model.
         'model_lists': [KNeighborsClassifier(n_neighbors = 5, weights='distance',n_jobs=-1), SVC(), DecisionTreeClassifier(), RandomForestClassifier(n_estimators=100, verbose =0,n_jobs=-1), GradientBoostingClassifier(verbose=0,loss='deviance'), AdaBoostClassifier(base_estimator = DecisionTreeClassifier(), n_estimators=10), GaussianNB(), MLPClassifier((100,100),alpha=0.001, activation = 'relu',verbose=0,learning_rate='adaptive')],# a list of model improted from sklearn
-        'gridsearchlist': [False, True, False, False, False, False, False, False],
+        'gridsearchlist': [False, False, False, False, False, False, False, False],
         'param_list': [{'n_neighbors':range(1, 30)}, {'C': [0.1, 1, 10], 'kernel': ('linear', 'poly', 'rbf')},  {'max_depth': [10, 100, 1e3]}, {'n_estimators':[10, 100]}, {'n_estimators':[10, 100]},{'n_estimators':[10, 100]}, {'var_smoothing':[1e-9, 1e-3]},{'hidden_layer_sizes':((100, 300, 500, 300, 100), (100, 300, 500, 500, 300, 100), (200, 600, 900, 600, 200))}]# a list of key parameters correspond to the models in the model_lists
         }
 
@@ -59,7 +59,7 @@ class MyMLdata:
 
 
 # %%--- Regression machine learning tasks.
-    def regression_repeat(self, plot=False, output_y_pred=False):
+    def regression_repeat(self, plot=False, output_y_pred=False, trainning_score=False):
         # extract the X and y from previous step.
         X, y = self.pre_processor()
         # n_repeat is the number of reeptition for this task
@@ -88,6 +88,7 @@ class MyMLdata:
         counter = 0
         # create an emptly list to collect the r2 and mean absolute error values for each trials
         r2_frame = []
+        r2_frame_train = []
         meanabs_frame = []
         y_prediction_frame = []
         y_test_frame = []
@@ -104,14 +105,11 @@ class MyMLdata:
             # make the training size 0.9 and test size 0.1 (this is what was done by the paper)
             X_train_scaled, X_test_scaled, y_train, y_test = train_test_split(X, y, test_size=0.1)
             # train the different models and collect the r2 score.
-            if output_y_pred == True: # if we plan to collect the y predction
-                r2score, y_prediction, y_test = self.regression_training(X_train_scaled=X_train_scaled, X_test_scaled=X_test_scaled, y_train=y_train, y_test=y_test, plot=plot, output_y_pred=True)
-                r2_frame.append(r2score)
-                y_prediction_frame.append(y_prediction)
-                y_test_frame.append(y_test)
-            else: # when we do not need to collect the y prediction
-                r2score = self.regression_training(X_train_scaled=X_train_scaled, X_test_scaled=X_test_scaled, y_train=y_train, y_test=y_test, plot=plot)
-                r2_frame.append(r2score)
+            r2score, y_prediction, y_test, traning_list = self.regression_training(X_train_scaled=X_train_scaled, X_test_scaled=X_test_scaled, y_train=y_train, y_test=y_test, plot=plot)
+            r2_frame.append(r2score)
+            y_prediction_frame.append(y_prediction)
+            y_test_frame.append(y_test)
+            r2_frame_train.append(traning_list)
             # print the number of iteration finished after finishing each iteration
             print('finish iteration ' + str(counter))
         # now r2_frame is a list of list containing the values for each trial for each model.
@@ -133,13 +131,44 @@ class MyMLdata:
         #     plt.text(x=0.98, y=y, s=str(round(r2_av[k], 3)) + '+-' + str(round(r2_std[k], 3)))
         plt.show()
 
+        # plot another column plot for comparing trnaing and testing set.
+        plt.figure()
+        # define the bar width.
+        barwidth = 0.3
+        r2_av_train = np.average(r2_frame_train, axis=0)
+        r2_std_train = np.std(r2_frame_train, axis=0)
+        # define the x position of bars.
+        r1 = np.arange(len(r2_av))
+        r2 = [x + barwidth for x in r1]
+        # create bars for testing r2
+        plt.bar(r1, r2_av, width=barwidth, label='validation set score', yerr=r2_std)
+        plt.bar(r2, r2_av_train, width=barwidth, label='tranining set score', yerr=r2_std_train)
+        plt.xticks([r + barwidth for r in range(len(r2_av))], r2_frame.columns.tolist(), fontsize=6)
+        plt.ylabel('$R^2$ score')
+        plt.legend(loc='lower right')
+        plt.show()
+
+        # plot real vs predicted for the best trial
+        # find the position which has the best R2 score.
+        r2_score_k = np.array(r2_frame)
+        max_position = np.argwhere(r2_score_k == np.max(r2_score_k))
+        repeat_num = int(max_position[0][0])
+        model_num = int(max_position[0][1])
+        # plot the graph for real vs predicted
+        plt.figure()
+        plt.scatter(np.array(y_test_frame)[repeat_num, :], np.array(y_prediction_frame)[repeat_num, :, model_num], label=('$R^2$' + '=' + str(round(np.max(r2_score_k), 3))))
+        plt.xlabel('real value')
+        plt.ylabel('predicted value')
+        plt.title('real vs predicted at trial ' + str(repeat_num + 1) + ' using method ' + str(self.reg_param['model_names'][model_num]))
+        plt.legend()
+        plt.show()
         if output_y_pred == False:
             return r2_frame
         else:
             return r2_frame, y_prediction_frame, y_test_frame
 
 
-    def regression_training(self, X_train_scaled, X_test_scaled, y_train, y_test, plot=False, output_y_pred=False):
+    def regression_training(self, X_train_scaled, X_test_scaled, y_train, y_test, plot=False):
 
         """
         input:
@@ -164,6 +193,7 @@ class MyMLdata:
         y_pred_list = []
         # prepare an emtply list to collect r2 scores:
         r2_list = []
+        training_list = []
         # train everything in a for loop
         for modelindex in range(np.shape(model_names)[0]):
             # read the name, model and parameter from the lists
@@ -191,11 +221,14 @@ class MyMLdata:
             # collect hte y values
             y_pred_list.append(y_pred)
             y_test_list.append(y_test)
+            # evaluate the training score as well
+            r2training = model.score(X_train_scaled, y_train)
+            training_list.append(r2training)
             # evaluate the model using R2 score:
             r2 = r2_score(y_test, y_pred)
             r2_list.append(r2)
             # print the output
-            print('finish training ' + name + ', the ' + 'R2' + ' score is ' + str(r2))
+            print('finish training ' + name + ', the validation set ' + 'R2' + ' score is ' + str(r2) + ', the training set ' + 'R2' + ' score is ' + str(r2training))
             # plot the real vs predicted graph if needed
             if plot==True:
                 plt.figure()
@@ -210,11 +243,8 @@ class MyMLdata:
         # put the name on it:
         y_output.columns = model_names
         # output hte prediction only if necessary:
-        if output_y_pred == True:
-            return r2_list, y_output, y_test
-        # this function will return all 2r scores and mean absolute errors
-        else:
-            return r2_list
+        return r2_list, y_output, y_test, training_list
+
 # %%-
 
 
