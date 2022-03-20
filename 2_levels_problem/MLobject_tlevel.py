@@ -57,7 +57,7 @@ class MyMLdata_2level:
         # }
 
         self.data = pd.read_csv(path)
-        self.task = task
+        self.singletask = task
         self.repetition = repeat
         self.reg_param = regression_default_param
         self.cla_param = classification_default_param
@@ -158,7 +158,7 @@ class MyMLdata_2level:
 
         output: a list of R2 scores for each model corresponding to 'KNN', 'Ridge Linear Regression', 'Random Forest', 'Neural Network', 'Gradient Boosting', 'Ada Boosting', 'Support Vector'
         """
-        print(X_train_scaled)
+        # print(X_train_scaled)
         # use a for loop to train and evaluate each model: firstly read the setting from the object itself.
         model_names = self.reg_param['model_names']
         model_lists = self.reg_param['model_lists']
@@ -366,10 +366,9 @@ class MyMLdata_2level:
         3. print the evaluation
         """
 
-        if self.task == 'k':
+        if self.singletask == 'logk_1':
             # if the task is to do regression using k
             # apply the regression repeat function for k
-            self.singletask = self.task
             r2_score_k, y_pred_k, y_test_k = self.regression_repeat(plot=plot_graphs, output_y_pred=True)
             # find the position which has the best R2 score.
             r2_score_k_output = r2_score_k
@@ -673,6 +672,21 @@ class MyMLdata_2level:
         # store the X and y to the object.
         # print(X)
         return X, y
+
+
+    def bandgap_split(self):
+        """
+        This function aims to split the data into four sets based on the bandgap classification: 00 01 10 11
+        Takes its own dataset and output 4 datasets of differnet bandgap configuration
+        """
+        # load the data from the object.
+        df = self.data
+        # split the dataframe:
+        set11 = df[(np.array(df['bandgap_1']==1))*np.array(df['bandgap_2']==1)]
+        set00 = df[(np.array(df['bandgap_1']==0))*np.array(df['bandgap_2']==0)]
+        set10 = df[(np.array(df['bandgap_1']==1))*np.array(df['bandgap_2']==0)]
+        set01 = df[(np.array(df['bandgap_1']==0))*np.array(df['bandgap_2']==1)]
+        return set11, set10, set01, set00
 # %%-
 
 
