@@ -342,7 +342,7 @@ class MyMLdata_2level:
         # box plot the data.
         plt.figure()
         plt.boxplot(f1_frame, vert=False, labels=labels)
-        plt.title('$F_1$' + 'score for classification')
+        plt.title('$F_1$' + 'score for classification ' + str(self.singletask))
         plt.show()
 
         if return_model == True:
