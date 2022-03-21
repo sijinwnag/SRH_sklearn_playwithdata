@@ -99,7 +99,3 @@ df1.data = set10
 df1.mypairplot(['Et_eV_1', '200K_1.01e+16cm-3_ 259502421139974.25cm-3'])
 # %%-
 # %%-
-
-# %%-- Basic setting all tasks:
-df1.singletask = 'logk_1'
-r2scores = df1.perform_singletask_ML()
