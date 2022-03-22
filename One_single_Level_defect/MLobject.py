@@ -45,8 +45,8 @@ class MyMLdata:
         }
         classification_default_param = {
         'model_names': ['KNN', 'SVC', 'Decision tree', 'Random Forest',  'Gradient Boosting', 'Adaptive boosting', 'Naive Bayes', 'Neural Network'], # a list of name for each model.
-        'model_lists': [KNeighborsClassifier(n_neighbors = 5, weights='distance',n_jobs=-1), SVC(), DecisionTreeClassifier(), RandomForestClassifier(n_estimators=100, verbose =0,n_jobs=-1), GradientBoostingClassifier(verbose=0,loss='deviance'), AdaBoostClassifier(base_estimator = DecisionTreeClassifier(), n_estimators=10), GaussianNB(), MLPClassifier((100,100),alpha=0.001, activation = 'relu',verbose=0,learning_rate='adaptive')],# a list of model improted from sklearn
-        'gridsearchlist': [True, False, False, False, False, False, False, False],
+        'model_lists': [KNeighborsClassifier(n_neighbors = 10, weights='distance',n_jobs=-1), SVC(), DecisionTreeClassifier(), RandomForestClassifier(n_estimators=100, verbose =0,n_jobs=-1), GradientBoostingClassifier(verbose=0,loss='deviance'), AdaBoostClassifier(base_estimator = DecisionTreeClassifier(), n_estimators=10), GaussianNB(), MLPClassifier((100,100),alpha=0.001, activation = 'relu',verbose=0,learning_rate='adaptive')],# a list of model improted from sklearn
+        'gridsearchlist': [False, False, False, False, False, False, False, False],
         'param_list': [{'n_neighbors':range(1, 30)}, {'C': [0.1, 1, 10], 'kernel': ('linear', 'poly', 'rbf')},  {'max_depth': [10, 100, 1e3]}, {'n_estimators':[10, 100]}, {'n_estimators':[10, 100]},{'n_estimators':[10, 100]}, {'var_smoothing':[1e-9, 1e-3]},{'hidden_layer_sizes':((100, 300, 500, 300, 100), (100, 300, 500, 500, 300, 100), (200, 600, 900, 600, 200))}]# a list of key parameters correspond to the models in the model_lists
         }
 
@@ -298,7 +298,7 @@ class MyMLdata:
                 # record the training accuracy.
                 # however, we need to calculate the accuracy based on the sample, so the weight should be calculated saperately
                 weights = self.sample_weight_generator(y_train)
-                f1_training = model.score(X_train_scaled, y_train, sample_weight=weights)
+                f1_training = model.score(X_train_scaled, y_train)
 
             # evaluate the model using micro f1 score (accuracy):
             f1 = f1_score(y_test, y_pred, average='macro')
@@ -423,7 +423,7 @@ class MyMLdata:
             else:
                 weights.append(negative_weight)
         # rescalse the weights:
-        weights = weights/sum(weights)
+        weights = np.array(weights)/sum(weights)
         return weights
 # %%-
 

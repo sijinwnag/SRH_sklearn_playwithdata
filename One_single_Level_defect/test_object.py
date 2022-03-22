@@ -9,8 +9,8 @@ df1 = MyMLdata(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\O
 # %%-
 
 # %%--- original setting as Yoann code.
-df1.singletask = 'k'
-df1.regression_repeat()
+# df1.singletask = 'k'
+# df1.regression_repeat()
 df1.singletask = 'bandgap'
 df1.classification_repeat()
 # %%-
