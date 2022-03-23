@@ -111,14 +111,14 @@ class MyMLdata_2level:
             # we must apply the scaling to the test set that we computed for the training set
             X_test_scaled = scaler.transform(X_test)
             # train the different models and collect the r2 score.
-            if output_y_pred == True: # if we plan to collect the y predction
-                r2score, y_prediction, y_test = self.regression_training(X_train_scaled=X_train_scaled, X_test_scaled=X_test_scaled, y_train=y_train, y_test=y_test, plot=plot, output_y_pred=True)
-                r2_frame.append(r2score)
-                y_prediction_frame.append(y_prediction)
-                y_test_frame.append(y_test)
-            else: # when we do not need to collect the y prediction
-                r2score = self.regression_training(X_train_scaled=X_train_scaled, X_test_scaled=X_test_scaled, y_train=y_train, y_test=y_test, plot=plot)
-                r2_frame.append(r2score)
+            # if output_y_pred == True: # if we plan to collect the y predction
+            r2score, y_prediction, y_test = self.regression_training(X_train_scaled=X_train_scaled, X_test_scaled=X_test_scaled, y_train=y_train, y_test=y_test, plot=plot, output_y_pred=True)
+            r2_frame.append(r2score)
+            y_prediction_frame.append(y_prediction)
+            y_test_frame.append(y_test)
+            # else: # when we do not need to collect the y prediction
+            # r2score = self.regression_training(X_train_scaled=X_train_scaled, X_test_scaled=X_test_scaled, y_train=y_train, y_test=y_test, plot=plot)
+            # r2_frame.append(r2score)
             # print the number of iteration finished after finishing each iteration
             print('finish iteration ' + str(counter))
         # now r2_frame is a list of list containing the values for each trial for each model.
@@ -138,6 +138,23 @@ class MyMLdata_2level:
         #     y = 8.5/(len(r2_av) + 1)*k + 0.5
         #     # x=0.99
         #     plt.text(x=0.98, y=y, s=str(round(r2_av[k], 3)) + '+-' + str(round(r2_std[k], 3)))
+        plt.show()
+
+        # plot real vs predicted for the best trial
+        # find the position which has the best R2 score.
+        r2_score_k = np.array(r2_frame)
+        max_position = np.argwhere(r2_score_k == np.max(r2_score_k))
+        repeat_num = int(max_position[0][0])
+        model_num = int(max_position[0][1])
+        # plot the graph for real vs predicted
+        plt.figure()
+        # print(np.shape(r2_frame))
+        # print(np.shape(y_prediction_frame))
+        plt.scatter(np.array(y_test_frame)[repeat_num], np.array(y_prediction_frame)[repeat_num, :, model_num], label=('$R^2$' + '=' + str(round(np.max(r2_score_k), 3))))
+        plt.xlabel('real value')
+        plt.ylabel('predicted value')
+        plt.title('real vs predicted at trial ' + str(repeat_num + 1) + ' using method ' + str(self.reg_param['model_names'][model_num]))
+        plt.legend()
         plt.show()
 
         if output_y_pred == False:
@@ -876,5 +893,4 @@ class MyMLdata_2level:
             # perform the prediction.
             y_pred = model.predict(X_scaled)
             return y_pred
-
 # %%-

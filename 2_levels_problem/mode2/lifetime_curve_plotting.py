@@ -244,7 +244,7 @@ class two_level_lifetime_plot():
         plt.yscale('log')
 
 
-    def plot_swing_T(self, excess_range=np.logspace(12,17), T_range=np.linspace(150, 160, 3)):
+    def plot_swing_T(self, excess_range=np.logspace(12,17), T_range=np.linspace(290, 310, 3)):
         """
         This plot aims to swing T for lifetime curve.
         """
@@ -253,13 +253,16 @@ class two_level_lifetime_plot():
         plt.xlabel('excess carrier concentration $cm^{-3}$')
         plt.ylabel('lifetime (s)')
         # we will swing across different temperature
+        labellist = []
         for T in T_range:
             self.T = T
             self.plot_onecurve(excess_range=excess_range)
+            labellist.append(str(int(round(T))) + 'K')
+        plt.legend(labellist)
         plt.show()
 
 
-    def plot_swing_doping(self, excess_range=np.logspace(12,17), doping_range=np.logspace(12, 19, 5)):
+    def plot_swing_doping(self, excess_range=np.logspace(12,17), doping_range=np.logspace(13, 15, 3)):
         """
         This plot aims to swing doping for lifetime curve.
         """
@@ -267,8 +270,29 @@ class two_level_lifetime_plot():
         plt.title('two-level defect lifeitme at different doping level')
         plt.xlabel('excess carrier concentration $cm^{-3}$')
         plt.ylabel('lifetime (s)')
-        # we will swing across different temperature
+        # we will swing across different doping.
+        labellist = []
         for doping in doping_range:
             self.doping = doping
             self.plot_onecurve(excess_range=excess_range)
+            labellist.append(str(np.format_float_scientific(doping, precision = 1, exp_digits=3)) + '$cm^{-3}$')
+        plt.legend(labellist)
+        plt.show()
+
+
+    def plot_swing_Et1(self, excess_range=np.logspace(12,17), Et_range=np.linspace(0.3, -0.3, 10)):
+        """
+        This plot aims to swing doping for lifetime curve.
+        """
+        plt.figure()
+        plt.title('two-level defect lifeitme at different $E_{t1}$')
+        plt.xlabel('excess carrier concentration $cm^{-3}$')
+        plt.ylabel('lifetime (s)')
+        # we will swing across different temperature
+        labellist = []
+        for Et1 in Et_range:
+            self.Et1 = Et1
+            self.plot_onecurve(excess_range=excess_range)
+            labellist.append(str(round(Et1, 3)) + 'eV')
+        plt.legend(labellist)
         plt.show()
