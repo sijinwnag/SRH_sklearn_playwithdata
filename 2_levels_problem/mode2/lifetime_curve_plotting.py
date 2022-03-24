@@ -10,7 +10,7 @@ class two_level_lifetime_plot():
     """
 
 
-    def __init__(self, T=300, doping_type='p', doping=1e15, sigman1 = 1e-15, sigman2 = 1e-15, sigmap1 = 1e-14, sigmap2 = 1e-14, E1=0.1, E2=-0.1, Nt=1e10):
+    def __init__(self, T=300, doping_type='p', doping=1e15, sigman1 = 1e-15, sigman2 = 1e-15, sigmap1 = 1e-14, sigmap2 = 1e-14, E1=0.1, E2=-0.1, Nt=1e12):
         """
         1. define the basic default parameters
         """
@@ -234,8 +234,8 @@ class two_level_lifetime_plot():
             # calculate n1 and p1 and n2 and p2
             n1, p1 = self.n1p1SRH2(self.Et1, self.T, dn)
             n2, p2 = self.n1p1SRH2(self.Et2, self.T, dn)
-            # calculate the lifetime:
-            tau = self.SRHlifetime_two_level(dn, p0, n0, p1, n1, p2, n2, self.sigman1, self.sigman2, self.sigmap1, self.sigmap2, vn, vp, self.Nt)
+            # calculate the lifetime: self, dn, p0, n0, p1, n1, p2, n2, sigman1, sigman2, sigmap1, sigmap2, vn, vp, Nt
+            tau = self.SRHlifetime_two_level(dn=dn, p0=p0, n0=n0, p1=p1, n1=n1, p2=p2, n2=n2, sigman1=self.sigman1, sigman2=self.sigman2, sigmap1=self.sigmap1, sigmap2=self.sigmap2, vn=vn, vp=vp, Nt=self.Nt)
             taulist.append(tau)
 
         # plot tau as a function of excess carrier concentration
