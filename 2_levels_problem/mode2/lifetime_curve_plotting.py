@@ -2,6 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import scipy.constants as const
 from semiconductor.recombination import SRH
+# import sys
+# sys.path
 
 
 class two_level_lifetime_plot():
@@ -296,3 +298,32 @@ class two_level_lifetime_plot():
             labellist.append(str(round(Et1, 3)) + 'eV')
         plt.legend(labellist)
         plt.show()
+
+
+    def interactiveplot(self, excess_upperbound=12, excess_lowerbound=17):
+        # we will swing across different doping level
+        # create an empty list for tau:
+        excess_range=np.logspace(excess_lowerbound, excess_upperbound)
+        taulist = []
+        for dn in excess_range:
+            # calculate the thermal thermal velocity.
+            vn, vp, ni = self.thermal_velocity(self.T, self.Nt, dn, self.doping, self.dopingtype)
+            # calculate the minority carrier concentration:
+            # Calculate n0 and p0
+            if self.dopingtype == "p":
+                p0 = (0.5 * (np.abs(self.doping - 0) + np.sqrt((0 - self.doping)**2 + 4 * ni**2)))
+                n0 = (ni**2)/p0
+            if self.dopingtype == "n":
+                n0 = (0.5 * (np.abs(self.doping - 0) + np.sqrt((0 - self.doping)**2 + 4 * ni**2)))
+                p0 = (ni**2)/n0
+            # calculate n1 and p1 and n2 and p2
+            n1, p1 = self.n1p1SRH2(self.Et1, self.T, dn)
+            n2, p2 = self.n1p1SRH2(self.Et2, self.T, dn)
+            # calculate the lifetime: self, dn, p0, n0, p1, n1, p2, n2, sigman1, sigman2, sigmap1, sigmap2, vn, vp, Nt
+            tau = self.SRHlifetime_two_level(dn=dn, p0=p0, n0=n0, p1=p1, n1=n1, p2=p2, n2=n2, sigman1=self.sigman1, sigman2=self.sigman2, sigmap1=self.sigmap1, sigmap2=self.sigmap2, vn=vn, vp=vp, Nt=self.Nt)
+            taulist.append(tau)
+
+        # plot tau as a function of excess carrier concentration
+        plt.plot(excess_range, taulist)
+        plt.xscale('log')
+        plt.yscale('log')

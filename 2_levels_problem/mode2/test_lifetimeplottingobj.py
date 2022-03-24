@@ -1,5 +1,6 @@
 # %%-- import and setup
 from lifetime_curve_plotting import *
+from ipywidgets import interact
 # %%-
 
 # %%-- lifetime plot one curve
@@ -19,5 +20,9 @@ lifetime_obj.plot_swing_doping(doping_range=np.logspace(13, 19, 6))
 
 # %%-- lifetime plot at different Et1.
 lifetime_obj = two_level_lifetime_plot()
-lifetime_obj.plot_swing_Et1(Et_range=np.linspace(0.3, -0.3, 20))
+lifetime_obj.plot_swing_Et1(Et_range=np.linspace(0.3, -0.3, 10))
+# %%-
+
+# %%-- interactive visualization
+# see jupyter notebook
 # %%-
