@@ -300,30 +300,44 @@ class two_level_lifetime_plot():
         plt.show()
 
 
-    def interactiveplot(self, excess_upperbound=12, excess_lowerbound=17):
-        # we will swing across different doping level
-        # create an empty list for tau:
-        excess_range=np.logspace(excess_lowerbound, excess_upperbound)
-        taulist = []
-        for dn in excess_range:
-            # calculate the thermal thermal velocity.
-            vn, vp, ni = self.thermal_velocity(self.T, self.Nt, dn, self.doping, self.dopingtype)
-            # calculate the minority carrier concentration:
-            # Calculate n0 and p0
-            if self.dopingtype == "p":
-                p0 = (0.5 * (np.abs(self.doping - 0) + np.sqrt((0 - self.doping)**2 + 4 * ni**2)))
-                n0 = (ni**2)/p0
-            if self.dopingtype == "n":
-                n0 = (0.5 * (np.abs(self.doping - 0) + np.sqrt((0 - self.doping)**2 + 4 * ni**2)))
-                p0 = (ni**2)/n0
-            # calculate n1 and p1 and n2 and p2
-            n1, p1 = self.n1p1SRH2(self.Et1, self.T, dn)
-            n2, p2 = self.n1p1SRH2(self.Et2, self.T, dn)
-            # calculate the lifetime: self, dn, p0, n0, p1, n1, p2, n2, sigman1, sigman2, sigmap1, sigmap2, vn, vp, Nt
-            tau = self.SRHlifetime_two_level(dn=dn, p0=p0, n0=n0, p1=p1, n1=n1, p2=p2, n2=n2, sigman1=self.sigman1, sigman2=self.sigman2, sigmap1=self.sigmap1, sigmap2=self.sigmap2, vn=vn, vp=vp, Nt=self.Nt)
-            taulist.append(tau)
+    def plot_swing_Et2(self, excess_range=np.logspace(12,17), Et_range=np.linspace(0.3, -0.3, 10)):
+        """
+        This plot aims to swing doping for lifetime curve.
+        """
+        plt.figure()
+        plt.title('two-level defect lifeitme at different $E_{t2}$')
+        plt.xlabel('excess carrier concentration $cm^{-3}$')
+        plt.ylabel('lifetime (s)')
+        # we will swing across different temperature
+        labellist = []
+        for Et2 in Et_range:
+            self.Et2 = Et2
+            self.plot_onecurve(excess_range=excess_range)
+            labellist.append(str(round(Et2, 3)) + 'eV')
+        plt.legend(labellist)
+        plt.show()
 
-        # plot tau as a function of excess carrier concentration
-        plt.plot(excess_range, taulist)
-        plt.xscale('log')
-        plt.yscale('log')
+
+    def plot_swing_sigma(self, excess_range=np.logspace(12,17), area_range=np.linspace(1e-16, 1e-14, 5), area_name='sigman1'):
+        """
+        area_name is a string input that can be either: sigman1, sigman2, sigmap1, sigmap2
+        """
+        plt.figure()
+        plt.title('two-level defect lifeitme at different ' + area_name)
+        plt.xlabel('excess carrier concentration $cm^{-3}$')
+        plt.ylabel('lifetime (s)')
+        # we will swing across different temperature
+        labellist = []
+        for area in area_range:
+            if area_name == 'sigman1':
+                self.sigman1 = area
+            if area_name == 'sigman2':
+                self.sigman2 = area
+            if area_name == 'sigmap1':
+                self.sigmap1 = area
+            if area_name == 'sigmap1':
+                self.sigmap2 = area
+            self.plot_onecurve(excess_range=excess_range)
+            labellist.append(str(np.format_float_scientific(area, precision = 1, exp_digits=3)) + '$cm^{-3}$')
+        plt.legend(labellist)
+        plt.show()
