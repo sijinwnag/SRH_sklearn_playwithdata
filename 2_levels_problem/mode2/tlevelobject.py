@@ -52,6 +52,10 @@ r2scores = df1.regression_repeat()
 # try asking for E1 given bandgap 1
 df1.singletask = 'Et_eV_1_known_bandgap1'
 r2scores = df1.regression_repeat() # this makes the results better but has data leakage, test if adding the esmiated bandgap 1 will help
+
+# do regression for the difference of energy level: does not work, but better than doing each energy individually, but still very bad.
+df1.singletask = 'Et_eV_1-Et_eV_2'
+r2scores = df1.regression_repeat()
 # %%-
 
 # %%-- Performe 2 step regression: bandgap1->Et1: failed because bandgap1 does not work

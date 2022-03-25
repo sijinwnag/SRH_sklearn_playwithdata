@@ -684,6 +684,8 @@ class MyMLdata_2level:
         elif singletask == 'Et_eV_1_known_predicted_bandgap_1':
             X['predicted_bandgap_1'] = dfk['predicted_bandgap_1']
             y = dfk['Et_eV_1']
+        elif singletask == 'Et_eV_1-Et_eV_2':
+            y = dfk['Et_eV_1'] - dfk['Et_eV_2']
         else:
             y = dfk[singletask]
         # store the X and y to the object.
