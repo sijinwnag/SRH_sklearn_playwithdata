@@ -32,7 +32,7 @@ lifetime_obj.plot_swing_Et1(Et_range=np.linspace(-0.33, 0.1, 5))
 # %%-- lifetime plot at different cross capture area.
 # swing across signman1
 lifetime_obj = two_level_lifetime_plot()
-lifetime_obj.plot_swing_sigma(area_range=np.linspace(1e-16, 1e-14, 5))
+lifetime_obj.plot_swing_sigma(area_range=np.linspace(1e-16, 1e-14, 5), area_name='sigman1')
 # swing across sigman2
 lifetime_obj = two_level_lifetime_plot()
 lifetime_obj.plot_swing_sigma(area_range=np.linspace(1e-16, 1e-14, 5), area_name='sigman2')
@@ -47,18 +47,14 @@ lifetime_obj.plot_swing_sigma(area_range=np.linspace(1e-16, 1e-14, 5), area_name
 
 # %%--- see if classification make sense
 plt.figure()
-lifetime_obj = two_level_lifetime_plot(E1=0, E2=0)
+lifetime_obj = two_level_lifetime_plot(E1=0.33, E2=0.32)
 lifetime_obj.plot_onecurve()
 plt.figure()
-lifetime_obj = two_level_lifetime_plot(E1=0.33, E2=0.33)
+lifetime_obj = two_level_lifetime_plot(E1=-0.33, E2=-0.32)
 lifetime_obj.plot_onecurve()
 plt.figure()
-lifetime_obj = two_level_lifetime_plot(E1=-0.33, E2=-0.33)
+lifetime_obj = two_level_lifetime_plot(E1=0.33, E2=-0.32)
 lifetime_obj.plot_onecurve()
-plt.figure()
-lifetime_obj = two_level_lifetime_plot(E1=0.33, E2=-0.33)
-lifetime_obj.plot_onecurve()
-
 # %%-
 
 
