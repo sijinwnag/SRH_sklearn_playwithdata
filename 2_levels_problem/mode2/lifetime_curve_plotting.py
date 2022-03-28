@@ -215,7 +215,7 @@ class two_level_lifetime_plot():
         return Vn, Vp, ni
 
 
-    def plot_onecurve(self, excess_range=np.logspace(12,17)):
+    def plot_onecurve(self, excess_range=np.logspace(10,19)):
         """
         excess range refers to the excess carrier concentration range that we want to plot on
         """

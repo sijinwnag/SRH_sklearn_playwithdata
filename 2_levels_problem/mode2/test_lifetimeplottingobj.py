@@ -45,6 +45,23 @@ lifetime_obj.plot_swing_sigma(area_range=np.linspace(1e-16, 1e-14, 5), area_name
 # %%-
 
 
+# %%--- see if classification make sense
+plt.figure()
+lifetime_obj = two_level_lifetime_plot(E1=0, E2=0)
+lifetime_obj.plot_onecurve()
+plt.figure()
+lifetime_obj = two_level_lifetime_plot(E1=0.33, E2=0.33)
+lifetime_obj.plot_onecurve()
+plt.figure()
+lifetime_obj = two_level_lifetime_plot(E1=-0.33, E2=-0.33)
+lifetime_obj.plot_onecurve()
+plt.figure()
+lifetime_obj = two_level_lifetime_plot(E1=0.33, E2=-0.33)
+lifetime_obj.plot_onecurve()
+
+# %%-
+
+
 # %%-- interactive visualization
 # see jupyter notebook
 # %%-
