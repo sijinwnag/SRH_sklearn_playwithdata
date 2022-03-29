@@ -4,14 +4,15 @@ import sys
 # sys.path.append(r'C:\Users\budac\Documents\GitHub\SRH_sklearn_playwithdata\One_single_Level_defect')
 sys.path.append(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem')
 from MLobject_tlevel import *
-df1 = MyMLdata_2level(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\single_two_level_prob.csv', 'logk_1', 1)
+df1 = MyMLdata_2level(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\single_two_level_1e15doping.csv', 'bandgap1', 2)
+# df1 = MyMLdata_2level(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\single_two_level_prob.csv', 'bandgap1', 2)
 # %%-
 
 # %%-- perform bandgap classification.
 df1.singletask='bandgap_1'
 # try svc by itself
 # X, y = df1.pre_processor()
-f1scores, y_prediction_frame, y_test_frame = df1.classification_repeat(display_confusion_matrix=False)
+f1scores, y_prediction_frame, y_test_frame = df1.classification_repeat()
 # playsound('spongbob.mp3')
 # f1scores.to_csv('bandgap1')
 # does not work: the micro f1 score is high because most of bandgap 1 is 1, so the score of guessing everything is 1 is high, if you calculate macro average scroe, the score is less than 0.5, which is low.
@@ -20,7 +21,7 @@ f1scores, y_prediction_frame, y_test_frame = df1.classification_repeat(display_c
 df1.singletask='bandgap_2'
 # try svc by itself
 # X, y = df1.pre_processor()
-f1scores2, y_prediction_frame, y_test_frame = df1.classification_repeat(display_confusion_matrix=False)
+f1scores2, y_prediction_frame, y_test_frame = df1.classification_repeat()
 # playsound('spongbob.mp3')
 # f1scores2.to_csv('bandgap1.csv')
 # does not work

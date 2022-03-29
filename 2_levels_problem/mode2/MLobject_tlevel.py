@@ -341,7 +341,7 @@ class MyMLdata_2level:
             X_train_scaled = scaler.fit_transform(X_train)
             # we must apply the scaling to the test set that we computed for the training set
             X_test_scaled = scaler.transform(X_test)
-            bestmodel, f1_score, y_pred, y_test= self.classification_training(X_train_scaled, X_test_scaled, y_train, y_test, return_model=True)
+            bestmodel, f1_score, y_pred, y_test= self.classification_training(X_train_scaled, X_test_scaled, y_train, y_test, return_model=True, display_confusion_matrix=display_confusion_matrix)
             f1_frame.append(f1_score)
             y_prediction_frame.append(y_pred)
             y_test_frame.append(y_test)
@@ -361,6 +361,17 @@ class MyMLdata_2level:
         plt.boxplot(f1_frame, vert=False, labels=labels)
         plt.title('$F_1$' + 'score for classification ' + str(self.singletask))
         plt.show()
+
+        # print hte confusion matrix for the best trial.
+        f1_score = np.array(f1_frame)
+        max_position = np.argwhere(f1_score == np.max(f1_score))
+        repeat_num = int(max_position[0][0])
+        model_num = int(max_position[0][1])
+        # display the confusion matrix.
+        print('The best accuracy is ' + str(round(np.max(f1_score), 3)))
+        # print(y_test_frame)
+        # print(y_prediction_frame)
+        print(confusion_matrix(np.array(y_test_frame)[repeat_num, model_num, :], np.array(y_prediction_frame)[repeat_num,  model_num, :], normalize='all'))
 
         if return_model == True:
             return f1_frame, y_prediction_frame, y_test_frame, bestmodel, scaler
@@ -686,6 +697,10 @@ class MyMLdata_2level:
             y = dfk['Et_eV_1']
         elif singletask == 'Et_eV_1-Et_eV_2':
             y = dfk['Et_eV_1'] - dfk['Et_eV_2']
+        elif singletask == 'multi classification':
+            # define the classification.
+            y = dfk['bandgap_1'] + dfk['bandgap_2']
+            # define y as a class.
         else:
             y = dfk[singletask]
         # store the X and y to the object.
@@ -850,7 +865,7 @@ class MyMLdata_2level:
 # %%-
 
 
-# %%--- The functions for classification->regression
+# %%--- The functions for classification->regression chain
     def dataset_splitter(self, size=0.5):
         """
         When doing two different machine learning algarsim, to avoid data leakage, we need two different data frame for each task.
