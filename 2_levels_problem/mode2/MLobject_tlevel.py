@@ -701,6 +701,12 @@ class MyMLdata_2level:
             # define the classification.
             y = dfk['bandgap_1'] + dfk['bandgap_2']
             # define y as a class.
+        elif singletask == 'bandgap_2_known_1':
+            # add the bandgap 1 and energy 1 into X.
+            X['bandgap_1'] = dfk['bandgap_1']
+            X['Et_eV_1'] = dfk['Et_eV_1']
+            # define target as bandgap 2
+            y = dfk['bandgap_2']
         else:
             y = dfk[singletask]
         # store the X and y to the object.

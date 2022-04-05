@@ -4,8 +4,8 @@ import sys
 # sys.path.append(r'C:\Users\budac\Documents\GitHub\SRH_sklearn_playwithdata\One_single_Level_defect')
 sys.path.append(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem')
 from MLobject_tlevel import *
-# df1 = MyMLdata_2level(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\single_two_level_1e15doping.csv', 'bandgap1', 2)
-df1 = MyMLdata_2level(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\single_two_level_prob.csv', 'bandgap1', 2)
+df1 = MyMLdata_2level(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\single_two_level_1e15doping.csv', 'bandgap1', 5)
+# df1 = MyMLdata_2level(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\single_two_level_prob.csv', 'bandgap1', 1)
 # %%-
 
 # %%-- perform bandgap classification.
@@ -25,6 +25,10 @@ f1scores2, y_prediction_frame, y_test_frame = df1.classification_repeat()
 # playsound('spongbob.mp3')
 # f1scores2.to_csv('bandgap1.csv')
 # does not work
+
+# do the regression for energy 2 given energy 1 and bandgap 1
+df1.singletask = 'bandgap_2_known_1'
+r2scores = df1.classification_repeat()
 # %%-
 
 # %%-- Perform k regression.
@@ -84,8 +88,8 @@ r2scores = df1.regression_repeat()
 # %%-- Try splitting the dataset then try different tasks:
 set11, set10, set01, set00 = df1.bandgap_split()
 # %%--- Perform k regression for set 11
-df1.data = set11
-df1.singletask = 'logk_1'
+df1.data = set00
+df1.singletask = 'Et_eV_1'
 r2scores_11_k1 = df1.regression_repeat()
 # r2scores_11_k1.to_csv('k1_set11.csv')
 # not work either same behaviour as original setting.
