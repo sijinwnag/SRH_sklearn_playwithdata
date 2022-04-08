@@ -4,7 +4,7 @@ import sys
 # sys.path.append(r'C:\Users\budac\Documents\GitHub\SRH_sklearn_playwithdata\One_single_Level_defect')
 sys.path.append(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem')
 from MLobject_tlevel import *
-df1 = MyMLdata_2level(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\single_two_level_1e15doping.csv', 'bandgap1', 5)
+df1 = MyMLdata_2level(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\single_two_level_1e15doping.csv', 'bandgap1', 2)
 # df1 = MyMLdata_2level(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\single_two_level_prob.csv', 'bandgap1', 1)
 # %%-
 
@@ -35,13 +35,14 @@ r2scores = df1.classification_repeat()
 df1.singletask = 'logk_1'
 r2scores = df1.regression_repeat()
 # r2scores.to_csv('k1_original.csv')
-# not working
+# reach about 0.75 for 1e15 doping level.
 df1.singletask = 'logk_2'
 r2scores = df1.regression_repeat()
 # not working.
 df1.singletask = 'logk_1+logk_2'
 r2scores = df1.regression_repeat()
 # r2scores.to_csv('logk1pluslogk2')
+# it is working.
 # %%-
 
 # %%-- Perform Et regression.
@@ -88,14 +89,14 @@ r2scores = df1.regression_repeat()
 # %%-- Try splitting the dataset then try different tasks:
 set11, set10, set01, set00 = df1.bandgap_split()
 # %%--- Perform k regression for set 11
-df1.data = set00
+df1.data = set11
 df1.singletask = 'Et_eV_1'
 r2scores_11_k1 = df1.regression_repeat()
 # r2scores_11_k1.to_csv('k1_set11.csv')
 # not work either same behaviour as original setting.
-for dataset in [set00]:
+for dataset in [set11, set10, set00]:
     df1.data = dataset
-    for task in ['logk_1', 'logk_2', 'logk_1+logk_2', 'Et_eV_1', 'Et_eV_2']:
+    for task in ['Et_eV_1', 'Et_eV_2', 'Et_eV_1-Et_eV_2', 'Et_eV_1+Et_eV_2']:
         df1.singletask = task
         r2score = df1.regression_repeat()
 # %%-
