@@ -4,11 +4,11 @@ import sys
 # sys.path.append(r'C:\Users\budac\Documents\GitHub\SRH_sklearn_playwithdata\One_single_Level_defect')
 sys.path.append(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\One_single_Level_defect')
 from MLobject import *
-df1 = MyMLdata(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\One_single_Level_defect\2022-02-01-12-07-56_Main_datasetID_0.csv', 'Et_eV', 2)
+df1 = MyMLdata(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\One_single_Level_defect\2022-02-01-12-07-56_Main_datasetID_0.csv', 'Et_eV', 1)
 # df1.regression_repeat(n_repeat=1) # check if k regression works after converting into class.
 # %%-
 
-# %%--- original setting as Yoann code.
+# %%--- original setting as Yoann code: single task.
 # df1.singletask = 'k'
 # df1.regression_repeat()
 df1.singletask = 'bandgap'
