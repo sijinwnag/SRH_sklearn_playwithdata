@@ -754,7 +754,7 @@ class MyMLdata_2level:
         output:
             r2matrix: a matrix of r2 score, the columns correspond to different task and the row correspond to different ML models
         """
-        X_train_scaled, X_test_scaled, y_train, y_test = self.preprocessor_chain_regression(chain_name)
+        X_train_scaled, X_test_scaled, y_train, y_test = self.preprocessor_chain_regression(chain_name=chain_name)
         # read the parameter setting from the object itself:
         model_names = self.reg_param['model_names']
         model_lists = self.reg_param['model_lists']
@@ -806,7 +806,7 @@ class MyMLdata_2level:
         modelindex = np.argwhere(r2_matrix[:, -1] == np.max(r2_matrix[:, -1]))[0][0]
         print('the best R2 score is using ' + str(model_names[modelindex]))
         # plot the prediction vs test for each tasks.
-        tasknamelist = ['$E_{t1}$', '$E_{t1}$+$E_{t2}$', '$E_{t2}$']
+        tasknamelist = y_train.columns.tolist()
         for k in range(np.shape(y_test)[1]):
             plt.figure()
             plt.scatter(y_test[:, k], y_pred_ordered[:, k], label='$R^2$=' + str(np.max(r2_matrix[modelindex, k])))
@@ -859,7 +859,7 @@ class MyMLdata_2level:
         return X_train_scaled, X_test_scaled, y_train, y_test
 
 
-    def repeat_chain_regressor(self, repeat_num, regression_order, chain_name):
+    def repeat_chain_regressor(self, repeat_num, regression_order, chain_name='Et1->Et2'):
         """
         repeat the chain regressor for both plus and minus Et for multiple times
         input:
@@ -872,7 +872,7 @@ class MyMLdata_2level:
         # iterate for each repeatition
         for k in range(repeat_num):
             # iterate for upper and lower bandgap
-            r2matrix = self.chain_regression_once(regression_order=regression_order, chain_name)
+            r2matrix = self.chain_regression_once(regression_order=regression_order, chain_name=chain_name)
             # we want to put the same task into the same table
             r2list.append(r2matrix)
             print('finish repeatition ' + str(k+1))
