@@ -40,8 +40,9 @@ class MyMLdata:
         regression_default_param = {
         'model_names': ['KNN', 'Ridge Linear Regression', 'Random Forest', 'Neural Network', 'Gradient Boosting', 'Ada Boosting', 'Support Vector'], # a list of name for each model.
         'model_lists': [KNeighborsRegressor(), Ridge(), RandomForestRegressor(n_estimators=100, verbose =0, n_jobs=-1), MLPRegressor((100,100),alpha=0.001, activation = 'relu',verbose=0,learning_rate='adaptive'), GradientBoostingRegressor(verbose=0,loss='ls',max_depth=10), AdaBoostRegressor(base_estimator = DecisionTreeRegressor(), n_estimators=100, loss='linear'), SVR(kernel='rbf',C=5,verbose=0, gamma="auto")],# a list of model improted from sklearn
-        'gridsearchlist': [False, False, False, False, False, False, False], # each element in this list corspond to a particular model, if True, then we will do grid search while training the model, if False, we will not do Gridsearch for this model.
-        'param_list': [{'n_neighbors':range(1, 30)}, {'alpha': [0.01, 0.1, 1, 10]}, {'n_estimators': [200, 100], 'verbose':0, 'n_jobs':-1}, {'hidden_layer_sizes':((100, 300, 300, 100), (100, 300, 500, 300, 100), (200, 600, 600, 200), (200, 600, 900, 600, 200)), 'alpha': [0.001], 'learning_rate':['adaptive']}, {'n_estimators':[200, 100]}, {'n_estimators':[50, 100]}, {'C': [0.1, 1, 10], 'epsilon': [1e-2, 0.1, 1]}]# a list of key parameters correspond to the models in the model_lists if we are going to do grid searching
+        # 'gridsearchlist': [False, False, False, False, False, False, False], # each element in this list corspond to a particular model, if True, then we will do grid search while training the model, if False, we will not do Gridsearch for this model.
+        'gridsearchlist': [True, True, True, True, True, True, True],
+        'param_list': [{'n_neighbors':np.array(range(1, 30))}, {'alpha': [0.01, 0.1, 1, 10]}, {'n_estimators': [200, 100, 50, 600], 'verbose':[0], 'n_jobs':[-1]}, {'hidden_layer_sizes':((100, 300, 300, 100), (100, 300, 500, 300, 100), (200, 600, 600, 200), (200, 600, 900, 600, 200)), 'alpha': [0.001], 'learning_rate':['adaptive']}, {'n_estimators':[200, 100]}, {'n_estimators':[50, 100]}, {'C': [0.1, 1, 10], 'epsilon': [1e-2, 0.1, 1]}]# a list of key parameters correspond to the models in the model_lists if we are going to do grid searching
         }
         classification_default_param = {
         'model_names': ['KNN', 'SVC', 'Decision tree', 'Random Forest',  'Gradient Boosting', 'Adaptive boosting', 'Naive Bayes', 'Neural Network'], # a list of name for each model.
@@ -212,17 +213,19 @@ class MyMLdata:
                 grid.fit(X_train_scaled, y_train)
                 # use the trained model to predict the y
                 y_pred = grid.predict(X_test_scaled)
+                r2training = grid.score(X_train_scaled, y_train)
             else:
                 # just use the original model.
                 model.fit(X_train_scaled, y_train)
                 # predict with the original model using defalt settings
                 y_pred = model.predict(X_test_scaled)
+                r2training = model.score(X_train_scaled, y_train)
 
             # collect hte y values
             y_pred_list.append(y_pred)
             y_test_list.append(y_test)
             # evaluate the training score as well
-            r2training = model.score(X_train_scaled, y_train)
+
             training_list.append(r2training)
             # evaluate the model using R2 score:
             r2 = r2_score(y_test, y_pred)
