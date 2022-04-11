@@ -39,7 +39,7 @@ class MyMLdata_2level:
         # define the default maching learning setting for both regression and classification.
         regression_default_param = {
         'model_names': ['KNN', 'Ridge Linear Regression', 'Random Forest', 'Neural Network', 'Gradient Boosting', 'Ada Boosting', 'Support Vector'], # a list of name for each model.
-        'model_lists': [KNeighborsRegressor(), Ridge(), RandomForestRegressor(n_estimators=700, verbose =0, n_jobs=-1), MLPRegressor(((100, 300, 500, 700, 500, 300, 100)),alpha=0.001, activation = 'relu',verbose=0,learning_rate='adaptive'), GradientBoostingRegressor(verbose=0,loss='ls',max_depth=10), AdaBoostRegressor(base_estimator = DecisionTreeRegressor(), n_estimators=100, loss='linear'), SVR(kernel='rbf',C=5,verbose=0, gamma="auto")],# a list of model improted from sklearn
+        'model_lists': [KNeighborsRegressor(), Ridge(), RandomForestRegressor(n_estimators=100, verbose =0, n_jobs=-1), MLPRegressor(((100, 300, 500, 700, 500, 300, 100)),alpha=0.001, activation = 'relu',verbose=0,learning_rate='adaptive'), GradientBoostingRegressor(verbose=0,loss='ls',max_depth=10), AdaBoostRegressor(base_estimator = DecisionTreeRegressor(), n_estimators=100, loss='linear'), SVR(kernel='rbf',C=5,verbose=0, gamma="auto")],# a list of model improted from sklearn
         'gridsearchlist': [True, True, False, False, False, False, False], # each element in this list corspond to a particular model, if True, then we will do grid search while training the model, if False, we will not do Gridsearch for this model.
         'param_list': [{'n_neighbors':range(1, 30)}, {'alpha': [0.01, 0.1, 1, 10]}, {'n_estimators': [200, 100, 1000, 500, 2000], 'verbose':[0], 'n_jobs':[-1]}, {'hidden_layer_sizes':((100, 300, 300, 100), (100, 300, 500, 300, 100), (200, 600, 600, 200), (200, 600, 900, 600, 200)), 'alpha': [0.001], 'learning_rate':['adaptive']}, {'n_estimators':[200, 100]}, {'n_estimators':[50, 100]}, {'C': [0.1, 1, 10], 'epsilon': [1e-2, 0.1, 1]}]# a list of key parameters correspond to the models in the model_lists if we are going to do grid searching
         }
@@ -853,6 +853,24 @@ class MyMLdata_2level:
         elif chain_name == 'Et1->Et2':
             y = dfk[['Et_eV_1']]
             y['Et_eV_2'] = dfk['Et_eV_2']
+        elif chain_name == 'logk1+logk2->logk1->logk2':
+            y = np.array(dfk[['logk_1']]) + np.array(dfk[['logk_2']])
+            y = pd.DataFrame(y)
+            y.columns = ['logk_1+logk_2']
+            y['logk_1'] = dfk['logk_1']
+            y['logk_2'] = dfk['logk_2']
+        elif chain_name == 'Et1->Et1+Et2->logk_1->logk_1+logk_2->Et2':
+            y = dfk[['Et_eV_1']]
+            # also include the sum of energy level.
+            y['Et_eV_1+Et_eV_2'] = dfk['Et_eV_1'] + dfk['Et_eV_2']
+            y['logk_1'] = dfk['logk_1']
+            y['logk_1+logk_2'] = dfk['logk_1'] + dfk['logk_2']
+            y['Et_eV_2'] = dfk['Et_eV_2']
+        else:
+            y = dfk[[chain_name[0]]]
+            # in case the chain is input as a list.
+            for columnname in chain_name[1:]:
+                y[colume] = dfk[columnname]
         # print(y)
         X_train_scaled, X_test_scaled, y_train, y_test = train_test_split(X, y, test_size=0.1)
 
