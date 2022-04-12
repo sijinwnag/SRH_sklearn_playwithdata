@@ -687,6 +687,8 @@ class MyMLdata_2level:
         # in case we want to do some combination
         if singletask == 'logk_1+logk_2':
             y = dfk['logk_1'] + dfk['logk_2']
+        elif singletask == 'logk_1-logk_2':
+            y = dfk['logk_1'] - dfk['logk_2']
         elif singletask == 'Et_eV_1+Et_eV_2':
             y = dfk['Et_eV_1'] + dfk['Et_eV_2']
         elif singletask == 'Et_eV_1_known_bandgap1':
@@ -711,6 +713,8 @@ class MyMLdata_2level:
             X['Et_eV_1'] = dfk['Et_eV_1']
             X['Et_eV_1+_Et_eV_2'] = dfk['Et_eV_1'] + dfk['Et_eV_2']
             y = dfk['Et_eV_2']
+        elif singletask == 'Et_eV_1-Et_eV_2':
+            y = dfk['Et_eV_1'] - dfk['Et_eV_2']
         else:
             y = dfk[singletask]
         # store the X and y to the object.
