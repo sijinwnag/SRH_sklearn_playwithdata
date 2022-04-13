@@ -41,7 +41,7 @@ class MyMLdata_2level:
         'model_names': ['KNN', 'Ridge Linear Regression', 'Random Forest', 'Neural Network', 'Gradient Boosting', 'Ada Boosting', 'Support Vector'], # a list of name for each model.
         'model_lists': [KNeighborsRegressor(), Ridge(), RandomForestRegressor(n_estimators=100, verbose =0, n_jobs=-1), MLPRegressor(((100, 300, 500, 700, 500, 300, 100)),alpha=0.001, activation = 'relu',verbose=0,learning_rate='adaptive'), GradientBoostingRegressor(verbose=0,loss='ls',max_depth=10), AdaBoostRegressor(base_estimator = DecisionTreeRegressor(), n_estimators=100, loss='linear'), SVR(kernel='rbf',C=5,verbose=0, gamma="auto")],# a list of model improted from sklearn
         'gridsearchlist': [True, True, False, False, False, False, False], # each element in this list corspond to a particular model, if True, then we will do grid search while training the model, if False, we will not do Gridsearch for this model.
-        'param_list': [{'n_neighbors':range(1, 30)}, {'alpha': [0.01, 0.1, 1, 10]}, {'n_estimators': [200, 100, 1000, 500, 2000], 'verbose':[0], 'n_jobs':[-1]}, {'hidden_layer_sizes':((100, 300, 300, 100), (100, 300, 500, 300, 100), (200, 600, 600, 200), (200, 600, 900, 600, 200)), 'alpha': [0.001], 'learning_rate':['adaptive']}, {'n_estimators':[200, 100]}, {'n_estimators':[50, 100]}, {'C': [0.1, 1, 10], 'epsilon': [1e-2, 0.1, 1]}]# a list of key parameters correspond to the models in the model_lists if we are going to do grid searching
+        'param_list': [{'n_neighbors':range(1, 30)}, {'alpha': [0.01, 0.1, 1, 10]}, {'n_estimators': [200, 100, 1000, 500, 2000], 'verbose':[0], 'n_jobs':[-1]}, {'hidden_layer_sizes':((100, 300, 300, 100), (100, 300, 500, 300, 100), (200, 600, 600, 200), (200, 600, 900, 600, 200), (100, 300, 500, 700, 500, 300, 100)), 'alpha': [0.001], 'learning_rate':['adaptive']}, {'n_estimators':[200, 100]}, {'n_estimators':[50, 100]}, {'C': [0.1, 1, 10], 'epsilon': [1e-2, 0.1, 1]}]# a list of key parameters correspond to the models in the model_lists if we are going to do grid searching
         }
         classification_default_param = {
         'model_names': ['KNN', 'SVC', 'Decision tree', 'Random Forest',  'Gradient Boosting', 'Adaptive boosting', 'Naive Bayes', 'Neural Network'], # a list of name for each model.
@@ -744,7 +744,7 @@ class MyMLdata_2level:
     The plan is to build the chain regressor instead of direct multi-output regressor
     The reason being is that: we have done the direct multi-output regression already using for loop
     """
-    def chain_regression_once(self, regression_order, chain_name):
+    def chain_regression_once(self, regression_order, chain_name, plotall='False'):
         """
         This function perform chain regression on each parameter once.
 
@@ -781,6 +781,7 @@ class MyMLdata_2level:
             # for single level case it is just Et or k
             # reorder the column of y_pred based on the input order:
             y_pred_ordered = y_pred
+            y_pred_list.append(y_pred_ordered)
             # y_pred_ordered = np.zeros_like(y_pred)
             # index2 = 0
             # for number in regression_order:
@@ -802,6 +803,18 @@ class MyMLdata_2level:
                 taskname = y_train.columns.tolist()[k]
                 print('The R2 score for ' + str(taskname) + ' is ' + str(r2))
             r2_matrix.append(r2list)
+            tasknamelist = y_train.columns.tolist()
+
+            # plot the behaviour of all models if requried
+            if plotall == True:
+                for k in range(np.shape(y_test)[1]):
+                    plt.figure()
+                    plt.scatter(y_test[:, k], y_pred_ordered[:, k], label='$R^2$=' + str(np.max(r2list[k])))
+                    plt.xlabel('real value')
+                    plt.ylabel('prediction')
+                    plt.title('real vs prediction using model ' + str(model_names[modelcount]) + ' for ' + tasknamelist[k])
+                    plt.legend()
+                    plt.show()
             modelcount = modelcount + 1
 
         # plot the real vs predicted for all three machine learning tasks for the best trial of the last task.
@@ -811,9 +824,10 @@ class MyMLdata_2level:
         print('the best R2 score is using ' + str(model_names[modelindex]))
         # plot the prediction vs test for each tasks.
         tasknamelist = y_train.columns.tolist()
+        best_y = y_pred_list[modelindex]
         for k in range(np.shape(y_test)[1]):
             plt.figure()
-            plt.scatter(y_test[:, k], y_pred_ordered[:, k], label='$R^2$=' + str(np.max(r2_matrix[modelindex, k])))
+            plt.scatter(y_test[:, k], best_y[:, k], label='$R^2$=' + str(np.max(r2_matrix[modelindex, k])))
             plt.xlabel('real value')
             plt.ylabel('prediction')
             plt.title('real vs prediction using model ' + str(model_names[modelindex]) + ' for ' + tasknamelist[k])
@@ -881,7 +895,7 @@ class MyMLdata_2level:
         return X_train_scaled, X_test_scaled, y_train, y_test
 
 
-    def repeat_chain_regressor(self, repeat_num, regression_order, chain_name='Et1->Et2'):
+    def repeat_chain_regressor(self, repeat_num, regression_order, chain_name='Et1->Et2', plotall=False):
         """
         repeat the chain regressor for both plus and minus Et for multiple times
         input:
@@ -894,7 +908,7 @@ class MyMLdata_2level:
         # iterate for each repeatition
         for k in range(repeat_num):
             # iterate for upper and lower bandgap
-            r2matrix = self.chain_regression_once(regression_order=regression_order, chain_name=chain_name)
+            r2matrix = self.chain_regression_once(regression_order=regression_order, chain_name=chain_name, plotall=plotall)
             # we want to put the same task into the same table
             r2list.append(r2matrix)
             print('finish repeatition ' + str(k+1))
