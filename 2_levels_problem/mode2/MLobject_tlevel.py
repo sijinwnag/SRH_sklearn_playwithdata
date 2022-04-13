@@ -38,7 +38,7 @@ class MyMLdata_2level:
         """
         # define the default maching learning setting for both regression and classification.
         regression_default_param = {
-        'model_names': ['KNN', 'Ridge Linear Regression', 'Random Forest', 'Neural Network', 'Gradient Boosting', 'Ada Boosting', 'Support Vector'], # a list of name for each model.
+        'model_names': ['KNN', 'Ridge Linear Regression', 'Random Forest' , 'Neural Network', 'Gradient Boosting', 'Ada Boosting', 'Support Vector'], # a list of name for each model.
         'model_lists': [KNeighborsRegressor(), Ridge(), RandomForestRegressor(n_estimators=100, verbose =0, n_jobs=-1), MLPRegressor(((100, 300, 500, 700, 500, 300, 100)),alpha=0.001, activation = 'relu',verbose=0,learning_rate='adaptive'), GradientBoostingRegressor(verbose=0,loss='ls',max_depth=10), AdaBoostRegressor(base_estimator = DecisionTreeRegressor(), n_estimators=100, loss='linear'), SVR(kernel='rbf',C=5,verbose=0, gamma="auto")],# a list of model improted from sklearn
         'gridsearchlist': [True, True, False, False, False, False, False], # each element in this list corspond to a particular model, if True, then we will do grid search while training the model, if False, we will not do Gridsearch for this model.
         'param_list': [{'n_neighbors':range(1, 30)}, {'alpha': [0.01, 0.1, 1, 10]}, {'n_estimators': [200, 100, 1000, 500, 2000], 'verbose':[0], 'n_jobs':[-1]}, {'hidden_layer_sizes':((100, 300, 300, 100), (100, 300, 500, 300, 100), (200, 600, 600, 200), (200, 600, 900, 600, 200), (100, 300, 500, 700, 500, 300, 100)), 'alpha': [0.001], 'learning_rate':['adaptive']}, {'n_estimators':[200, 100]}, {'n_estimators':[50, 100]}, {'C': [0.1, 1, 10], 'epsilon': [1e-2, 0.1, 1]}]# a list of key parameters correspond to the models in the model_lists if we are going to do grid searching
@@ -744,7 +744,115 @@ class MyMLdata_2level:
     The plan is to build the chain regressor instead of direct multi-output regressor
     The reason being is that: we have done the direct multi-output regression already using for loop
     """
-    def chain_regression_once(self, regression_order, chain_name, plotall='False'):
+
+    def sum_minus_Et1_chain(self, regression_order, plotall=False, return_pred=False):
+        """
+        This function perform chain regression for Et1->Et1+Et2.
+        Then predict Et2 by Et1+Et2-Et1.
+
+        input:
+            1. regression_order: a list to spesify the order of which one to predict first.
+            for example [0, 1] means predict the first column of y first then the second column.
+
+            2. chain_name: a string input, see the pre processor for chain regression for more detail.
+
+            3. plotall: a boolean input, if True, will plot real vs prediction for all models.
+
+            4. return_pred: a boolean input, if True, will output the predictions of all models.
+
+
+        output:
+            r2matrix: a matrix of r2 score, the columns correspond to different task and the row correspond to different ML models
+        """
+        chain_name='Et1->Et1+Et2->Et2'
+        X_train_scaled, X_test_scaled, y_train, y_test = self.preprocessor_chain_regression(chain_name=chain_name)
+        # read the parameter setting from the object itself:
+        model_names = self.reg_param['model_names']
+        model_lists = self.reg_param['model_lists']
+        gridsearchlist = self.reg_param['gridsearchlist']
+        param_list  = self.reg_param['param_list']
+        # iterate for each model:
+        r2_matrix = []
+        modelcount = 0
+        y_pred_list = []
+        for model in model_lists:
+            # define the chained multioutput wrapper model
+            wrapper = RegressorChain(model, order = regression_order)
+            # fit the model on the whole dataset
+            wrapper.fit(X_train_scaled, y_train)
+            print('finish training chain regressor for ' + model_names[modelcount])
+            # make the prediction:
+            y_pred = wrapper.predict(X_test_scaled)
+            # y_pred_list.append(y_pred)
+            # y_pred should be a list and the element correspond to the y prediction based on the input order.
+            # for single level case it is just Et or k
+            # reorder the column of y_pred based on the input order:
+            y_pred_ordered = y_pred
+            # replace the last colume with the difference of the first two.
+            # print(np.shape(y_pred_ordered))
+            print(y_pred_ordered[0:10, -1])
+            y_pred_ordered[:, -1] = y_pred_ordered[:, 1]-y_pred_ordered[:, 0]
+            print(y_pred_ordered[0:10, -1])
+            print(np.array(y_test)[0:10, -1])
+            y_pred_list.append(y_pred_ordered)
+            # y_pred_ordered = np.zeros_like(y_pred)
+            # index2 = 0
+            # for number in regression_order:
+                # put the column into the right position.
+            #     y_pred_ordered[:, number] = y_pred[:, index2]
+                # update the index.
+            #     index2 = index2 + 1
+            # now the y_pred_ordered is the y_pred with the correct order as y_test.
+            # notice that now y_test and y_pred are 2D matrix.
+            # evaluate the matrix using r2 score:
+            y_test = np.array(y_test)
+            # prepare a list to collect the r2 values
+            r2list = []
+            # iterate for each variable:
+            for k in range(np.shape(y_test)[1]):
+                r2 = (r2_score(y_test[:, k], y_pred_ordered[:, k]))
+                r2list.append(r2)
+                # find use k as index to call y_test title
+                taskname = y_train.columns.tolist()[k]
+                print('The R2 score for ' + str(taskname) + ' is ' + str(r2))
+            r2_matrix.append(r2list)
+            tasknamelist = y_train.columns.tolist()
+
+            # plot the behaviour of all models if requried
+            if plotall == True:
+                for k in range(np.shape(y_test)[1]):
+                    plt.figure()
+                    plt.scatter(y_test[:, k], y_pred_ordered[:, k], label='$R^2$=' + str(np.max(r2list[k])))
+                    plt.xlabel('real value')
+                    plt.ylabel('prediction')
+                    plt.title('real vs prediction using model ' + str(model_names[modelcount]) + ' for ' + tasknamelist[k])
+                    plt.legend()
+                    plt.show()
+            modelcount = modelcount + 1
+
+        # plot the real vs predicted for all three machine learning tasks for the best trial of the last task.
+        # find the model index for the best trial.
+        r2_matrix = np.array(r2_matrix)
+        modelindex = np.argwhere(r2_matrix[:, -1] == np.max(r2_matrix[:, -1]))[0][0]
+        print('the best R2 score is using ' + str(model_names[modelindex]))
+        # plot the prediction vs test for each tasks.
+        tasknamelist = y_train.columns.tolist()
+        best_y = y_pred_list[modelindex]
+        for k in range(np.shape(y_test)[1]):
+            plt.figure()
+            plt.scatter(y_test[:, k], best_y[:, k], label='$R^2$=' + str(np.max(r2_matrix[modelindex, k])))
+            plt.xlabel('real value')
+            plt.ylabel('prediction')
+            plt.title('real vs prediction using model ' + str(model_names[modelindex]) + ' for ' + tasknamelist[k])
+            plt.legend()
+            plt.show()
+
+        if return_pred == True:
+            return model_names, y_pred_list, y_test, r2_matrix
+        return r2_matrix
+
+
+    def chain_regression_once(self, regression_order, chain_name, plotall=False, return_pred=False):
         """
         This function perform chain regression on each parameter once.
 
@@ -752,7 +860,11 @@ class MyMLdata_2level:
             1. regression_order: a list to spesify the order of which one to predict first.
             for example [0, 1] means predict the first column of y first then the second column.
 
-            2. X_train_scaled, X_test_scaled, y_train, y_test.
+            2. chain_name: a string input, see the pre processor for chain regression for more detail.
+
+            3. plotall: a boolean input, if True, will plot real vs prediction for all models.
+
+            4. return_pred: a boolean input, if True, will output the predictions of all models.
 
 
         output:
@@ -776,7 +888,7 @@ class MyMLdata_2level:
             print('finish training chain regressor for ' + model_names[modelcount])
             # make the prediction:
             y_pred = wrapper.predict(X_test_scaled)
-            y_pred_list.append(y_pred)
+            # y_pred_list.append(y_pred)
             # y_pred should be a list and the element correspond to the y prediction based on the input order.
             # for single level case it is just Et or k
             # reorder the column of y_pred based on the input order:
@@ -833,6 +945,9 @@ class MyMLdata_2level:
             plt.title('real vs prediction using model ' + str(model_names[modelindex]) + ' for ' + tasknamelist[k])
             plt.legend()
             plt.show()
+
+        if return_pred == True:
+            return model_names, y_pred_list, y_test, r2_matrix
         return r2_matrix
 
 
@@ -884,6 +999,10 @@ class MyMLdata_2level:
             y['logk_1'] = dfk['logk_1']
             y['logk_1+logk_2'] = dfk['logk_1'] + dfk['logk_2']
             y['Et_eV_2'] = dfk['Et_eV_2']
+        elif chain_name == 'Et1->Et1+Et2':
+            y = dfk[['Et_eV_1']]
+            # also include the sum of energy level.
+            y['Et_eV_1+Et_eV_2'] = dfk['Et_eV_1'] + dfk['Et_eV_2']
         else:
             y = dfk[[chain_name[0]]]
             # in case the chain is input as a list.
@@ -895,25 +1014,34 @@ class MyMLdata_2level:
         return X_train_scaled, X_test_scaled, y_train, y_test
 
 
-    def repeat_chain_regressor(self, repeat_num, regression_order, chain_name='Et1->Et2', plotall=False):
+    def repeat_chain_regressor(self, repeat_num, regression_order, chain_name='Et1->Et2', plotall=False, return_pred=False):
         """
         repeat the chain regressor for both plus and minus Et for multiple times
         input:
         repeat_num, number of repeat to do to
+
         output:
-        a list of 3 tables: k regression mark, Et regression mark above Ei, Et regression mark below Ei
+        y_pred_matrix: a matrix with dimension (repeatition number, model, taks number, number of sample)
         """
         # prepare an empty list to collect different tasks r2 scores.
         r2list = []
+        y_pred_matrix = []
         # iterate for each repeatition
         for k in range(repeat_num):
+            if return_pred == True:
+                model_names, y_pred_list, y_test, r2matrix = self.chain_regression_once(regression_order=regression_order, chain_name=chain_name, plotall=plotall, return_pred=return_pred)
+                r2list.append(r2matrix)
+                y_pred_matrix.append(y_pred_list)
+            else:
             # iterate for upper and lower bandgap
-            r2matrix = self.chain_regression_once(regression_order=regression_order, chain_name=chain_name, plotall=plotall)
-            # we want to put the same task into the same table
-            r2list.append(r2matrix)
+                r2matrix = self.chain_regression_once(regression_order=regression_order, chain_name=chain_name, plotall=plotall)
+                # we want to put the same task into the same table
+                r2list.append(r2matrix)
             print('finish repeatition ' + str(k+1))
         # play a nice reminder music after finishing
         # playsound('spongbob.mp3')
+        if return_pred==True:
+            return model_names, y_pred_matrix, y_test, r2list
         return r2list
 # %%-
 

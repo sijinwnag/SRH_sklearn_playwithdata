@@ -8,6 +8,7 @@ df1 = MyMLdata_2level(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwit
 # np.shape(df1.data)
 # %%-
 
+# %%-- Single tasks.
 # %%-- Perform regression for Et single task.
 df1.singletask = 'Et_eV_1'
 r2scores = df1.regression_repeat() # R2 above 0.9
@@ -29,18 +30,29 @@ r2scores = df1.regression_repeat()
 df1.singletask = 'logk_1-logk_2'
 r2scores = df1.regression_repeat()
 # %%-
+# %%-
 
+# %%-- Data leakage.
 # %%-- Regression for Et2 known Et1 and Et1+Et.
 df1.singletask = 'Et_eV_2_known_Et_eV_2_plus'
 r2scores = df1.regression_repeat()
 # this makes the results better but has data leakage, R2 got about 0.999.
 # %%-
+# %%-
 
-# %%-- Perform chain regression: Et1->Et1+Et2->Et or Et1->Et2
+# %%-- Perform chain regression for energy levels.
+
+# %%-- Just the chain.
 chain_scores = df1.repeat_chain_regressor(repeat_num=5, regression_order=None, chain_name = 'Et1->Et2')
 chain_scores = df1.repeat_chain_regressor(repeat_num=5, regression_order=None, chain_name = 'Et1->Et1+Et2->Et2')
 chain_scores = df1.repeat_chain_regressor(repeat_num=5, regression_order=None, chain_name = 'Et1->Et1+Et2->logk_1->logk_1+logk_2->Et2')
 # pd.DataFrame(np.array(chain_scores).reshape(35, 2)).to_csv(path_or_buf = r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Et_regression\set11\chainscore_two_steps.csv')
+# %%-
+
+# %%-- Chain plus data manipulation
+# the plan is to first predict Et1, then predict Et1+Et2, then predict Et2 by subtracting the prediction of sum by Et1 prediction.
+# try predicting Et1->Et1+Et2 and output both r2 scores and the prediction.
+chain_scores = df1.repeat_chain_regressor(repeat_num=1, regression_order=None, chain_name = 'Et1->Et1+Et2->Et2')
 # %%-
 
 # %%-- Perform chain regression for k
