@@ -790,9 +790,12 @@ class MyMLdata_2level:
             y_pred_ordered = y_pred
             # replace the last colume with the difference of the first two.
             # print(np.shape(y_pred_ordered))
+            print('The fist 10 Et2 prediction by machine learning are ')
             print(y_pred_ordered[0:10, -1])
             y_pred_ordered[:, -1] = y_pred_ordered[:, 1]-y_pred_ordered[:, 0]
+            print('The fist 10 Et2 prediction by subtraction are ')
             print(y_pred_ordered[0:10, -1])
+            print('The fist 10 real y value are ')
             print(np.array(y_test)[0:10, -1])
             y_pred_list.append(y_pred_ordered)
             # y_pred_ordered = np.zeros_like(y_pred)
@@ -846,7 +849,7 @@ class MyMLdata_2level:
             plt.title('real vs prediction using model ' + str(model_names[modelindex]) + ' for ' + tasknamelist[k])
             plt.legend()
             plt.show()
-
+        playsound('spongbob.mp3')
         if return_pred == True:
             return model_names, y_pred_list, y_test, r2_matrix
         return r2_matrix
@@ -1039,7 +1042,7 @@ class MyMLdata_2level:
                 r2list.append(r2matrix)
             print('finish repeatition ' + str(k+1))
         # play a nice reminder music after finishing
-        # playsound('spongbob.mp3')
+        playsound('spongbob.mp3')
         if return_pred==True:
             return model_names, y_pred_matrix, y_test, r2list
         return r2list
