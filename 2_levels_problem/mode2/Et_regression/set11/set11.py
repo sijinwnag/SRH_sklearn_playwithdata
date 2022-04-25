@@ -14,9 +14,8 @@ df1 = MyMLdata_2level(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwit
 # %%-
 
 # %%-- different data engineering
-# df1.data.iloc[100, 100]
+# multiplying lifetime by (dn+doping)
 df1.pre_processor_dividX()
-# df1.data.iloc[100, 100]
 # %%-
 
 # %%-- Single tasks.
