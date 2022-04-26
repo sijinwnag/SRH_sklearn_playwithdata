@@ -14,7 +14,7 @@ df1 = MyMLdata_2level(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwit
 # %%-
 
 # %%-- different data engineering
-# multiplying lifetime by (dn+doping)
+# multiplying lifetime by (dn+p0+n0)
 df1.pre_processor_dividX()
 # %%-
 
@@ -62,6 +62,7 @@ chain_scores = df1.repeat_chain_regressor(repeat_num=5, regression_order=None, c
 # %%-- Chain and subtraction.
 # the plan is to first predict Et1, then predict Et1+Et2, then predict Et2 by subtracting the prediction of sum by Et1 prediction.
 r2 = df1.sum_minus_Et1_chain(regression_order=None, plotall=True)
+# df1.repeat_subtraction_method(repeat_num=5, regression_order=None, plotall=True, return_pred=True)
 # %%-
 
 # %%-

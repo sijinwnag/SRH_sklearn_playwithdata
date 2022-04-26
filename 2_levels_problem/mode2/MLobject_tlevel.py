@@ -18,6 +18,7 @@ from sklearn.naive_bayes import GaussianNB
 from playsound import playsound
 from sklearn.model_selection import cross_val_score, RepeatedKFold
 from sklearn.multioutput import RegressorChain
+from semiconductor.recombination import SRH
 # %%-
 
 
@@ -627,10 +628,16 @@ class MyMLdata_2level:
                 # convert the readed text into numbers for dn and doping:
                 doping_level[column_index] = float(doping_level[column_index].split('c')[0])
                 excess_dn[column_index] = float(excess_dn[column_index].split('c')[0])
+                T = float(temp_list[column_index].split('K')[0])
+                # find the minority carrier concentration
+                Tmodel=SRH(material="Si",temp = T, Nt = 1e5, nxc = excess_dn[column_index], Na = doping_level[column_index], Nd= 0, BGN_author = "Yan_2014fer")
+                ni = Tmodel.nieff
+                # calcualte the minority carrier concentration by ni**2=np*p0
+                p0 = ni**2/doping_level[column_index]
                 # multiply the lifetime in that column by (doping+dn)
                 columnname = list(self.data.columns)[column_index]
                 # print(self.data[columnname])
-                self.data[columnname] = self.data[columnname]*(doping_level[column_index] + excess_dn[column_index])# /excess_dn[column_index]
+                self.data[columnname] = self.data[columnname]*(doping_level[column_index] + excess_dn[column_index] + p0)# /excess_dn[column_index]
                 # print(self.data[columnname])
 
 
@@ -1075,6 +1082,37 @@ class MyMLdata_2level:
                 # we want to put the same task into the same table
                 r2list.append(r2matrix)
             print('finish repeatition ' + str(k+1))
+        # play a nice reminder music after finishing
+        playsound('spongbob.mp3')
+        if return_pred==True:
+            return model_names, y_pred_matrix, y_test, r2list
+        return r2list
+
+
+    def repeat_subtraction_method(self, repeat_num, regression_order, plotall=False, return_pred=False):
+        """
+        repeat the chain regressor for both plus and minus Et for multiple times
+        input:
+        repeat_num, number of repeat to do to
+
+        output:
+        y_pred_matrix: a matrix with dimension (repeatition number, model, taks number, number of sample)
+        """
+        # prepare an empty list to collect different tasks r2 scores.
+        r2list = []
+        y_pred_matrix = []
+        # iterate for each repeatition
+        for k in range(repeat_num):
+            if return_pred == True:
+                model_names, y_pred_list, y_test, r2_matrix = self.sum_minus_Et1_chain(regression_order=regression_order, plotall=plotall, return_pred=return_pred)
+                r2list.append(r2matrix)
+                y_pred_matrix.append(y_pred_list)
+            else:
+                r2matrix = self.sum_minus_Et1_chain(regression_order=regression_order, plotall=plotall, return_pred=return_pred)
+                # we want to put the same task into the same table
+                r2list.append(r2matrix)
+            print('finish repeatition ' + str(k+1))
+        # find the best trial of Et2 prediction.
         # play a nice reminder music after finishing
         playsound('spongbob.mp3')
         if return_pred==True:
