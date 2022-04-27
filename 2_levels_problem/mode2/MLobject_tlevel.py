@@ -38,12 +38,12 @@ class MyMLdata_2level:
         3.  define default parameters for machine learinng
         """
         # define the default maching learning setting for both regression and classification.
-        # regression_default_param = {
-        # 'model_names': ['KNN', 'Ridge Linear Regression', 'Random Forest' , 'Neural Network', 'Gradient Boosting', 'Ada Boosting', 'Support Vector'], # a list of name for each model.
-        # 'model_lists': [KNeighborsRegressor(), Ridge(), RandomForestRegressor(n_estimators=100, verbose =0, n_jobs=-1), MLPRegressor(((100, 300, 500, 700, 500, 300, 100)),alpha=0.001, activation = 'relu',verbose=0,learning_rate='adaptive'), GradientBoostingRegressor(verbose=0,loss='ls',max_depth=10), AdaBoostRegressor(base_estimator = DecisionTreeRegressor(), n_estimators=100, loss='linear'), SVR(kernel='rbf',C=5,verbose=0, gamma="auto")],# a list of model improted from sklearn
-        # 'gridsearchlist': [True, True, False, False, False, False, False], # each element in this list corspond to a particular model, if True, then we will do grid search while training the model, if False, we will not do Gridsearch for this model.
-        # 'param_list': [{'n_neighbors':range(1, 30)}, {'alpha': [0.01, 0.1, 1, 10]}, {'n_estimators': [200, 100, 1000, 500, 2000], 'verbose':[0], 'n_jobs':[-1]}, {'hidden_layer_sizes':((100, 300, 300, 100), (100, 300, 500, 300, 100), (200, 600, 600, 200), (200, 600, 900, 600, 200), (100, 300, 500, 700, 500, 300, 100)), 'alpha': [0.001], 'learning_rate':['adaptive']}, {'n_estimators':[200, 100]}, {'n_estimators':[50, 100]}, {'C': [0.1, 1, 10], 'epsilon': [1e-2, 0.1, 1]}]# a list of key parameters correspond to the models in the model_lists if we are going to do grid searching
-        # }
+        regression_default_param = {
+        'model_names': ['KNN', 'Ridge Linear Regression', 'Random Forest' , 'Neural Network', 'Gradient Boosting', 'Ada Boosting', 'Support Vector'], # a list of name for each model.
+        'model_lists': [KNeighborsRegressor(), Ridge(), RandomForestRegressor(n_estimators=100, verbose =0, n_jobs=-1), MLPRegressor(((100, 300, 500, 700, 500, 300, 100)),alpha=0.001, activation = 'relu',verbose=0,learning_rate='adaptive'), GradientBoostingRegressor(verbose=0,loss='ls',max_depth=10), AdaBoostRegressor(base_estimator = DecisionTreeRegressor(), n_estimators=100, loss='linear'), SVR(kernel='rbf',C=5,verbose=0, gamma="auto")],# a list of model improted from sklearn
+        'gridsearchlist': [True, True, False, False, False, False, False], # each element in this list corspond to a particular model, if True, then we will do grid search while training the model, if False, we will not do Gridsearch for this model.
+        'param_list': [{'n_neighbors':range(1, 30)}, {'alpha': [0.01, 0.1, 1, 10]}, {'n_estimators': [200, 100, 1000, 500, 2000], 'verbose':[0], 'n_jobs':[-1]}, {'hidden_layer_sizes':((100, 300, 300, 100), (100, 300, 500, 300, 100), (200, 600, 600, 200), (200, 600, 900, 600, 200), (100, 300, 500, 700, 500, 300, 100)), 'alpha': [0.001], 'learning_rate':['adaptive']}, {'n_estimators':[200, 100]}, {'n_estimators':[50, 100]}, {'C': [0.1, 1, 10], 'epsilon': [1e-2, 0.1, 1]}]# a list of key parameters correspond to the models in the model_lists if we are going to do grid searching
+        }
         # only neural network.
         # regression_default_param = {
         # 'model_names': ['Neural Network'], # a list of name for each model.
@@ -52,12 +52,12 @@ class MyMLdata_2level:
         # 'param_list': [{'hidden_layer_sizes':((100, 300, 300, 100), (100, 300, 500, 300, 100), (200, 600, 600, 200), (200, 600, 900, 600, 200), (100, 300, 500, 700, 500, 300, 100)), 'alpha': [0.001], 'learning_rate':['adaptive']}# a list of key parameters correspond to the models in the model_lists if we are going to do grid searching
         # ]}
         # only the quick ones
-        regression_default_param = {
-        'model_names': ['KNN', 'Ridge Linear Regression'], # a list of name for each model.
-        'model_lists': [KNeighborsRegressor(), Ridge()],# a list of model improted from sklearn
-        'gridsearchlist': [True, True], # each element in this list corspond to a particular model, if True, then we will do grid search while training the model, if False, we will not do Gridsearch for this model.
-        'param_list': [{'n_neighbors':range(1, 30)}, {'alpha': [0.01, 0.1, 1, 10]}]
-        }
+        # regression_default_param = {
+        # 'model_names': ['KNN', 'Ridge Linear Regression'], # a list of name for each model.
+        # 'model_lists': [KNeighborsRegressor(), Ridge()],# a list of model improted from sklearn
+        # 'gridsearchlist': [True, True], # each element in this list corspond to a particular model, if True, then we will do grid search while training the model, if False, we will not do Gridsearch for this model.
+        # 'param_list': [{'n_neighbors':range(1, 30)}, {'alpha': [0.01, 0.1, 1, 10]}]
+        # }
         classification_default_param = {
         'model_names': ['KNN', 'SVC', 'Decision tree', 'Random Forest',  'Gradient Boosting', 'Adaptive boosting', 'Naive Bayes', 'Neural Network'], # a list of name for each model.
         'model_lists': [KNeighborsClassifier(n_neighbors = 5, weights='distance',n_jobs=-1), SVC(), DecisionTreeClassifier(), RandomForestClassifier(n_estimators=100, verbose =0,n_jobs=-1), GradientBoostingClassifier(verbose=0,loss='deviance'), AdaBoostClassifier(base_estimator = DecisionTreeClassifier(), n_estimators=10), GaussianNB(), MLPClassifier((100,100),alpha=0.001, activation = 'relu',verbose=0,learning_rate='adaptive')],# a list of model improted from sklearn
@@ -1168,7 +1168,34 @@ class MyMLdata_2level:
         plt.legend()
         plt.show()
 
-        # play a nice reminder music after finishing
+        # print(np.shape(r2list))
+        # the dimension of r2 list is (trial, model, machine learning tasks)
+        # do the boxplot.
+        # convert it into dataframe for box plot.
+        r2list = np.array(r2list)
+        for taskindex in range(2):
+            r2_frame = pd.DataFrame(r2list[:, :, -taskindex-1], columns=model_names)
+            r2_av = np.average(r2_frame, axis=0)
+            r2_std = np.std(r2_frame, axis=0)
+            labels = []
+            # iterate through each model.
+            for k in range(len(r2_av)):
+                labels.append(str(r2_frame.columns[k] +' ('+ str(round(r2_av[k], 3)) + r'$\pm$' + str(round(r2_std[k], 3)) + ')'))
+            # box plot the data.
+            plt.figure()
+            plt.boxplot(r2_frame, vert=False, labels=labels)
+            if taskindex == 0:
+                taskname = 'machine learning'
+            else:
+                taskname = 'subtraction'
+            plt.title('$R^2$ scores for ' + '$E_{t2}$ ' + taskname + ' method')
+            # append the data label for the boxplot
+            # for k in range(len(r2_av)):
+            #     y = 8.5/(len(r2_av) + 1)*k + 0.5
+            #     # x=0.99
+            #     plt.text(x=0.98, y=y, s=str(round(r2_av[k], 3)) + '+-' + str(round(r2_std[k], 3)))
+            plt.show()
+            # play a nice reminder music after finishing
         # playsound('spongbob.mp3')
         if return_pred==True:
             return model_names, y_pred_matrix, y_test, r2list
