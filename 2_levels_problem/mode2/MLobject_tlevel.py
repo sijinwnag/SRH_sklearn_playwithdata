@@ -38,12 +38,12 @@ class MyMLdata_2level:
         3.  define default parameters for machine learinng
         """
         # define the default maching learning setting for both regression and classification.
-        regression_default_param = {
-        'model_names': ['KNN', 'Ridge Linear Regression', 'Random Forest' , 'Neural Network', 'Gradient Boosting', 'Ada Boosting', 'Support Vector'], # a list of name for each model.
-        'model_lists': [KNeighborsRegressor(), Ridge(), RandomForestRegressor(n_estimators=100, verbose =0, n_jobs=-1), MLPRegressor(((100, 300, 500, 700, 500, 300, 100)),alpha=0.001, activation = 'relu',verbose=0,learning_rate='adaptive'), GradientBoostingRegressor(verbose=0,loss='ls',max_depth=10), AdaBoostRegressor(base_estimator = DecisionTreeRegressor(), n_estimators=100, loss='linear'), SVR(kernel='rbf',C=5,verbose=0, gamma="auto")],# a list of model improted from sklearn
-        'gridsearchlist': [True, True, False, False, False, False, False], # each element in this list corspond to a particular model, if True, then we will do grid search while training the model, if False, we will not do Gridsearch for this model.
-        'param_list': [{'n_neighbors':range(1, 30)}, {'alpha': [0.01, 0.1, 1, 10]}, {'n_estimators': [200, 100, 1000, 500, 2000], 'verbose':[0], 'n_jobs':[-1]}, {'hidden_layer_sizes':((100, 300, 300, 100), (100, 300, 500, 300, 100), (200, 600, 600, 200), (200, 600, 900, 600, 200), (100, 300, 500, 700, 500, 300, 100)), 'alpha': [0.001], 'learning_rate':['adaptive']}, {'n_estimators':[200, 100]}, {'n_estimators':[50, 100]}, {'C': [0.1, 1, 10], 'epsilon': [1e-2, 0.1, 1]}]# a list of key parameters correspond to the models in the model_lists if we are going to do grid searching
-        }
+        # regression_default_param = {
+        # 'model_names': ['KNN', 'Ridge Linear Regression', 'Random Forest' , 'Neural Network', 'Gradient Boosting', 'Ada Boosting', 'Support Vector'], # a list of name for each model.
+        # 'model_lists': [KNeighborsRegressor(), Ridge(), RandomForestRegressor(n_estimators=100, verbose =0, n_jobs=-1), MLPRegressor(((100, 300, 500, 700, 500, 300, 100)),alpha=0.001, activation = 'relu',verbose=0,learning_rate='adaptive'), GradientBoostingRegressor(verbose=0,loss='ls',max_depth=10), AdaBoostRegressor(base_estimator = DecisionTreeRegressor(), n_estimators=100, loss='linear'), SVR(kernel='rbf',C=5,verbose=0, gamma="auto")],# a list of model improted from sklearn
+        # 'gridsearchlist': [True, True, False, False, False, False, False], # each element in this list corspond to a particular model, if True, then we will do grid search while training the model, if False, we will not do Gridsearch for this model.
+        # 'param_list': [{'n_neighbors':range(1, 30)}, {'alpha': [0.01, 0.1, 1, 10]}, {'n_estimators': [200, 100, 1000, 500, 2000], 'verbose':[0], 'n_jobs':[-1]}, {'hidden_layer_sizes':((100, 300, 300, 100), (100, 300, 500, 300, 100), (200, 600, 600, 200), (200, 600, 900, 600, 200), (100, 300, 500, 700, 500, 300, 100)), 'alpha': [0.001], 'learning_rate':['adaptive']}, {'n_estimators':[200, 100]}, {'n_estimators':[50, 100]}, {'C': [0.1, 1, 10], 'epsilon': [1e-2, 0.1, 1]}]# a list of key parameters correspond to the models in the model_lists if we are going to do grid searching
+        # }
         # only neural network.
         # regression_default_param = {
         # 'model_names': ['Neural Network'], # a list of name for each model.
@@ -52,12 +52,12 @@ class MyMLdata_2level:
         # 'param_list': [{'hidden_layer_sizes':((100, 300, 300, 100), (100, 300, 500, 300, 100), (200, 600, 600, 200), (200, 600, 900, 600, 200), (100, 300, 500, 700, 500, 300, 100)), 'alpha': [0.001], 'learning_rate':['adaptive']}# a list of key parameters correspond to the models in the model_lists if we are going to do grid searching
         # ]}
         # only the quick ones
-        # regression_default_param = {
-        # 'model_names': ['KNN', 'Ridge Linear Regression'], # a list of name for each model.
-        # 'model_lists': [KNeighborsRegressor(), Ridge()],# a list of model improted from sklearn
-        # 'gridsearchlist': [True, True], # each element in this list corspond to a particular model, if True, then we will do grid search while training the model, if False, we will not do Gridsearch for this model.
-        # 'param_list': [{'n_neighbors':range(1, 30)}, {'alpha': [0.01, 0.1, 1, 10]}]
-        # }
+        regression_default_param = {
+        'model_names': ['KNN', 'Ridge Linear Regression'], # a list of name for each model.
+        'model_lists': [KNeighborsRegressor(), Ridge()],# a list of model improted from sklearn
+        'gridsearchlist': [True, True], # each element in this list corspond to a particular model, if True, then we will do grid search while training the model, if False, we will not do Gridsearch for this model.
+        'param_list': [{'n_neighbors':range(1, 30)}, {'alpha': [0.01, 0.1, 1, 10]}]
+        }
         classification_default_param = {
         'model_names': ['KNN', 'SVC', 'Decision tree', 'Random Forest',  'Gradient Boosting', 'Adaptive boosting', 'Naive Bayes', 'Neural Network'], # a list of name for each model.
         'model_lists': [KNeighborsClassifier(n_neighbors = 5, weights='distance',n_jobs=-1), SVC(), DecisionTreeClassifier(), RandomForestClassifier(n_estimators=100, verbose =0,n_jobs=-1), GradientBoostingClassifier(verbose=0,loss='deviance'), AdaBoostClassifier(base_estimator = DecisionTreeClassifier(), n_estimators=10), GaussianNB(), MLPClassifier((100,100),alpha=0.001, activation = 'relu',verbose=0,learning_rate='adaptive')],# a list of model improted from sklearn
@@ -786,7 +786,13 @@ class MyMLdata_2level:
 
 
         output:
-            r2matrix: a matrix of r2 score, the columns correspond to different task and the row correspond to different ML models
+            r2matrix: a matrix of r2 score, the columns correspond to different task and the row correspond to different ML models.
+
+            y_pred_list: dimension is (model, dataset size, Et1;Et2+Et1;regression chain;subtraction)
+
+            y_test: dimension is (dataset size, Et1;Et2+Et1;Et2)
+
+            r2_matrix: dimension is (model, Et1;Et1+Et2;Et2)
         """
         # do the normal train regression first.
         chain_name='Et1->Et1+Et2->Et2'
@@ -815,20 +821,22 @@ class MyMLdata_2level:
             y_pred_ordered = y_pred
             # replace the last colume with the difference of the first two.
             # print(np.shape(y_pred_ordered))
-            print('The first 10 predicted Et1 are')
-            print(y_pred_ordered[0:10, 0])
-            print('The first 10 predicted Et1+Et2 are')
-            print(y_pred_ordered[0:10, 1])
-            print('The fist 10 Et2 prediction by machine learning are ')
-            print(y_pred_ordered[0:10, -1])
+            if plotall == True:
+                print('The first 10 predicted Et1 are')
+                print(y_pred_ordered[0:10, 0])
+                print('The first 10 predicted Et1+Et2 are')
+                print(y_pred_ordered[0:10, 1])
+                print('The fist 10 Et2 prediction by machine learning are ')
+                print(y_pred_ordered[0:10, -1])
             # add the colume for subtraction.
             # print(np.shape(y_pred_ordered))
             # print(np.shape(y_pred_ordered[0]))
             y_prediction = np.column_stack((y_pred_ordered, y_pred_ordered[:, 1]-y_pred_ordered[:, 0]))
-            print('The fist 10 Et2 prediction by subtraction are ')
-            print(y_prediction[0:10, -1])
-            print('The fist 10 real y value are ')
-            print(np.array(y_test)[0:10, -1])
+            if plotall == True:
+                print('The fist 10 Et2 prediction by subtraction are ')
+                print(y_prediction[0:10, -1])
+                print('The fist 10 real y value are ')
+                print(np.array(y_test)[0:10, -1])
             y_pred_list.append(y_prediction)
             # print(np.shape(y_pred_ordered))
             # evaluate the matrix using r2 score:
@@ -849,6 +857,7 @@ class MyMLdata_2level:
             print('The R2 score for subtraction method is ' + str(r2))
 
             r2_matrix.append(r2list)
+            # r2_matrix = np.array(r2_matrix)
             tasknamelist = y_train.columns.tolist()
 
             # plot the behaviour of all models if requried
@@ -862,14 +871,14 @@ class MyMLdata_2level:
                     plt.title('real vs prediction using model ' + str(model_names[modelcount]) + ' for ' + tasknamelist[k])
                     plt.legend()
                     plt.show()
-            # plot the subtraction method behaviour:
-            plt.figure()
-            plt.scatter(y_test[:, -1], y_prediction[:, -1], label='$R^2$=' + str(r2list[-1]))
-            plt.xlabel('real value')
-            plt.ylabel('prediction')
-            plt.title('real vs prediction using subtraction method for $E_{t2}$')
-            plt.legend()
-            plt.show()
+                # plot the subtraction method behaviour:
+                plt.figure()
+                plt.scatter(y_test[:, -1], y_prediction[:, -1], label='$R^2$=' + str(r2list[-1]))
+                plt.xlabel('real value')
+                plt.ylabel('prediction')
+                plt.title('real vs prediction using subtraction method for $E_{t2}$')
+                plt.legend()
+                plt.show()
 
             modelcount = modelcount + 1
 
@@ -890,7 +899,8 @@ class MyMLdata_2level:
         #     plt.title('real vs prediction using model ' + str(model_names[modelindex]) + ' for ' + tasknamelist[k])
         #     plt.legend()
         #     plt.show()
-        playsound('spongbob.mp3')
+        # playsound('spongbob.mp3')
+        r2_matrix = np.array(r2_matrix)
         if return_pred == True:
             return model_names, y_pred_list, y_test, r2_matrix
         return r2_matrix
@@ -1098,23 +1108,68 @@ class MyMLdata_2level:
         output:
         y_pred_matrix: a matrix with dimension (repeatition number, model, taks number, number of sample)
         """
+        model_names = self.reg_param['model_names']
         # prepare an empty list to collect different tasks r2 scores.
         r2list = []
         y_pred_matrix = []
+        best_indexes = []
+        best_scores = []
+        y_test_matrix = []
         # iterate for each repeatition
         for k in range(repeat_num):
-            if return_pred == True:
-                model_names, y_pred_list, y_test, r2_matrix = self.sum_minus_Et1_chain(regression_order=regression_order, plotall=plotall, return_pred=return_pred)
-                r2list.append(r2matrix)
-                y_pred_matrix.append(y_pred_list)
-            else:
-                r2matrix = self.sum_minus_Et1_chain(regression_order=regression_order, plotall=plotall, return_pred=return_pred)
-                # we want to put the same task into the same table
-                r2list.append(r2matrix)
+            model_names, y_pred_list, y_test, r2_matrix = self.sum_minus_Et1_chain(regression_order=regression_order, plotall=plotall, return_pred=return_pred)
+            r2list.append(r2_matrix)
+            y_test_matrix.append(y_test)
+            y_pred_matrix.append(y_pred_list)
             print('finish repeatition ' + str(k+1))
+            # find the best model.
+            # the last two columns of r2_matrix are the Et2 score from machine learning and subtraction method respectively
+            # print(r2_matrix)
+            r2_Et2 = np.array(r2_matrix)[:, -2:-1]
+            # find the highest score index.
+            best_Et2_index = np.argwhere(r2_Et2 == np.max(r2_Et2))
+            # store the best score and best indexes.
+            best_indexes.append(best_Et2_index)
+            best_scores.append(np.max(r2_Et2))
+            # print(best_Et2_index[0])
+            # extract the name of hte best model.
+            bestmodel = model_names[best_Et2_index[0][0]]
+            if best_Et2_index[0][1] == -1:
+                bestmethod = 'subtraction'
+            else:
+                bestmethod = 'machine learning'
+            print('The best R2 is ' + bestmethod + ' using ' + str(bestmodel) + str(np.max(r2_Et2)))
+
         # find the best trial of Et2 prediction.
+        best_trial = np.argwhere(best_scores == np.max(best_scores))[0][0]
+        # print(best_trial[0][0])
+        # the first element of best index represent the model, the second element of best index represent whether it is subtraction or machine learning.
+        best_index = best_indexes[best_trial]
+        if best_index[0][1] == 1:
+            bestmethod = 'subtraction'
+        else:
+            bestmethod = 'machine learning'
+        title = model_names[best_index[0][0]] + bestmethod + ' method trial ' + str(best_trial)
+        # find the prediction and test y
+        # print(np.shape(y_pred_matrix))
+        # print(np.shape(y_test_matrix))
+        # the dimension of y_pred_matrix is (repetition, model, size of test set data, Et1;Et1+Et2;Et2 machine learning; Et2 subtraction)
+        # the dimension of y_test_matrix is (repetition, datasize, Et1;Et2+Et1;Et2)
+        # extract the prediction and test data for the best trial.
+        best_prediction = np.array(y_pred_matrix)[best_trial, best_index[0][0], :, best_index[0][1] + 2]
+        best_test = np.array(y_test_matrix)[best_trial, :, best_index[0][1] + 2]
+        # print(best_index[0][1])
+        # plot the best trial:
+        plt.figure()
+        plt.scatter(best_test, best_prediction, label='$R^{2}$' + '=' + str(np.max(best_scores)))
+        plt.xlabel('prediction')
+        plt.ylabel('real value')
+        plt.title(str(title))
+        plt.legend()
+        plt.show()
+
         # play a nice reminder music after finishing
-        playsound('spongbob.mp3')
+        # playsound('spongbob.mp3')
         if return_pred==True:
             return model_names, y_pred_matrix, y_test, r2list
         return r2list

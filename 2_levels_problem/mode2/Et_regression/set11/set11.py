@@ -61,8 +61,8 @@ chain_scores = df1.repeat_chain_regressor(repeat_num=5, regression_order=None, c
 
 # %%-- Chain and subtraction.
 # the plan is to first predict Et1, then predict Et1+Et2, then predict Et2 by subtracting the prediction of sum by Et1 prediction.
-r2 = df1.sum_minus_Et1_chain(regression_order=None, plotall=True)
-# df1.repeat_subtraction_method(repeat_num=5, regression_order=None, plotall=True, return_pred=True)
+# r2 = df1.sum_minus_Et1_chain(regression_order=None, plotall=True)
+model_names, y_pred_matrix, y_test, r2list = df1.repeat_subtraction_method(repeat_num=3, regression_order=None, plotall=False, return_pred=True)
 # %%-
 
 # %%-
