@@ -630,7 +630,7 @@ class MyMLdata_2level:
                 excess_dn[column_index] = float(excess_dn[column_index].split('c')[0])
                 T = float(temp_list[column_index].split('K')[0])
                 # find the minority carrier concentration
-                Tmodel=SRH(material="Si",temp = T, Nt = 1e5, nxc = excess_dn[column_index], Na = doping_level[column_index], Nd= 0, BGN_author = "Yan_2014fer")
+                Tmodel=SRH(material="Si",temp = T, Nt = 1e12, nxc = excess_dn[column_index], Na = doping_level[column_index], Nd= 0, BGN_author = "Yan_2014fer")
                 ni = Tmodel.nieff
                 # calcualte the minority carrier concentration by ni**2=np*p0
                 p0 = ni**2/doping_level[column_index]
