@@ -277,6 +277,7 @@ class MyMLdata_2level:
             mae_list.append(mae)
             # print the output
             print('finish training ' + name + ', the ' + 'R2' + ' score is ' + str(r2))
+            print('The mean absolute error is ' + str(mae))
             # plot the real vs predicted graph if needed
             if plot==True:
                 plt.figure()
@@ -972,8 +973,10 @@ class MyMLdata_2level:
         model_lists = self.reg_param['model_lists']
         gridsearchlist = self.reg_param['gridsearchlist']
         param_list  = self.reg_param['param_list']
+        self.chain_name = chain_name
         # iterate for each model:
         r2_matrix = []
+        mae_matrix = []
         modelcount = 0
         y_pred_list = []
         for model in model_lists:
@@ -1003,14 +1006,21 @@ class MyMLdata_2level:
             y_test = np.array(y_test)
             # prepare a list to collect the r2 values
             r2list = []
+            # prepare a list to collect the mean absolute errors.
+            mae_list = []
             # iterate for each variable:
             for k in range(np.shape(y_test)[1]):
                 r2 = (r2_score(y_test[:, k], y_pred_ordered[:, k]))
                 r2list.append(r2)
+                # also append for mean absolute error
+                mae = (mean_absolute_error(y_test[:, k], y_pred_ordered[:, k]))
+                mae_list.append(mae)
                 # find use k as index to call y_test title
                 taskname = y_train.columns.tolist()[k]
                 print('The R2 score for ' + str(taskname) + ' is ' + str(r2))
+                print('The mean absolute error for ' + str(taskname) + 'is ' + str(mae))
             r2_matrix.append(r2list)
+            mae_matrix.append(mae_list)
             tasknamelist = y_train.columns.tolist()
 
             # plot the behaviour of all models if requried
@@ -1028,14 +1038,19 @@ class MyMLdata_2level:
         # plot the real vs predicted for all three machine learning tasks for the best trial of the last task.
         # find the model index for the best trial.
         r2_matrix = np.array(r2_matrix)
-        modelindex = np.argwhere(r2_matrix[:, -1] == np.max(r2_matrix[:, -1]))[0][0]
-        print('the best R2 score is using ' + str(model_names[modelindex]))
+        mae_matrix = np.array(mae_matrix)
+        if self.regression_matrix == 'R2':
+            modelindex = np.argwhere(r2_matrix[:, -1] == np.max(r2_matrix[:, -1]))[0][0]
+            print('the best R2 score is using ' + str(model_names[modelindex]))
+        elif self.regression_matrix == 'Mean Absolute Error':
+            modelindex = np.argwhere(mae_matrix[:, -1] == np.min(mae_matrix[:, -1]))[0][0]
+            print('the lowest mean absolute error is using ' + str(model_names[modelindex]))
         # plot the prediction vs test for each tasks.
         tasknamelist = y_train.columns.tolist()
         best_y = y_pred_list[modelindex]
         for k in range(np.shape(y_test)[1]):
             plt.figure()
-            plt.scatter(y_test[:, k], best_y[:, k], label='$R^2$=' + str(np.max(r2_matrix[modelindex, k])))
+            plt.scatter(y_test[:, k], best_y[:, k], label='$R^2$=' + str((round(r2_matrix[modelindex, k], 3))) + '; Mean absolute error  is ' + str((round(mae_matrix[modelindex, k], 4))), marker='+')
             plt.xlabel('real value')
             plt.ylabel('prediction')
             plt.title('real vs prediction using model ' + str(model_names[modelindex]) + ' for ' + tasknamelist[k])
@@ -1043,8 +1058,8 @@ class MyMLdata_2level:
             plt.show()
 
         if return_pred == True:
-            return model_names, y_pred_list, y_test, r2_matrix
-        return r2_matrix
+            return model_names, y_pred_list, y_test, r2_matrix, mae_matrix
+        return r2_matrix, mae_matrix
 
 
     def preprocessor_chain_regression(self, chain_name):
@@ -1118,27 +1133,74 @@ class MyMLdata_2level:
 
         output:
         y_pred_matrix: a matrix with dimension (repeatition number, model, taks number, number of sample)
+        r2list: a matrix with dimension (repeition number, models, tasks)
+        mae_list: a matrix with dimension (repetition number, models, tasks)
         """
         # prepare an empty list to collect different tasks r2 scores.
         r2list = []
+        maelist = []
         y_pred_matrix = []
         # iterate for each repeatition
         for k in range(repeat_num):
             if return_pred == True:
-                model_names, y_pred_list, y_test, r2matrix = self.chain_regression_once(regression_order=regression_order, chain_name=chain_name, plotall=plotall, return_pred=return_pred)
+                model_names, mae_matrix, y_pred_list, y_test, r2matrix = self.chain_regression_once(regression_order=regression_order, chain_name=chain_name, plotall=plotall, return_pred=return_pred)
                 r2list.append(r2matrix)
+                maelist.append(mae_matrix)
                 y_pred_matrix.append(y_pred_list)
             else:
             # iterate for upper and lower bandgap
-                r2matrix = self.chain_regression_once(regression_order=regression_order, chain_name=chain_name, plotall=plotall)
+                r2matrix, mae_matrix = self.chain_regression_once(regression_order=regression_order, chain_name=chain_name, plotall=plotall)
                 # we want to put the same task into the same table
                 r2list.append(r2matrix)
+                maelist.append(mae_matrix)
             print('finish repeatition ' + str(k+1))
+
+        # make a boxplot for R2 scores.
+        r2_frame = np.array(r2list)[:, :, -1] # the dimension of r2 frame is (repetition, models)
+        r2_frame = pd.DataFrame(r2_frame, columns=self.reg_param['model_names'])
+        r2_av = np.average(r2_frame, axis=0)
+        r2_std = np.std(r2_frame, axis=0)
+        labels = []
+        # iterates through each
+        for k in range(len(r2_av)):
+            labels.append(str(r2_frame.columns[k] +' ('+ str(round(r2_av[k], 3)) + r'$\pm$' + str(round(r2_std[k], 3)) + ')'))
+        # box plot the data.
+        plt.figure()
+        plt.boxplot(r2_frame, vert=False, labels=labels)
+        plt.title('$R^2$ scores for ' + str(self.chain_name))
+        # append the data label for the boxplot
+        # for k in range(len(r2_av)):
+        #     y = 8.5/(len(r2_av) + 1)*k + 0.5
+        #     # x=0.99
+        #     plt.text(x=0.98, y=y, s=str(round(r2_av[k], 3)) + '+-' + str(round(r2_std[k], 3)))
+        plt.show()
+
+        # make a boxplot for Mean Absolute Errors.
+        mae_frame = np.array(maelist)[:, :, -1] # the dimension of mae frame is (repetition, models)
+        mae_frame = pd.DataFrame(mae_frame, columns=self.reg_param['model_names'])
+        mae_av = np.average(mae_frame, axis=0)
+        mae_std = np.std(mae_frame, axis=0)
+        labels = []
+        # iterates through each
+        for k in range(len(mae_av)):
+            labels.append(str(mae_frame.columns[k] +' ('+ str(round(mae_av[k], 3)) + r'$\pm$' + str(round(mae_std[k], 4)) + ')'))
+        # box plot the data.
+        plt.figure()
+        plt.boxplot(mae_frame, vert=False, labels=labels)
+        plt.title('Mean Absolute error for ' + str(self.chain_name))
+        # append the data label for the boxplot
+        # for k in range(len(r2_av)):
+        #     y = 8.5/(len(r2_av) + 1)*k + 0.5
+        #     # x=0.99
+        #     plt.text(x=0.98, y=y, s=str(round(r2_av[k], 3)) + '+-' + str(round(r2_std[k], 3)))
+        plt.show()
+
+        # print(np.shape(r2list))
         # play a nice reminder music after finishing
         # playsound('spongbob.mp3')
         if return_pred==True:
             return model_names, y_pred_matrix, y_test, r2list
-        return r2list
+        return r2list, mae_matrix
 
 
     def repeat_subtraction_method(self, repeat_num, regression_order, plotall=False, return_pred=False):

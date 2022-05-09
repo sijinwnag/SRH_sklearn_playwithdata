@@ -5,7 +5,7 @@ import sys
 sys.path.append(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2')
 from MLobject_tlevel import *
 # one doping level:
-df1 = MyMLdata_2level(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Et_regression\set11\set11_1e15.csv', 'bandgap1', 5)
+df1 = MyMLdata_2level(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Et_regression\set11\set11_1e15.csv', 'bandgap1', 2)
 # np.shape(df1.data)
 # multiple doping level:
 # df1 = MyMLdata_2level(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Et_regression\set11\set11_diff_doping.csv', 'bandgap1', 5)
@@ -21,6 +21,7 @@ df1.pre_processor_dividX()
 # %%-- Single tasks.
 # %%-- Perform regression for Et single task.
 df1.singletask = 'Et_eV_1'
+df1.regression_matrix = 'Mean Absolute Error'
 r2scores = df1.regression_repeat()
 df1.singletask = 'Et_eV_2'
 r2scores = df1.regression_repeat() # R2 about 0.2 to 0.4
@@ -53,8 +54,9 @@ r2scores = df1.regression_repeat()
 # %%-- Perform chain regression for energy levels.
 
 # %%-- Just the chain.
-chain_scores = df1.repeat_chain_regressor(repeat_num=5, regression_order=None, chain_name = 'Et1->Et2')
-chain_scores = df1.repeat_chain_regressor(repeat_num=5, regression_order=None, chain_name = 'Et1->Et1+Et2->Et2')
+df1.regression_matrix='Mean Absolute Error'
+chain_scores = df1.repeat_chain_regressor(repeat_num=3, regression_order=None, chain_name = 'Et1->Et2')
+chain_scores = df1.repeat_chain_regressor(repeat_num=3, regression_order=None, chain_name = 'Et1->Et1+Et2->Et2')
 chain_scores = df1.repeat_chain_regressor(repeat_num=5, regression_order=None, chain_name = 'Et1->Et1+Et2->logk_1->logk_1+logk_2->Et2')
 # pd.DataFrame(np.array(chain_scores).reshape(35, 2)).to_csv(path_or_buf = r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Et_regression\set11\chainscore_two_steps.csv')
 # %%-
