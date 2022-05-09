@@ -38,12 +38,12 @@ class MyMLdata_2level:
         3.  define default parameters for machine learinng
         """
         # define the default maching learning setting for both regression and classification.
-        regression_default_param = {
-        'model_names': ['KNN', 'Ridge Linear Regression', 'Random Forest' , 'Neural Network', 'Gradient Boosting', 'Ada Boosting', 'Support Vector'], # a list of name for each model.
-        'model_lists': [KNeighborsRegressor(), Ridge(), RandomForestRegressor(n_estimators=100, verbose =0, n_jobs=-1), MLPRegressor(((100, 300, 500, 700, 500, 300, 100)),alpha=0.001, activation = 'relu',verbose=0,learning_rate='adaptive'), GradientBoostingRegressor(verbose=0,loss='ls',max_depth=10), AdaBoostRegressor(base_estimator = DecisionTreeRegressor(), n_estimators=100, loss='linear'), SVR(kernel='rbf',C=5,verbose=0, gamma="auto")],# a list of model improted from sklearn
-        'gridsearchlist': [True, True, False, False, False, False, False], # each element in this list corspond to a particular model, if True, then we will do grid search while training the model, if False, we will not do Gridsearch for this model.
-        'param_list': [{'n_neighbors':range(1, 30)}, {'alpha': [0.01, 0.1, 1, 10]}, {'n_estimators': [200, 100, 1000, 500, 2000], 'verbose':[0], 'n_jobs':[-1]}, {'hidden_layer_sizes':((100, 300, 300, 100), (100, 300, 500, 300, 100), (200, 600, 600, 200), (200, 600, 900, 600, 200), (100, 300, 500, 700, 500, 300, 100)), 'alpha': [0.001], 'learning_rate':['adaptive']}, {'n_estimators':[200, 100]}, {'n_estimators':[50, 100]}, {'C': [0.1, 1, 10], 'epsilon': [1e-2, 0.1, 1]}]# a list of key parameters correspond to the models in the model_lists if we are going to do grid searching
-        }
+        # regression_default_param = {
+        # 'model_names': ['KNN', 'Ridge Linear Regression', 'Random Forest' , 'Neural Network', 'Gradient Boosting', 'Ada Boosting', 'Support Vector'], # a list of name for each model.
+        # 'model_lists': [KNeighborsRegressor(), Ridge(), RandomForestRegressor(n_estimators=100, verbose =0, n_jobs=-1), MLPRegressor(((100, 300, 500, 700, 500, 300, 100)),alpha=0.001, activation = 'relu',verbose=0,learning_rate='adaptive'), GradientBoostingRegressor(verbose=0,loss='ls',max_depth=10), AdaBoostRegressor(base_estimator = DecisionTreeRegressor(), n_estimators=100, loss='linear'), SVR(kernel='rbf',C=5,verbose=0, gamma="auto")],# a list of model improted from sklearn
+        # 'gridsearchlist': [True, True, False, False, False, False, False], # each element in this list corspond to a particular model, if True, then we will do grid search while training the model, if False, we will not do Gridsearch for this model.
+        # 'param_list': [{'n_neighbors':range(1, 30)}, {'alpha': [0.01, 0.1, 1, 10]}, {'n_estimators': [200, 100, 1000, 500, 2000], 'verbose':[0], 'n_jobs':[-1]}, {'hidden_layer_sizes':((100, 300, 300, 100), (100, 300, 500, 300, 100), (200, 600, 600, 200), (200, 600, 900, 600, 200), (100, 300, 500, 700, 500, 300, 100)), 'alpha': [0.001], 'learning_rate':['adaptive']}, {'n_estimators':[200, 100]}, {'n_estimators':[50, 100]}, {'C': [0.1, 1, 10], 'epsilon': [1e-2, 0.1, 1]}]# a list of key parameters correspond to the models in the model_lists if we are going to do grid searching
+        # }
         # only neural network.
         # regression_default_param = {
         # 'model_names': ['Neural Network'], # a list of name for each model.
@@ -52,12 +52,12 @@ class MyMLdata_2level:
         # 'param_list': [{'hidden_layer_sizes':((100, 300, 300, 100), (100, 300, 500, 300, 100), (200, 600, 600, 200), (200, 600, 900, 600, 200), (100, 300, 500, 700, 500, 300, 100)), 'alpha': [0.001], 'learning_rate':['adaptive']}# a list of key parameters correspond to the models in the model_lists if we are going to do grid searching
         # ]}
         # only the quick ones
-        # regression_default_param = {
-        # 'model_names': ['KNN', 'Ridge Linear Regression'], # a list of name for each model.
-        # 'model_lists': [KNeighborsRegressor(), Ridge()],# a list of model improted from sklearn
-        # 'gridsearchlist': [True, True], # each element in this list corspond to a particular model, if True, then we will do grid search while training the model, if False, we will not do Gridsearch for this model.
-        # 'param_list': [{'n_neighbors':range(1, 30)}, {'alpha': [0.01, 0.1, 1, 10]}]
-        # }
+        regression_default_param = {
+        'model_names': ['KNN', 'Ridge Linear Regression'], # a list of name for each model.
+        'model_lists': [KNeighborsRegressor(), Ridge()],# a list of model improted from sklearn
+        'gridsearchlist': [True, True], # each element in this list corspond to a particular model, if True, then we will do grid search while training the model, if False, we will not do Gridsearch for this model.
+        'param_list': [{'n_neighbors':range(1, 30)}, {'alpha': [0.01, 0.1, 1, 10]}]
+        }
         classification_default_param = {
         'model_names': ['KNN', 'SVC', 'Decision tree', 'Random Forest',  'Gradient Boosting', 'Adaptive boosting', 'Naive Bayes', 'Neural Network'], # a list of name for each model.
         'model_lists': [KNeighborsClassifier(n_neighbors = 5, weights='distance',n_jobs=-1), SVC(), DecisionTreeClassifier(), RandomForestClassifier(n_estimators=100, verbose =0,n_jobs=-1), GradientBoostingClassifier(verbose=0,loss='deviance'), AdaBoostClassifier(base_estimator = DecisionTreeClassifier(), n_estimators=10), GaussianNB(), MLPClassifier((100,100),alpha=0.001, activation = 'relu',verbose=0,learning_rate='adaptive')],# a list of model improted from sklearn
@@ -76,6 +76,7 @@ class MyMLdata_2level:
         self.repetition = repeat
         self.reg_param = regression_default_param
         self.cla_param = classification_default_param
+        self.regression_matrix = 'R2'
 # %%-
 
 
@@ -127,8 +128,9 @@ class MyMLdata_2level:
             X_test_scaled = scaler.transform(X_test)
             # train the different models and collect the r2 score.
             # if output_y_pred == True: # if we plan to collect the y predction
-            r2score, y_prediction, y_test = self.regression_training(X_train_scaled=X_train_scaled, X_test_scaled=X_test_scaled, y_train=y_train, y_test=y_test, plot=plot, output_y_pred=True)
+            r2score, mae_list, y_prediction, y_test = self.regression_training(X_train_scaled=X_train_scaled, X_test_scaled=X_test_scaled, y_train=y_train, y_test=y_test, plot=plot, output_y_pred=True)
             r2_frame.append(r2score)
+            meanabs_frame.append(mae_list) # the dimension is repeatition * different models.
             y_prediction_frame.append(y_prediction)
             y_test_frame.append(y_test)
             # else: # when we do not need to collect the y prediction
@@ -136,9 +138,10 @@ class MyMLdata_2level:
             # r2_frame.append(r2score)
             # print the number of iteration finished after finishing each iteration
             print('finish iteration ' + str(counter))
+
         # now r2_frame is a list of list containing the values for each trial for each model.
         # convert it into dataframe for box plot.
-        r2_frame = pd.DataFrame(r2_frame, columns=['KNN', 'Ridge Linear Regression', 'Random Forest', 'Neural Network', 'Gradient Boosting', 'Ada Boosting', 'Support Vector'])
+        r2_frame = pd.DataFrame(r2_frame, columns=self.reg_param['model_names'])
         r2_av = np.average(r2_frame, axis=0)
         r2_std = np.std(r2_frame, axis=0)
         labels = []
@@ -155,17 +158,51 @@ class MyMLdata_2level:
         #     plt.text(x=0.98, y=y, s=str(round(r2_av[k], 3)) + '+-' + str(round(r2_std[k], 3)))
         plt.show()
 
+        # do the boxplot for mean absolute error.
+        # convert it into dataframe for box plot.
+        meanabs_frame = pd.DataFrame(meanabs_frame, columns=self.reg_param['model_names'])
+        meanabs_av = np.average(meanabs_frame, axis=0)
+        meanabs_std = np.std(meanabs_frame, axis=0)
+        labels = []
+        for k in range(len(meanabs_av)):
+            if self.singletask[0] == 'E':
+                unit = 'eV'
+            else:
+                unit = '(log of k)'
+            labels.append(str(meanabs_frame.columns[k] +' ('+ str(round(meanabs_av[k], 3)) + r'$\pm$' + str(round(meanabs_std[k], 3)) + ')') + unit)
+        # box plot the data.
+        plt.figure()
+        plt.boxplot(meanabs_frame, vert=False, labels=labels)
+        plt.title('Mean absolute error scores for ' + str(self.singletask))
+        # append the data label for the boxplot
+        # for k in range(len(r2_av)):
+        #     y = 8.5/(len(r2_av) + 1)*k + 0.5
+        #     # x=0.99
+        #     plt.text(x=0.98, y=y, s=str(round(r2_av[k], 3)) + '+-' + str(round(r2_std[k], 3)))
+        plt.show()
+
         # plot real vs predicted for the best trial
-        # find the position which has the best R2 score.
         r2_score_k = np.array(r2_frame)
-        max_position = np.argwhere(r2_score_k == np.max(r2_score_k))
-        repeat_num = int(max_position[0][0])
-        model_num = int(max_position[0][1])
+        mae_score_k = np.array(meanabs_frame)
+        if self.regression_matrix == 'R2':
+            # find the position which has the best R2 score.
+            max_position = np.argwhere(r2_score_k == np.max(r2_score_k))
+            repeat_num = int(max_position[0][0])
+            model_num = int(max_position[0][1])
+            print('The best performance is decided by highest R2')
+        elif self.regression_matrix == 'Mean Absolute Error':
+            # find the position which has the best R2 score.
+            max_position = np.argwhere(mae_score_k == np.min(mae_score_k))
+            repeat_num = int(max_position[0][0])
+            model_num = int(max_position[0][1])
+            print('The best performance is decided by lowest Mean Absolute Error')
         # plot the graph for real vs predicted
         plt.figure()
         # print(np.shape(r2_frame))
         # print(np.shape(y_prediction_frame))
-        plt.scatter(np.array(y_test_frame)[repeat_num], np.array(y_prediction_frame)[repeat_num, :, model_num], label=('$R^2$' + '=' + str(round(np.max(r2_score_k), 3))))
+        # print(np.shape(y_test_frame))
+        # print(np.shape(y_prediction_frame))
+        plt.scatter(np.array(y_test_frame)[repeat_num], np.array(y_prediction_frame)[repeat_num, :, model_num], label=('$R^2$' + '=' + str(round(np.max(r2_score_k), 3))) + ('  Mean Absolue error' + '=' + str(round(np.min(mae_score_k), 3))), marker='+')
         plt.xlabel('real value')
         plt.ylabel('predicted value')
         plt.title('real vs predicted at trial ' + str(repeat_num + 1) + ' using method ' + str(self.reg_param['model_names'][model_num]))
@@ -203,6 +240,8 @@ class MyMLdata_2level:
         y_pred_list = []
         # prepare an emtply list to collect r2 scores:
         r2_list = []
+        # prepare an empty list to collect the mean absolute errors.
+        mae_list = []
         # train everything in a for loop
         for modelindex in range(np.shape(model_names)[0]):
             # read the name, model and parameter from the lists
@@ -233,12 +272,15 @@ class MyMLdata_2level:
             # evaluate the model using R2 score:
             r2 = r2_score(y_test, y_pred)
             r2_list.append(r2)
+            # evaluate the model using mean absolute errors
+            mae = mean_absolute_error(y_test, y_pred)
+            mae_list.append(mae)
             # print the output
             print('finish training ' + name + ', the ' + 'R2' + ' score is ' + str(r2))
             # plot the real vs predicted graph if needed
             if plot==True:
                 plt.figure()
-                plt.scatter(y_test, y_pred)
+                plt.scatter(y_test, y_pred, marker='+')
                 plt.xlabel('real value')
                 plt.ylabel('predicted')
                 plt.title('predicted vs real for ' + name)
@@ -250,10 +292,10 @@ class MyMLdata_2level:
         y_output.columns = model_names
         # output hte prediction only if necessary:
         if output_y_pred == True:
-            return r2_list, y_output, y_test
+            return r2_list, mae_list, y_output, y_test
         # this function will return all 2r scores and mean absolute errors
         else:
-            return r2_list
+            return r2_list, mae_list
 # %%-
 
 
@@ -1093,7 +1135,7 @@ class MyMLdata_2level:
                 r2list.append(r2matrix)
             print('finish repeatition ' + str(k+1))
         # play a nice reminder music after finishing
-        playsound('spongbob.mp3')
+        # playsound('spongbob.mp3')
         if return_pred==True:
             return model_names, y_pred_matrix, y_test, r2list
         return r2list
