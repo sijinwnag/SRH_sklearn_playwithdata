@@ -54,7 +54,8 @@ r2scores = df1.regression_repeat()
 # %%-- Perform chain regression for energy levels.
 
 # %%-- Just the chain.
-df1.regression_matrix='Mean Absolute Error'
+df1.regression_matrix = 'Mean Absolute Error'
+df1.regression_matrix = 'R2'
 chain_scores = df1.repeat_chain_regressor(repeat_num=3, regression_order=None, chain_name = 'Et1->Et2')
 chain_scores = df1.repeat_chain_regressor(repeat_num=3, regression_order=None, chain_name = 'Et1->Et1+Et2->Et2')
 chain_scores = df1.repeat_chain_regressor(repeat_num=5, regression_order=None, chain_name = 'Et1->Et1+Et2->logk_1->logk_1+logk_2->Et2')
@@ -71,4 +72,8 @@ model_names, y_pred_matrix, y_test, r2list = df1.repeat_subtraction_method(repea
 
 # %%-- Perform chain regression for k
 chain_scores = df1.repeat_chain_regressor(repeat_num=5, regression_order=None, chain_name = 'logk1+logk2->logk1->logk2')
+# %%-
+
+# %%-- Test drafting zone
+df1.pre_processor_insert_all_known()
 # %%-

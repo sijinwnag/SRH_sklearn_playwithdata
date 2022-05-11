@@ -802,6 +802,70 @@ class MyMLdata_2level:
         set01 = df[(np.array(df['bandgap_1']==0))*np.array(df['bandgap_2']==1)]
         return set11, set10, set01, set00
 
+
+    def pre_processor_insert_all_known(self):
+        """
+        This function will take each X column, then caluclate T, n, p, vn, vp, ni, Ei for each event
+        """
+        # Load the data from the object.
+        dataframe = self.data
+        # read the header of each data
+        variable_type, temp_list, doping_level, excess_dn = self.reader_heading()
+        # extract the X of the dataframe (features)
+        features = pd.DataFrame(dataframe.iloc[:, np.array(variable_type)=='X'])
+        # print(features)
+
+        # itrate for each column: for each column, the T, n, p are the same
+        # since vn and vp are only dependent on T.
+        # ni is only dependent on T.
+        # Ei is only dependent on T as well.
+        extra_column_list = []
+        lifetime_column_list = []
+        for column_index in range(len(list(self.data.columns))):
+            # if that column is a variable instead of y
+            if variable_type[column_index] == 'X':
+                # convert the readed text into numbers for dn and doping:
+                doping_level[column_index] = float(doping_level[column_index].split('c')[0])
+                excess_dn[column_index] = float(excess_dn[column_index].split('c')[0])
+                T = float(temp_list[column_index].split('K')[0])
+                # find the minority carrier concentration
+                Tmodel=SRH(material="Si",temp = T, Nt = 1e12, nxc = excess_dn[column_index], Na = doping_level[column_index], Nd= 0, BGN_author = "Yan_2014fer")
+                ni = float(Tmodel.nieff)
+                # calcualte the minority carrier concentration by ni**2=np*p0
+                p0 = ni**2/doping_level[column_index]
+                # calculate the vn at this temperature.
+                Vn = Tmodel.vel_th_e[0]
+                Vp = Tmodel.vel_th_h
+                # calcualte the carrier concentration
+                majority_p = float(excess_dn[column_index] + doping_level[column_index])
+                minority_n = p0 + excess_dn[column_index]
+
+                # write up the extra columns.
+                extra_column = np.array([T, majority_p, minority_n, Vn, Vp, ni])
+                # print(extra_column)
+                # # reshape the extra column the same dimension as the others.
+                extra_column = np.zeros((np.shape(self.data)[0], len(extra_column))) + extra_column
+                # print(np.shape(extra_column))
+                # add this column after the current column.
+                extra_column_list.append(extra_column)
+                # print(np.shape(extra_column))
+
+                # also collect the lifetime column.
+                lifetime_column_list.append(self.data.iloc[:, column_index])
+                # print(np.shape(self.data.iloc[:, column_index]))
+
+        # sanity check.
+        # print(np.shape(extra_column_list)) [600, 8000, 6]
+        # print(extra_column_list) [600, 8000]
+        # print(np.shape(lifetime_column_list))
+        X_array = np.array([])
+        for event in range(np.shape(lifetime_column_list)[0]):
+            # cascade the lifetime with its corresponding temperature and all other known information.
+            # print(np.shape(extra_column_list[event]))
+            lifetime_column_list[event] = np.reshape(lifetime_column_list[event], (len(lifetime_column_list[event]), -1))
+            event_array = np.concatenate((extra_column_list[event], lifetime_column_list[event]), axis=0)
+            print(np.shape(event_array))
+            break
 # %%-
 
 
