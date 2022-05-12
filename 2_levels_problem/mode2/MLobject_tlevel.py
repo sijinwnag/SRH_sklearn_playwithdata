@@ -38,12 +38,12 @@ class MyMLdata_2level:
         3.  define default parameters for machine learinng
         """
         # define the default maching learning setting for both regression and classification.
-        # regression_default_param = {
-        # 'model_names': ['KNN', 'Ridge Linear Regression', 'Random Forest' , 'Neural Network', 'Gradient Boosting', 'Ada Boosting', 'Support Vector'], # a list of name for each model.
-        # 'model_lists': [KNeighborsRegressor(), Ridge(), RandomForestRegressor(n_estimators=100, verbose =0, n_jobs=-1), MLPRegressor(((100, 300, 500, 700, 500, 300, 100)),alpha=0.001, activation = 'relu',verbose=0,learning_rate='adaptive'), GradientBoostingRegressor(verbose=0,loss='ls',max_depth=10), AdaBoostRegressor(base_estimator = DecisionTreeRegressor(), n_estimators=100, loss='linear'), SVR(kernel='rbf',C=5,verbose=0, gamma="auto")],# a list of model improted from sklearn
-        # 'gridsearchlist': [True, True, False, False, False, False, False], # each element in this list corspond to a particular model, if True, then we will do grid search while training the model, if False, we will not do Gridsearch for this model.
-        # 'param_list': [{'n_neighbors':range(1, 30)}, {'alpha': [0.01, 0.1, 1, 10]}, {'n_estimators': [200, 100, 1000, 500, 2000], 'verbose':[0], 'n_jobs':[-1]}, {'hidden_layer_sizes':((100, 300, 300, 100), (100, 300, 500, 300, 100), (200, 600, 600, 200), (200, 600, 900, 600, 200), (100, 300, 500, 700, 500, 300, 100)), 'alpha': [0.001], 'learning_rate':['adaptive']}, {'n_estimators':[200, 100]}, {'n_estimators':[50, 100]}, {'C': [0.1, 1, 10], 'epsilon': [1e-2, 0.1, 1]}]# a list of key parameters correspond to the models in the model_lists if we are going to do grid searching
-        # }
+        regression_default_param = {
+        'model_names': ['KNN', 'Ridge Linear Regression', 'Random Forest' , 'Neural Network', 'Gradient Boosting', 'Ada Boosting', 'Support Vector'], # a list of name for each model.
+        'model_lists': [KNeighborsRegressor(), Ridge(), RandomForestRegressor(n_estimators=100, verbose =0, n_jobs=-1), MLPRegressor(((100, 300, 500, 700, 500, 300, 100)),alpha=0.001, activation = 'relu',verbose=0,learning_rate='adaptive'), GradientBoostingRegressor(verbose=0,loss='ls',max_depth=10), AdaBoostRegressor(base_estimator = DecisionTreeRegressor(), n_estimators=100, loss='linear'), SVR(kernel='rbf',C=5,verbose=0, gamma="auto")],# a list of model improted from sklearn
+        'gridsearchlist': [True, True, False, False, False, False, False], # each element in this list corspond to a particular model, if True, then we will do grid search while training the model, if False, we will not do Gridsearch for this model.
+        'param_list': [{'n_neighbors':range(1, 30)}, {'alpha': [0.01, 0.1, 1, 10]}, {'n_estimators': [200, 100, 1000, 500, 2000], 'verbose':[0], 'n_jobs':[-1]}, {'hidden_layer_sizes':((100, 300, 300, 100), (100, 300, 500, 300, 100), (200, 600, 600, 200), (200, 600, 900, 600, 200), (100, 300, 500, 700, 500, 300, 100)), 'alpha': [0.001], 'learning_rate':['adaptive']}, {'n_estimators':[200, 100]}, {'n_estimators':[50, 100]}, {'C': [0.1, 1, 10], 'epsilon': [1e-2, 0.1, 1]}]# a list of key parameters correspond to the models in the model_lists if we are going to do grid searching
+        }
         # only neural network.
         # regression_default_param = {
         # 'model_names': ['Neural Network'], # a list of name for each model.
@@ -52,12 +52,12 @@ class MyMLdata_2level:
         # 'param_list': [{'hidden_layer_sizes':((100, 300, 300, 100), (100, 300, 500, 300, 100), (200, 600, 600, 200), (200, 600, 900, 600, 200), (100, 300, 500, 700, 500, 300, 100)), 'alpha': [0.001], 'learning_rate':['adaptive']}# a list of key parameters correspond to the models in the model_lists if we are going to do grid searching
         # ]}
         # only the quick ones
-        regression_default_param = {
-        'model_names': ['KNN', 'Ridge Linear Regression'], # a list of name for each model.
-        'model_lists': [KNeighborsRegressor(), Ridge()],# a list of model improted from sklearn
-        'gridsearchlist': [True, True], # each element in this list corspond to a particular model, if True, then we will do grid search while training the model, if False, we will not do Gridsearch for this model.
-        'param_list': [{'n_neighbors':range(1, 30)}, {'alpha': [0.01, 0.1, 1, 10]}]
-        }
+        # regression_default_param = {
+        # 'model_names': ['KNN', 'Ridge Linear Regression'], # a list of name for each model.
+        # 'model_lists': [KNeighborsRegressor(), Ridge()],# a list of model improted from sklearn
+        # 'gridsearchlist': [True, True], # each element in this list corspond to a particular model, if True, then we will do grid search while training the model, if False, we will not do Gridsearch for this model.
+        # 'param_list': [{'n_neighbors':range(1, 30)}, {'alpha': [0.01, 0.1, 1, 10]}]
+        # }
         classification_default_param = {
         'model_names': ['KNN', 'SVC', 'Decision tree', 'Random Forest',  'Gradient Boosting', 'Adaptive boosting', 'Naive Bayes', 'Neural Network'], # a list of name for each model.
         'model_lists': [KNeighborsClassifier(n_neighbors = 5, weights='distance',n_jobs=-1), SVC(), DecisionTreeClassifier(), RandomForestClassifier(n_estimators=100, verbose =0,n_jobs=-1), GradientBoostingClassifier(verbose=0,loss='deviance'), AdaBoostClassifier(base_estimator = DecisionTreeClassifier(), n_estimators=10), GaussianNB(), MLPClassifier((100,100),alpha=0.001, activation = 'relu',verbose=0,learning_rate='adaptive')],# a list of model improted from sklearn
@@ -821,25 +821,40 @@ class MyMLdata_2level:
         # Ei is only dependent on T as well.
         extra_column_list = []
         lifetime_column_list = []
+        column_name = []
+        y_column_name = []
+        # the original heading for the orginal lifetime data.
+        headings = list(self.data.columns)
+        y_columns = []
         for column_index in range(len(list(self.data.columns))):
+            if variable_type[column_index] == 'y':
+                # collect that into y columns.
+                y_columns.append(self.data.iloc[:, column_index])
+                y_heading = headings[column_index]
+                y_column_name.append(y_heading)
             # if that column is a variable instead of y
             if variable_type[column_index] == 'X':
                 # convert the readed text into numbers for dn and doping:
                 doping_level[column_index] = float(doping_level[column_index].split('c')[0])
                 excess_dn[column_index] = float(excess_dn[column_index].split('c')[0])
                 T = float(temp_list[column_index].split('K')[0])
+                T_heading = 'Temperature=' + str(T)
                 # find the minority carrier concentration
                 Tmodel=SRH(material="Si",temp = T, Nt = 1e12, nxc = excess_dn[column_index], Na = doping_level[column_index], Nd= 0, BGN_author = "Yan_2014fer")
                 ni = float(Tmodel.nieff)
+                ni_heading = 'ni=' + str(ni)
                 # calcualte the minority carrier concentration by ni**2=np*p0
                 p0 = ni**2/doping_level[column_index]
                 # calculate the vn at this temperature.
                 Vn = Tmodel.vel_th_e[0]
                 Vp = Tmodel.vel_th_h
+                Vn_heading = 'Vn=' + str(Vn)
+                Vp_heading = 'Vp=' + str(Vp)
                 # calcualte the carrier concentration
                 majority_p = float(excess_dn[column_index] + doping_level[column_index])
                 minority_n = p0 + excess_dn[column_index]
-
+                majority_heading = 'Majority Carrier Concentration=' + str(majority_p)
+                minority_heading = 'Minority Carrier Concentration=' + str(minority_n)
                 # write up the extra columns.
                 extra_column = np.array([T, majority_p, minority_n, Vn, Vp, ni])
                 # print(extra_column)
@@ -854,18 +869,51 @@ class MyMLdata_2level:
                 lifetime_column_list.append(self.data.iloc[:, column_index])
                 # print(np.shape(self.data.iloc[:, column_index]))
 
+                # in terms of the heading: firstly keep the original heading for the lifetime data.
+                lifetime_heading = headings[column_index]
+                column_name.append(lifetime_heading)
+                # then append the heading for parameters.
+                column_name.append(T_heading)
+                column_name.append(majority_heading)
+                column_name.append(minority_heading)
+                column_name.append(Vn_heading)
+                column_name.append(Vp_heading)
+                column_name.append(ni_heading)
+
         # sanity check.
         # print(np.shape(extra_column_list)) [600, 8000, 6]
         # print(extra_column_list) [600, 8000]
         # print(np.shape(lifetime_column_list))
-        X_array = np.array([])
+        # print(lifetime_column_list[0])# expect to see hte first column of lifeitme: met the expectation.
+        X_array = np.empty((np.shape(extra_column_list)[1],))
         for event in range(np.shape(lifetime_column_list)[0]):
             # cascade the lifetime with its corresponding temperature and all other known information.
-            # print(np.shape(extra_column_list[event]))
-            lifetime_column_list[event] = np.reshape(lifetime_column_list[event], (len(lifetime_column_list[event]), -1))
-            event_array = np.concatenate((extra_column_list[event], lifetime_column_list[event]), axis=0)
-            print(np.shape(event_array))
-            break
+            # print(np.shape(extra_column_list[event])) (8000, 6) 8000 is the datasize, 6 is the number of parameter.
+            # print(lifetime_column_list[event].ndim) # it is 1D array.
+            # print(np.shape(lifetime_column_list[event])[0]) # 8000
+            # lifetime_column_list[event] = np.reshape(lifetime_column_list[event], (np.shape((lifetime_column_list[event]))[0], -1))
+            # event_array = np.concatenate((extra_column_list[event], lifetime_column_list[event]), axis=0)
+            event_array = np.column_stack((lifetime_column_list[event], extra_column_list[event]))
+            # collect the event array into the list.
+            X_array = np.column_stack((X_array, event_array))
+            # print(np.shape(event_array))
+        X_array = X_array[:, 1:] # only have 3600 columns.
+        # print(np.shape(X_array))
+        # print(X_array[:, 0]) # expect to be found in the dataset as a lifetime. met the expectation.
+        # print(X_array[:, -1]) # expect to be all the same: met the expectation.
+        # put the heading for X.
+        # print(np.shape(column_name))
+        X_frame = pd.DataFrame(X_array, columns=column_name)
+        # print(X_frame.head()) # expect to see the X_array with headings as a dataframe.
+        # add X_frame with y frames.
+        # print(np.shape(y_columns))
+        y_frame = pd.DataFrame(np.transpose(np.array(y_columns)), columns=y_column_name)
+        print(np.shape(y_frame)) # expect: 8000*19
+        print(np.shape(X_frame))
+        newdata = pd.concat([y_frame, X_frame], axis=1)
+        print(np.shape(newdata)) # expect: 8000*(19+4200)
+        # export it to csv to check the details.
+        newdata.to_csv('new_data.csv')
 # %%-
 
 
