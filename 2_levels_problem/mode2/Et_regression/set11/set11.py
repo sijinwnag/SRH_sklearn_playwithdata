@@ -12,7 +12,9 @@ from MLobject_tlevel import *
 # n type doping:
 #df1 = MyMLdata_2level(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Et_regression\set11\set11_1e15_ntype.csv', 'bandgap1', 5)
 # all known data.
-df1 = MyMLdata_2level(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Et_regression\set11\new_data.csv', 'bandgap1', 2)
+# df1 = MyMLdata_2level(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Et_regression\set11\new_data.csv', 'bandgap1', 5)
+# one doping one temperature.
+df1 = MyMLdata_2level(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Et_regression\set11\one_doping_one_temp.csv', 'bandgap1', 5)
 # %%-
 
 # %%-- different data engineering
@@ -76,6 +78,10 @@ model_names, y_pred_matrix, y_test, r2list = df1.repeat_subtraction_method(repea
 chain_scores = df1.repeat_chain_regressor(repeat_num=5, regression_order=None, chain_name = 'logk1+logk2->logk1->logk2')
 # %%-
 
-# %%-- Test drafting zone
+# %%-- insert all known information as columns (failed)
 df1.pre_processor_insert_all_known()
+# %%-
+
+# %%-- calculate C1 C2 C3 C4 as known for each defect.
+df1.C1_C2_C3_C4_calculator()
 # %%-

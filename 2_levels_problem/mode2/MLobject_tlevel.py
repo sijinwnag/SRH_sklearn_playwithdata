@@ -19,6 +19,7 @@ from playsound import playsound
 from sklearn.model_selection import cross_val_score, RepeatedKFold
 from sklearn.multioutput import RegressorChain
 from semiconductor.recombination import SRH
+import scipy.constants as sc
 # %%-
 
 
@@ -683,7 +684,6 @@ class MyMLdata_2level:
                 self.data[columnname] = self.data[columnname]*(doping_level[column_index] + excess_dn[column_index] + p0)# /excess_dn[column_index]
                 # print(self.data[columnname])
 
-
     def pre_processor_insert_dtal(self):
         """
         This function takes the original data frame from the object itself and add extra columns that is the difference between adjacent columns
@@ -914,8 +914,80 @@ class MyMLdata_2level:
         print(np.shape(newdata)) # expect: 8000*(19+4200)
         # export it to csv to check the details.
         newdata.to_csv('new_data.csv')
-# %%-
 
+
+    def C1_C2_C3_C4_calculator(self):
+        """
+        This function only works if the data only have one temperature and one doping levels.
+        """
+        # read off the temperature and doping and excess carrier concentration from the headings.
+        variable_type, temp_list, doping_level, excess_dn = self.reader_heading()
+        # read off and calcualte the vn, vp, n0, p0, ni, T, dn from the headings
+        for column_index in range(len(list(self.data.columns))):
+            # if that column is a variable instead of y
+            if variable_type[column_index] == 'X':
+                # convert the readed text into numbers for dn and doping:
+                doping_level[column_index] = float(doping_level[column_index].split('c')[0])
+                excess_dn[column_index] = float(excess_dn[column_index].split('c')[0])
+                T = float(temp_list[column_index].split('K')[0])
+                # find the minority carrier concentration
+                Tmodel=SRH(material="Si",temp = T, Nt = 1e12, nxc = excess_dn[column_index], Na = doping_level[column_index], Nd= 0, BGN_author = "Yan_2014fer")
+                ni = float(Tmodel.nieff)
+                # calcualte the minority carrier concentration by ni**2=np*p0
+                intrinsic_doping = doping_level[column_index]
+                intrinsic_minority = ni**2/doping_level[column_index]
+                # calculate the vn at this temperature.
+                Vn = Tmodel.vel_th_e[0]
+                Vp = Tmodel.vel_th_h
+                # calcualte the carrier concentration
+                break
+        # for each defect, calculate C1 C2 C3 C4
+        # create the list to collect them.
+        C1_list = []
+        C2_list = []
+        C3_list = []
+        C4_list = []
+        # k1Vnn1_list = []
+        # Vpdoping_list = []
+        # Vpp1_list = []
+        # k1Vnminority = []
+        # iterate for each defect:
+        # print(np.shape(self.data)) # expect 8000*feature numbers
+        for row_index in range(np.shape(self.data)[0]):
+            # read off the capcture cross sectional areas.
+            k1 = self.data._get_value(row_index, 'k_1')
+            k2 = self.data._get_value(row_index, 'k_2')
+            Et1 = self.data._get_value(row_index, 'Et_eV_1')
+            Et2 = self.data._get_value(row_index, 'Et_eV_2')
+            # calculate n1 p1 and n2 p2
+            n1 = ni*np.exp(Et1/(sc.k/sc.e)/T) # k here needs to be in eV/K
+            p1 = ni**2/n1
+            n2 = ni*np.exp(Et2/(sc.k/sc.e)/T)
+            p2 = ni**2/n2
+            # calcualte C1 C2 C3 and C4
+            C3 = (Vp*p2 + k2*Vn*intrinsic_minority)/(k2*Vn*n2 + Vp*intrinsic_doping) # first term first energy
+            C4 = (Vn*Vp)/(k2*Vn*n2 + Vp*intrinsic_doping/k2) # second term second energy
+            C1 = (k1*Vn*n1 + Vp*intrinsic_doping)/(Vp*p1 + k1*Vn*intrinsic_minority) # first term first energy
+            # C1_numerator = (k1*Vn*n1 + Vp*intrinsic_doping)
+            # C1_denominator = (Vp*p1 + k1*Vn*intrinsic_minority)
+            # k1Vnn1 = k1*Vn*n1
+            # Vpdoping = Vp*intrinsic_doping
+            # Vpp1 = Vp*p1
+            # k1Vnminority = k1*Vn*intrinsic_minority
+            C2 = (Vn*Vp)/(k1*Vn*intrinsic_minority + Vp*p1/k1) # second term first energy
+            # put them into the list
+            C1_list.append(C1)
+            C2_list.append(C2)
+            C3_list.append(C3)
+            C4_list.append(C4)
+        # now insert the created C1, C2, C3, C4 into the original dataframe.
+        newdata = self.data
+        newdata['C1'] = np.array(C1_list)
+        newdata['C2'] = np.array(C2_list)
+        newdata['C3'] = np.array(C3_list)
+        newdata['C4'] = np.array(C4_list)
+        # export as csv file to see what happens.
+        newdata.to_csv('new_data_C.csv')
 
 # %%--- The functions for chain multi-output regressor chain.
     """
