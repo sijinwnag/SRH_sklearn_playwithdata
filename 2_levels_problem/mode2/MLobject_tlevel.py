@@ -623,6 +623,55 @@ class MyMLdata_2level:
         dfplotT.columns = plot_sci_col
         sn.set(font_scale=0.8)
         figure = sn.pairplot(dfplotT)
+
+
+    def C_visiaulization(self):
+        """
+        The aim of this function is to plot the histogram of C1n, C1d on the same plot with x axis logscale
+
+        This function only works if the data only have one temperature and one doping
+        """
+        # read off the C values using prewritten functions.
+        C1n_list, C1d_list, C2n_list, C2d_list = self.C1_C2_C3_C4_calculator(return_C=True)
+        # print(np.shape(C3_list)) # expect (8000,)
+        # read off the temperautre, doping and excess carrier concentration.
+        variable_type, temp_list, doping_level, excess_dn = self.reader_heading()
+        for column_index in range(len(list(self.data.columns))):
+            # if that column is a variable instead of y
+            if variable_type[column_index] == 'X':
+                # convert the readed text into numbers for dn and doping:
+                doping_level[column_index] = float(doping_level[column_index].split('c')[0])
+                excess_dn[column_index] = float(excess_dn[column_index].split('c')[0])
+                T = float(temp_list[column_index].split('K')[0])
+
+                doping = doping_level[column_index]
+                dn = excess_dn[column_index]
+                break
+
+        # start plotting the histogram
+        bins=1000
+        plt.figure()
+        plt.hist(C1n_list, bins=bins, label='C1d')
+        plt.hist(C1d_list, bins=bins, label='C2d')
+        plt.xscale('log')
+        plt.show()
+
+        # boxplot.
+        # make C into a frame
+        Cframe = pd.DataFrame(np.transpose(np.array([C1n_list, C2n_list])))
+        print(np.shape(Cframe)) # expect (8000,2)
+        plt.figure()
+        plt.boxplot(Cframe)
+        plt.yscale('log')
+        plt.show()
+
+        # plot this histogram of the ratio.
+        bins=1000
+        ratio_array = np.array(C1n_list)/np.array(C2n_list)
+        plt.figure()
+        plt.scatter(ratio_array)
+        # plt.xscale('log')
+        plt.show()
 # %%-
 
 
@@ -916,9 +965,11 @@ class MyMLdata_2level:
         newdata.to_csv('new_data.csv')
 
 
-    def C1_C2_C3_C4_calculator(self):
+    def C1_C2_C3_C4_calculator(self, return_C=False):
         """
         This function only works if the data only have one temperature and one doping levels.
+
+        return_C: whether or not to return C at the end.
         """
         # read off the temperature and doping and excess carrier concentration from the headings.
         variable_type, temp_list, doping_level, excess_dn = self.reader_heading()
@@ -988,6 +1039,11 @@ class MyMLdata_2level:
         newdata['C4'] = np.array(C4_list)
         # export as csv file to see what happens.
         newdata.to_csv('new_data_C.csv')
+
+        # return the value if requried
+        if return_C == True:
+            return C1_list, C2_list, C3_list, C4_list
+
 
 # %%--- The functions for chain multi-output regressor chain.
     """
@@ -1536,4 +1592,5 @@ class MyMLdata_2level:
             # perform the prediction.
             y_pred = model.predict(X_scaled)
             return y_pred
+# %%-
 # %%-

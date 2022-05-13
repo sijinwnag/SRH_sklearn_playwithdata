@@ -85,3 +85,7 @@ df1.pre_processor_insert_all_known()
 # %%-- calculate C1 C2 C3 C4 as known for each defect.
 df1.C1_C2_C3_C4_calculator()
 # %%-
+
+# %%-- Data visualization
+df1.C_visiaulization()
+# %%-
