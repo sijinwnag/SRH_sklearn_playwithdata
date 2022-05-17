@@ -2,7 +2,7 @@
 import sys
 
 # import the function file from another folder:
-use this line if on hp laptop:
+# use this line if on hp laptop:
 # sys.path.append(r'C:\Users\budac\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2')
 # use this line if on dell laptop
 # sys.path.append(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2')
