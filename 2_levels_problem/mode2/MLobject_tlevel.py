@@ -15,7 +15,8 @@ from sklearn.svm import SVR, SVC
 import sys
 from sklearn.tree import DecisionTreeRegressor, DecisionTreeClassifier
 from sklearn.naive_bayes import GaussianNB
-from playsound import playsound
+# uncomment the below line for dell laptop only
+# from playsound import playsound
 from sklearn.model_selection import cross_val_score, RepeatedKFold
 from sklearn.multioutput import RegressorChain
 from semiconductor.recombination import SRH
@@ -554,7 +555,7 @@ class MyMLdata_2level:
             return f1_output
 
 
-    def perform_alltasks_ML(self, plot_graphs=False):
+    def perform_alltasks_ML(self, plot_graphs=False, playmusic=False):
         """
         This is the function to perform all tasks together using ML
 
@@ -571,7 +572,8 @@ class MyMLdata_2level:
             print('finish predicting ' + tasks)
 
         # play a nice reminder music after finishing
-        playsound('spongbob.mp3')
+        if playmusic == True:
+            playsound('spongbob.mp3')
 
         return score_list
 # %%-

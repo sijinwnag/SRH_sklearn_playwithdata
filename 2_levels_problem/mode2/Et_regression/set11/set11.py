@@ -29,7 +29,7 @@ from MLobject_tlevel import *
 
 # use this section if using hp laptop:
 # one doping level:
-df1 = MyMLdata_2level(r'"C:\ML_databank\set11_1e15.csv"', 'bandgap1', 10)
+df1 = MyMLdata_2level(r'C:\ML_databank\set11_1e15.csv', 'bandgap1', 10)
 # %%-
 
 # %%-- different data engineering
