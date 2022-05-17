@@ -20,6 +20,7 @@ from sklearn.model_selection import cross_val_score, RepeatedKFold
 from sklearn.multioutput import RegressorChain
 from semiconductor.recombination import SRH
 import scipy.constants as sc
+from datetime import datetime
 # %%-
 
 
@@ -648,29 +649,59 @@ class MyMLdata_2level:
                 dn = excess_dn[column_index]
                 break
 
-        # start plotting the histogram
+        # start plotting the histogram for Cn
         bins=1000
         plt.figure()
-        plt.hist(C1n_list, bins=bins, label='C1d')
-        plt.hist(C1d_list, bins=bins, label='C2d')
-        plt.xscale('log')
+        plt.hist(np.log10(np.array(C1n_list)/np.array(C2n_list)), bins=bins, label='C1d')
+        # plt.xscale('log')
+        plt.title('Distribution of ratio for $C_{1n}/C_{2n}$')
+        plt.xlabel('log10 of the ratio')
+        plt.show()
+
+        # start plotting the histogram for Cn
+        bins=1000
+        plt.figure()
+        plt.hist(np.log10(np.array(C1d_list)/np.array(C2d_list)), bins=bins, label='C1d')
+        # plt.xscale('log')
+        plt.title('Distribution of ratio for $C_{1d}/C_{2d}$')
+        plt.xlabel('log10 of the ratio')
         plt.show()
 
         # boxplot.
         # make C into a frame
-        Cframe = pd.DataFrame(np.transpose(np.array([C1n_list, C2n_list])))
-        print(np.shape(Cframe)) # expect (8000,2)
+        Cframe = pd.DataFrame(np.transpose(np.array([C1n_list, C2n_list])), columns=['$C_1n$', '$C_2n$'])
+        # print(np.shape(Cframe)) # expect (8000,2)
         plt.figure()
-        plt.boxplot(Cframe)
+        plt.boxplot(Cframe, labels=['$C_{1n}$', '$C_{2n}$'])
         plt.yscale('log')
+        plt.title('comparison between the $C_{n}$ on the numerator')
         plt.show()
 
-        # plot this histogram of the ratio.
+        # # plot this boxplot of hte ratio for Cn
         bins=1000
         ratio_array = np.array(C1n_list)/np.array(C2n_list)
         plt.figure()
-        plt.scatter(ratio_array)
-        # plt.xscale('log')
+        plt.boxplot(ratio_array, labels=['${C_{1n}}/{C_{2n}}$'])
+        plt.yscale('log')
+        plt.title('Distribution of ratio of $C_{n}$')
+        plt.show()
+
+        # box plot for Cd
+        Cframe = pd.DataFrame(np.transpose(np.array([C1d_list, C2d_list])), columns=['$C_1d$', '$C_2d$'])
+        # print(np.shape(Cframe)) # expect (8000,2)
+        plt.figure()
+        plt.boxplot(Cframe, labels=['$C_{1d}$', '$C_{2d}$'])
+        plt.yscale('log')
+        plt.title('comparison between the $C_{d}$ on the numerator')
+        plt.show()
+
+        # # plot this box plot of the ratio for Cd
+        bins=1000
+        ratio_array = np.array(C1d_list)/np.array(C2d_list)
+        plt.figure()
+        plt.boxplot(ratio_array, labels=['${C_{1d}}/{C_{2d}}$'])
+        plt.yscale('log')
+        plt.title('Distribution of ratio of $C_{d}$')
         plt.show()
 # %%-
 
@@ -799,7 +830,7 @@ class MyMLdata_2level:
                 select_X_list.append(string)
         X = dfk[select_X_list] # take the lifetime as X, delete any column that does not start with a number.
         X = np.log(X) # take the log of lifetime data.
-        # in case we want to do some combination
+        # in case we want to do some combination, pre-process the data based on the single task.
         if singletask == 'logk_1+logk_2':
             y = dfk['logk_1'] + dfk['logk_2']
         elif singletask == 'logk_1-logk_2':
@@ -828,8 +859,13 @@ class MyMLdata_2level:
             X['Et_eV_1'] = dfk['Et_eV_1']
             X['Et_eV_1+_Et_eV_2'] = dfk['Et_eV_1'] + dfk['Et_eV_2']
             y = dfk['Et_eV_2']
+        elif singletask == 'Et_eV_2_known_Et_eV_1':
+            y = dfk['Et_eV_2']
+            X['Et_eV_1'] = dfk['Et_eV_1']
         elif singletask == 'Et_eV_1-Et_eV_2':
             y = dfk['Et_eV_1'] - dfk['Et_eV_2']
+        elif singletask == 'Sn_cm2_1':
+            y = pd.DataFrame(self.data)['Sn_cm2_1']
         else:
             y = dfk[singletask]
         # store the X and y to the object.
@@ -962,10 +998,10 @@ class MyMLdata_2level:
         newdata = pd.concat([y_frame, X_frame], axis=1)
         print(np.shape(newdata)) # expect: 8000*(19+4200)
         # export it to csv to check the details.
-        newdata.to_csv('new_data.csv')
+        # newdata.to_csv('new_data.csv')
 
 
-    def C1_C2_C3_C4_calculator(self, return_C=False):
+    def C1_C2_C3_C4_calculator(self, return_C=False, export=False):
         """
         This function only works if the data only have one temperature and one doping levels.
 
@@ -994,10 +1030,10 @@ class MyMLdata_2level:
                 break
         # for each defect, calculate C1 C2 C3 C4
         # create the list to collect them.
-        C1_list = []
-        C2_list = []
-        C3_list = []
-        C4_list = []
+        C1d_list = []
+        C2d_list = []
+        C1n_list = []
+        C2n_list = []
         # k1Vnn1_list = []
         # Vpdoping_list = []
         # Vpp1_list = []
@@ -1010,39 +1046,47 @@ class MyMLdata_2level:
             k2 = self.data._get_value(row_index, 'k_2')
             Et1 = self.data._get_value(row_index, 'Et_eV_1')
             Et2 = self.data._get_value(row_index, 'Et_eV_2')
+            Sn1 = self.data._get_value(row_index, 'Sn_cm2_1')
+            Sn2 = self.data._get_value(row_index, 'Sn_cm2_2')
+            Sp1 = self.data._get_value(row_index, 'Sp_cm2_1')
+            Sp2 = self.data._get_value(row_index, 'Sp_cm2_2')
             # calculate n1 p1 and n2 p2
             n1 = ni*np.exp(Et1/(sc.k/sc.e)/T) # k here needs to be in eV/K
             p1 = ni**2/n1
             n2 = ni*np.exp(Et2/(sc.k/sc.e)/T)
             p2 = ni**2/n2
-            # calcualte C1 C2 C3 and C4
-            C3 = (Vp*p2 + k2*Vn*intrinsic_minority)/(k2*Vn*n2 + Vp*intrinsic_doping) # first term first energy
-            C4 = (Vn*Vp)/(k2*Vn*n2 + Vp*intrinsic_doping/k2) # second term second energy
-            C1 = (k1*Vn*n1 + Vp*intrinsic_doping)/(Vp*p1 + k1*Vn*intrinsic_minority) # first term first energy
+            # calcualte C1n C2n C1d and C2d
+            C_2n = (Vp*p2 + k2*Vn*intrinsic_minority)/(k2*Vn*n2 + Vp*intrinsic_doping) # first term first energy
+            C_2d = (Vn*Vp*Sn2*Sp2)/(Vn*n2*Sn2 + Vp*intrinsic_doping*Sp2) # second term second energy
+            C_1n = (k1*Vn*n1 + Vp*intrinsic_doping)/(Vp*p1 + k1*Vn*intrinsic_minority) # first term first energy
             # C1_numerator = (k1*Vn*n1 + Vp*intrinsic_doping)
             # C1_denominator = (Vp*p1 + k1*Vn*intrinsic_minority)
             # k1Vnn1 = k1*Vn*n1
             # Vpdoping = Vp*intrinsic_doping
             # Vpp1 = Vp*p1
             # k1Vnminority = k1*Vn*intrinsic_minority
-            C2 = (Vn*Vp)/(k1*Vn*intrinsic_minority + Vp*p1/k1) # second term first energy
+            C_1d = (Vn*Vp*Sp1*Sn1)/(Sn1*Vn*intrinsic_minority + Vp*p1*Sp1) # second term first energy
             # put them into the list
-            C1_list.append(C1)
-            C2_list.append(C2)
-            C3_list.append(C3)
-            C4_list.append(C4)
+            C2n_list.append(C_2n)
+            C2d_list.append(C_2d)
+            C1n_list.append(C_1n)
+            C1d_list.append(C_1d)
         # now insert the created C1, C2, C3, C4 into the original dataframe.
         newdata = self.data
-        newdata['C1'] = np.array(C1_list)
-        newdata['C2'] = np.array(C2_list)
-        newdata['C3'] = np.array(C3_list)
-        newdata['C4'] = np.array(C4_list)
+        newdata['C1n'] = np.array(C1n_list)
+        newdata['C2n'] = np.array(C2n_list)
+        newdata['C1d'] = np.array(C1d_list)
+        newdata['C2d'] = np.array(C2d_list)
+
+        if export==True:
         # export as csv file to see what happens.
-        newdata.to_csv('new_data_C.csv')
+            now = datetime.now()
+            current_time = now.strftime("%H_%M_%S")
+            newdata.to_csv('Cdata' + str(current_time) + '.csv')
 
         # return the value if requried
         if return_C == True:
-            return C1_list, C2_list, C3_list, C4_list
+            return C1n_list, C2n_list, C1d_list, C2d_list
 
 
 # %%--- The functions for chain multi-output regressor chain.
