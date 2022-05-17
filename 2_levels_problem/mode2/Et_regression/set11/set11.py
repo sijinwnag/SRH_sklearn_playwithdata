@@ -1,11 +1,17 @@
 # %%-- Imports
 import sys
+
 # import the function file from another folder:
-# sys.path.append(r'C:\Users\budac\Documents\GitHub\SRH_sklearn_playwithdata\One_single_Level_defect')
-sys.path.append(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2')
+# use this line if on hp laptop:
+sys.path.append(r'C:\Users\budac\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2')
+# use this line if on dell laptop
+# sys.path.append(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2')
+# use this line if on workstation
 from MLobject_tlevel import *
+
+# use this secion if using dell laptop
 # one doping level:
-df1 = MyMLdata_2level(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Et_regression\set11\set11_1e15.csv', 'bandgap1', 10)
+# df1 = MyMLdata_2level(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Et_regression\set11\set11_1e15.csv', 'bandgap1', 10)
 # np.shape(df1.data)
 # multiple doping level:
 # df1 = MyMLdata_2level(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Et_regression\set11\set11_diff_doping.csv', 'bandgap1', 5)
@@ -19,7 +25,11 @@ df1 = MyMLdata_2level(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwit
 # 1e15 doping:
 # df1 = MyMLdata_2level(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Et_regression\set11\1e15_400K_single.csv', 'bandgap1', 10)
 # 1e15 dopiong 300K
-# df1 = MyMLdata_2level(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Et_regression\set11\1e15_300K.csv', 'bandgap1', 5)
+# df1 = MyMLdata_2level(r'C:\Users\sjin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Et_regression\set11\1e15_300K.csv', 'bandgap1', 5)
+
+# use this section if using hp laptop:
+# one doping level:
+df1 = MyMLdata_2level(r'"C:\ML_databank\set11_1e15.csv"', 'bandgap1', 10)
 # %%-
 
 # %%-- different data engineering
