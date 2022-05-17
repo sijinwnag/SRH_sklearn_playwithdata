@@ -50,6 +50,10 @@ r2scores = df1.regression_repeat()
 df1.singletask = 'logk_1-logk_2'
 r2scores = df1.regression_repeat()
 # %%-
+
+# %%-- Perform regression for sigma single tasks.
+df1.singletask = 'logSn_cm2_1'
+r2scores = df1.regression_repeat()
 # %%-
 
 # %%-- Data leakage.
