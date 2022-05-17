@@ -7,6 +7,7 @@ import sys
 # use this line if on dell laptop
 sys.path.append(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2')
 # use this line if on workstation
+sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2')
 from MLobject_tlevel import *
 
 # use this secion if using dell laptop
@@ -31,6 +32,9 @@ df1 = MyMLdata_2level(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwit
 # one doping level:
 # df1 = MyMLdata_2level(r'C:\ML_databank\set11_1e15.csv', 'bandgap1', 10)
 # df1 = MyMLdata_2level(r'"C:\ML_databank\set11_1e15.csv"', 'bandgap1', 10)
+
+# use this section if using workstation
+# df1 = MyMLdata_2level(r'', 'bandgap1', 10)
 # %%-
 
 # %%-- different data engineering
