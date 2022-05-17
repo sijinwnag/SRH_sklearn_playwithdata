@@ -11,7 +11,7 @@ from MLobject_tlevel import *
 
 # use this secion if using dell laptop
 # one doping level:
-df1 = MyMLdata_2level(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Et_regression\set11\set11_1e15.csv', 'bandgap1', 10)
+# df1 = MyMLdata_2level(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Et_regression\set11\set11_1e15.csv', 'bandgap1', 10)
 # np.shape(df1.data)
 # multiple doping level:
 # df1 = MyMLdata_2level(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Et_regression\set11\set11_diff_doping.csv', 'bandgap1', 5)
