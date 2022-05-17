@@ -864,10 +864,10 @@ class MyMLdata_2level:
             X['Et_eV_1'] = dfk['Et_eV_1']
         elif singletask == 'Et_eV_1-Et_eV_2':
             y = dfk['Et_eV_1'] - dfk['Et_eV_2']
-        elif singletask == 'logSn_cm2_1':
-            y = pd.DataFrame(self.data)['logSn_cm2_1']
-        elif singletask == 'logSp_cm2_1':
-            y = pd.DataFrame(self.data)['logSp_cm2_1']
+        elif singletask == 'logSn_1':
+            y = pd.DataFrame(self.data)['logSn_1']
+        elif singletask == 'logSp_1':
+            y = pd.DataFrame(self.data)['logSp_1']
         else:
             y = dfk[singletask]
         # store the X and y to the object.
