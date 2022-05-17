@@ -2,10 +2,10 @@
 import sys
 
 # import the function file from another folder:
-# use this line if on hp laptop:
+use this line if on hp laptop:
 # sys.path.append(r'C:\Users\budac\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2')
 # use this line if on dell laptop
-sys.path.append(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2')
+# sys.path.append(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2')
 # use this line if on workstation
 from MLobject_tlevel import *
 
@@ -29,11 +29,8 @@ df1 = MyMLdata_2level(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwit
 
 # use this section if using hp laptop:
 # one doping level:
-<<<<<<< HEAD
 df1 = MyMLdata_2level(r'C:\ML_databank\set11_1e15.csv', 'bandgap1', 10)
-=======
 # df1 = MyMLdata_2level(r'"C:\ML_databank\set11_1e15.csv"', 'bandgap1', 10)
->>>>>>> 7a5ef575eef1a7a433065fa0ac24a21e953c7da7
 # %%-
 
 # %%-- different data engineering
