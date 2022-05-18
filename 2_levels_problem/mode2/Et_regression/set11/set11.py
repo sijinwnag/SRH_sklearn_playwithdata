@@ -7,7 +7,7 @@ import sys
 # use this line if on dell laptop
 sys.path.append(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2')
 # use this line if on workstation
-sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2')
+# sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2')
 from MLobject_tlevel import *
 
 # %%-- use this secion if using dell laptop
@@ -36,6 +36,10 @@ from MLobject_tlevel import *
 # df1 = MyMLdata_2level(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\single_T_single_doping\p\400K_1e15_8000_p.csv', 'bandgap1', 5)
 # 1e14 300K, p type 8000 data points:
 # df1 = MyMLdata_2level(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\single_T_single_doping\p\300K_1e14_8000_p.csv', 'bandgap1', 5)
+# 1e15 200K, ptype, 8000 datapoints:
+# df1 = MyMLdata_2level(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\single_T_single_doping\p\200K_1e15_8000_p.csv', 'bandgap1', 5)
+# 1e15 100K, p type, 8000 datapoints:
+df1 = MyMLdata_2level(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\single_T_single_doping\p\100K_1e15_8000_p.csv', 'bandgap1', 5)
 # %%-
 
 # %%--use this section if using hp laptop:
