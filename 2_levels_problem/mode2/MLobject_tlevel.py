@@ -669,42 +669,42 @@ class MyMLdata_2level:
         plt.xlabel('log10 of the ratio')
         plt.show()
 
-        # boxplot.
-        # make C into a frame
-        Cframe = pd.DataFrame(np.transpose(np.array([C1n_list, C2n_list])), columns=['$C_1n$', '$C_2n$'])
-        # print(np.shape(Cframe)) # expect (8000,2)
-        plt.figure()
-        plt.boxplot(Cframe, labels=['$C_{1n}$', '$C_{2n}$'])
-        plt.yscale('log')
-        plt.title('comparison between the $C_{n}$ on the numerator')
-        plt.show()
-
-        # # plot this boxplot of hte ratio for Cn
-        bins=1000
-        ratio_array = np.array(C1n_list)/np.array(C2n_list)
-        plt.figure()
-        plt.boxplot(ratio_array, labels=['${C_{1n}}/{C_{2n}}$'])
-        plt.yscale('log')
-        plt.title('Distribution of ratio of $C_{n}$')
-        plt.show()
-
-        # box plot for Cd
-        Cframe = pd.DataFrame(np.transpose(np.array([C1d_list, C2d_list])), columns=['$C_1d$', '$C_2d$'])
-        # print(np.shape(Cframe)) # expect (8000,2)
-        plt.figure()
-        plt.boxplot(Cframe, labels=['$C_{1d}$', '$C_{2d}$'])
-        plt.yscale('log')
-        plt.title('comparison between the $C_{d}$ on the numerator')
-        plt.show()
-
-        # # plot this box plot of the ratio for Cd
-        bins=1000
-        ratio_array = np.array(C1d_list)/np.array(C2d_list)
-        plt.figure()
-        plt.boxplot(ratio_array, labels=['${C_{1d}}/{C_{2d}}$'])
-        plt.yscale('log')
-        plt.title('Distribution of ratio of $C_{d}$')
-        plt.show()
+        # # boxplot.
+        # # make C into a frame
+        # Cframe = pd.DataFrame(np.transpose(np.array([C1n_list, C2n_list])), columns=['$C_1n$', '$C_2n$'])
+        # # print(np.shape(Cframe)) # expect (8000,2)
+        # plt.figure()
+        # plt.boxplot(Cframe, labels=['$C_{1n}$', '$C_{2n}$'])
+        # plt.yscale('log')
+        # plt.title('comparison between the $C_{n}$ on the numerator')
+        # plt.show()
+        #
+        # # # plot this boxplot of hte ratio for Cn
+        # bins=1000
+        # ratio_array = np.array(C1n_list)/np.array(C2n_list)
+        # plt.figure()
+        # plt.boxplot(ratio_array, labels=['${C_{1n}}/{C_{2n}}$'])
+        # plt.yscale('log')
+        # plt.title('Distribution of ratio of $C_{n}$')
+        # plt.show()
+        #
+        # # box plot for Cd
+        # Cframe = pd.DataFrame(np.transpose(np.array([C1d_list, C2d_list])), columns=['$C_1d$', '$C_2d$'])
+        # # print(np.shape(Cframe)) # expect (8000,2)
+        # plt.figure()
+        # plt.boxplot(Cframe, labels=['$C_{1d}$', '$C_{2d}$'])
+        # plt.yscale('log')
+        # plt.title('comparison between the $C_{d}$ on the numerator')
+        # plt.show()
+        # 
+        # # # plot this box plot of the ratio for Cd
+        # bins=1000
+        # ratio_array = np.array(C1d_list)/np.array(C2d_list)
+        # plt.figure()
+        # plt.boxplot(ratio_array, labels=['${C_{1d}}/{C_{2d}}$'])
+        # plt.yscale('log')
+        # plt.title('Distribution of ratio of $C_{d}$')
+        # plt.show()
 # %%-
 
 
