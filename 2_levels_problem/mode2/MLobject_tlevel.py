@@ -696,7 +696,7 @@ class MyMLdata_2level:
         # plt.yscale('log')
         # plt.title('comparison between the $C_{d}$ on the numerator')
         # plt.show()
-        # 
+        #
         # # # plot this box plot of the ratio for Cd
         # bins=1000
         # ratio_array = np.array(C1d_list)/np.array(C2d_list)
@@ -1009,6 +1009,8 @@ class MyMLdata_2level:
         """
         This function only works if the data only have one temperature and one doping levels.
 
+        This function calculate C1 C2 C3 C4 for each defect but instead of using n and p, it uses the intrinsic carrier concentration.
+
         return_C: whether or not to return C at the end.
         """
         # read off the temperature and doping and excess carrier concentration from the headings.
@@ -1092,6 +1094,102 @@ class MyMLdata_2level:
         if return_C == True:
             return C1n_list, C2n_list, C1d_list, C2d_list
 
+
+    def C1n_C2n_C1d_C2d_calculator(self, return_C=False, export=False):
+        """
+        This function work for multiple T, and doping. But only works for p type material.
+
+        This function calculate C1 C2 C3 C4 for each lifetiem points.
+
+        return_C: whether or not to return C at the end.
+        """
+        # read off the temperature and doping and excess carrier concentration from the headings.
+        variable_type, temp_list, doping_level, excess_dn = self.reader_heading()
+
+        # prepare emtply list to collect the C array for different T, doping and excess carrier concentration.
+        C1d_array = []
+        C2d_array = []
+        C1n_array = []
+        C2n_array = []
+        for column_index in range(len(list(self.data.columns))):
+            # if that column is a variable instead of y
+            if variable_type[column_index] == 'X':
+                # convert the readed text into numbers for dn and doping:
+                doping_level[column_index] = float(doping_level[column_index].split('c')[0])
+                excess_dn[column_index] = float(excess_dn[column_index].split('c')[0])
+                T = float(temp_list[column_index].split('K')[0])
+                # find the minority carrier concentration
+                Tmodel=SRH(material="Si",temp = T, Nt = 1e12, nxc = excess_dn[column_index], Na = doping_level[column_index], Nd= 0, BGN_author = "Yan_2014fer")
+                ni = float(Tmodel.nieff)
+                # calcualte the minority carrier concentration by ni**2=np*p0
+                intrinsic_doping = doping_level[column_index]
+                intrinsic_minority = ni**2/doping_level[column_index]
+                # calculate the vn at this temperature.
+                Vn = Tmodel.vel_th_e[0]
+                Vp = Tmodel.vel_th_h
+                # calcualte the excess carrier concentration
+                dn = excess_dn[column_index]
+                # calculate the carrier concentrations
+                p = intrinsic_doping + dn
+                n = intrinsic_minority + dn
+
+                # prepare the list to collect C for each defect column.
+                C1d_list = []
+                C2d_list = []
+                C1n_list = []
+                C2n_list = []
+
+                # now iterate through the row (different T, doping and carrier concentration)
+                for row_index in range(np.shape(self.data)[0]):
+                    # read off the capcture cross sectional areas.
+                    k1 = self.data._get_value(row_index, 'k_1')
+                    k2 = self.data._get_value(row_index, 'k_2')
+                    Et1 = self.data._get_value(row_index, 'Et_eV_1')
+                    Et2 = self.data._get_value(row_index, 'Et_eV_2')
+                    Sn1 = self.data._get_value(row_index, 'Sn_cm2_1')
+                    Sn2 = self.data._get_value(row_index, 'Sn_cm2_2')
+                    Sp1 = self.data._get_value(row_index, 'Sp_cm2_1')
+                    Sp2 = self.data._get_value(row_index, 'Sp_cm2_2')
+                    # calculate n1 p1 and n2 p2
+                    n1 = ni*np.exp(Et1/(sc.k/sc.e)/T) # k here needs to be in eV/K
+                    p1 = ni**2/n1
+                    n2 = ni*np.exp(Et2/(sc.k/sc.e)/T)
+                    p2 = ni**2/n2
+                    # calcualte C1n C2n C1d and C2d
+                    C1n = (Sn1*n1*Vn + Sp1*Vp*p)/(Sp1*Vp*p1 + n*Sn1*Vn)
+                    C2n = (Sn2*n*Vn + Sp2*Vp*p2)/(Sp2*Vp*p + n2*Sn2*Vn)
+                    C1d = (Vn*Vp*Sn1*Sp1)/(Sp1*Vp*p1 + Sn1*Vn*n)
+                    C2d = (Vn*Vp*Sn2*Sp2)/(Sp2*Vp*p + Sn2*Vn*n2)
+                    # append the calculation to the list.
+                    C2n_list.append(C2n)
+                    C2d_list.append(C2d)
+                    C1n_list.append(C1n)
+                    C1d_list.append(C1d)
+
+                # collect the lists into the array.
+                C2n_array.append(C2n_list)
+                C2d_array.append(C2d_list)
+                C1n_array.append(C1n_list)
+                C1d_array.append(C1d_list)
+                # print('Finish training column ' + str(column_index))
+
+        # convert the list of list into array.
+        C2n_array = np.array(C2n_array)
+        C2d_array = np.array(C2d_array)
+        C1n_array = np.array(C1n_array)
+        C1d_array = np.array(C1d_array)
+        print(np.shape(C1d_array)) # expect: (8000*3600)
+
+
+        if export==True:
+        # export as csv file to see what happens.
+            now = datetime.now()
+            current_time = now.strftime("%H_%M_%S")
+            newdata.to_csv('Cdata' + str(current_time) + '.csv')
+
+        # return the value if requried
+        if return_C == True:
+            return C1n_list, C2n_list, C1d_list, C2d_list
 
 # %%--- The functions for chain multi-output regressor chain.
     """
