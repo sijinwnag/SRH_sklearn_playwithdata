@@ -9,32 +9,44 @@ sys.path.append(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\
 # use this line if on workstation
 sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2')
 from MLobject_tlevel import *
-# f
-# use this secion if using dell laptop
-# one doping level:
-df1 = MyMLdata_2level(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Et_regression\set11\set11_1e15.csv', 'bandgap1', 10)
-# np.shape(df1.data)
-# multiple doping level:
-# df1 = MyMLdata_2level(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Et_regression\set11\set11_diff_doping.csv', 'bandgap1', 5)
-# n type doping:
-#df1 = MyMLdata_2level(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Et_regression\set11\set11_1e15_ntype.csv', 'bandgap1', 5)
-# all known data.
-# df1 = MyMLdata_2level(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Et_regression\set11\new_data.csv', 'bandgap1', 5)
-# one doping one temperature.
-# 1e14 doping
-# df1 = MyMLdata_2level(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Et_regression\set11\one_doping_one_temp.csv', 'bandgap1', 50)
-# 1e15 doping:
-# df1 = MyMLdata_2level(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Et_regression\set11\1e15_400K_single.csv', 'bandgap1', 10)
-# 1e15 dopiong 300K
-# df1 = MyMLdata_2level(r'C:\Users\sjin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Et_regression\set11\1e15_300K.csv', 'bandgap1', 5)
 
-# use this section if using hp laptop:
+# %%-- use this secion if using dell laptop
+
+# one doping level: 1e15, varying T, p, 8000 datapoints
+# df1 = MyMLdata_2level(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\set11_1e15.csv', 'bandgap1', 10)
+# np.shape(df1.data)
+
+# multiple doping level: varying T, doping, p, 8000 datapoints
+# df1 = MyMLdata_2level(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\set11_diff_doping.csv', 'bandgap1', 5)
+
+# n type doping: vary T, 1e15, n, 8000 datapoints
+# df1 = MyMLdata_2level(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\set11_1e15_ntype.csv', 'bandgap1', 5)
+
+# all known data: add temperature, doping and excess carrier cocnentration as extra columns.
+# df1 = MyMLdata_2level(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Et_regression\set11\new_data.csv', 'bandgap1', 5)
+
+# one doping one temperature, p type:
+# 1e14 doping and 400K, p type, 8000 data points, all files below works:
+# df1 = MyMLdata_2level(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\one_doping_one_temp.csv', 'bandgap1', 50)
+# df1 = MyMLdata_2level(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\single_T_single_doping\p\400K_1e14_8000_p.csv', 'bandgap1', 50)
+# 1e15 dopiong 300K, p type: both files below works
+# df1 = MyMLdata_2level(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\1e15_300K.csv', 'bandgap1', 5)
+# df1 = MyMLdata_2level(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\single_T_single_doping\p\300K_1e15_8000_p.csv', 'bandgap1', 5)
+# 1e15 doping 400K, p type:
+# df1 = MyMLdata_2level(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\single_T_single_doping\p\400K_1e15_8000_p.csv', 'bandgap1', 5)
+# 1e14 300K, p type 8000 data points:
+# df1 = MyMLdata_2level(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\single_T_single_doping\p\300K_1e14_8000_p.csv', 'bandgap1', 5)
+# %%-
+
+# %%--use this section if using hp laptop:
 # one doping level:
 # df1 = MyMLdata_2level(r'C:\ML_databank\set11_1e15.csv', 'bandgap1', 10)
 # df1 = MyMLdata_2level(r'"C:\ML_databank\set11_1e15.csv"', 'bandgap1', 10)
+# %%-
 
-# use this section if using workstation
+# %%--use this section if using workstation
 # df1 = MyMLdata_2level(r'', 'bandgap1', 10)
+# %%-
 # %%-
 
 # %%-- different data engineering
