@@ -39,7 +39,9 @@ from MLobject_tlevel import *
 # 1e15 200K, ptype, 8000 datapoints:
 # df1 = MyMLdata_2level(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\single_T_single_doping\p\200K_1e15_8000_p.csv', 'bandgap1', 5)
 # 1e15 100K, p type, 8000 datapoints:
-df1 = MyMLdata_2level(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\single_T_single_doping\p\100K_1e15_8000_p.csv', 'bandgap1', 5)
+# df1 = MyMLdata_2level(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\single_T_single_doping\p\100K_1e15_8000_p.csv', 'bandgap1', 5)
+# 1e15 150K ptype 8000 datapints:
+# df1 = MyMLdata_2level(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\single_T_single_doping\p\150K_1e15_8000_p.csv', 'bandgap1', 5)
 # %%-
 
 # %%--use this section if using hp laptop:
@@ -133,5 +135,6 @@ df1.C1_C2_C3_C4_calculator()
 # %%-
 
 # %%-- Data visualization
+# histogram for C:
 df1.C_visiaulization()
 # %%-
