@@ -133,10 +133,10 @@ df1.pre_processor_insert_all_known()
 # %%-- calculate C1 C2 C3 C4 as known for each defect.
 # This equation only calcualte C while ignoring excess carrier concentration, and only works for one doping and one temperature.
 # df1.C1_C2_C3_C4_calculator()
-df1.C1n_C2n_C1d_C2d_calculator()
+C2n_frame, C2d_frame, C1n_frame, C1d_frame = df1.C1n_C2n_C1d_C2d_calculator(return_C=False, export=False)
 # %%-
 
 # %%-- Data visualization
 # histogram for C:
-df1.C_visiaulization()
+df1.C_visiaulization(C2n_frame, C2d_frame, C1n_frame, C1d_frame)
 # %%-

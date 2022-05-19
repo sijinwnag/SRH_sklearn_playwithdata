@@ -16,7 +16,7 @@ import sys
 from sklearn.tree import DecisionTreeRegressor, DecisionTreeClassifier
 from sklearn.naive_bayes import GaussianNB
 # uncomment the below line for dell laptop only
-# from playsound import playsound
+from playsound import playsound
 from sklearn.model_selection import cross_val_score, RepeatedKFold
 from sklearn.multioutput import RegressorChain
 from semiconductor.recombination import SRH
@@ -628,7 +628,7 @@ class MyMLdata_2level:
         figure = sn.pairplot(dfplotT)
 
 
-    def C_visiaulization(self):
+    def C_visiaulization_singeT_singledope(self):
         """
         The aim of this function is to plot the histogram of C1n, C1d on the same plot with x axis logscale
 
@@ -705,6 +705,27 @@ class MyMLdata_2level:
         # plt.yscale('log')
         # plt.title('Distribution of ratio of $C_{d}$')
         # plt.show()
+
+
+def C_visiaulization(self, C2n_frame, C2d_frame, C1n_frame, C1d_frame, variable='C1d/C2d', task_name='histogram of all lifetime'):
+    """
+    This function works in general: OK to vary T and doping now.
+
+    input:
+    taskname: a string input that defines the task for visalization.
+    variable: a string input that defines the variable that we are taking.
+    """
+
+    # calcualte the parameter based on hte input:
+    if variable == 'C1d/C2n':
+        Cset = np.array(C1d_frame)/np.array(C2d_frame)
+
+    # plot the histogram of all lifetime curve.
+    if task_name == 'histogram of all lifetime':
+        # restructure the data back to 1D
+        Cset = np.flat(Cset)
+        print(np.shape(Cset))
+
 # %%-
 
 
@@ -1111,6 +1132,10 @@ class MyMLdata_2level:
         C2d_array = []
         C1n_array = []
         C2n_array = []
+        T_title = []
+        dn_title = []
+        doping_title = []
+
         for column_index in range(len(list(self.data.columns))):
             # if that column is a variable instead of y
             if variable_type[column_index] == 'X':
@@ -1132,13 +1157,15 @@ class MyMLdata_2level:
                 # calculate the carrier concentrations
                 p = intrinsic_doping + dn
                 n = intrinsic_minority + dn
-
+                # write the heading for this column.
+                T_title.append(str(T))
+                dn_title.append(str(dn))
+                doping_title.append(str(intrinsic_doping))
                 # prepare the list to collect C for each defect column.
                 C1d_list = []
                 C2d_list = []
                 C1n_list = []
                 C2n_list = []
-
                 # now iterate through the row (different T, doping and carrier concentration)
                 for row_index in range(np.shape(self.data)[0]):
                     # read off the capcture cross sectional areas.
@@ -1173,23 +1200,66 @@ class MyMLdata_2level:
                 C1d_array.append(C1d_list)
                 # print('Finish training column ' + str(column_index))
 
-        # convert the list of list into array.
-        C2n_array = np.array(C2n_array)
-        C2d_array = np.array(C2d_array)
-        C1n_array = np.array(C1n_array)
-        C1d_array = np.array(C1d_array)
-        print(np.shape(C1d_array)) # expect: (8000*3600)
 
+        # convert the list of list into array.
+        C2n_array = np.transpose(np.array(C2n_array))
+        C2d_array = np.transpose(np.array(C2d_array))
+        C1n_array = np.transpose(np.array(C1n_array))
+        C1d_array = np.transpose(np.array(C1d_array))
+        # print(np.shape(C1d_array)) # expect: (8000*3600)
+        T_title = np.transpose(pd.DataFrame(np.transpose(np.array(T_title))))
+        dn_title = np.transpose(pd.DataFrame(np.transpose(np.array(dn_title))))
+        doping_title = np.transpose(pd.DataFrame(np.transpose(np.array(doping_title))))
+
+
+        # before returning them, make them datagrame with proper headings instead of just arrays
+        C2n_frame = pd.DataFrame(C2n_array)
+        # add dn as extra row.
+        C2n_frame = pd.concat([dn_title, C2n_frame], axis=0)
+        # add temperature as an extra row.
+        C2n_frame = pd.concat([T_title, C2n_frame], axis=0)
+        # add doping as extra row.
+        C2n_frame = pd.concat([doping_title, C2n_frame], axis=0)
+        # do the same for other arrays.
+        # for C2d
+        C2d_frame = pd.DataFrame(C2d_array)
+        C2d_frame = pd.concat([dn_title, C2d_frame], axis=0)
+        C2d_frame = pd.concat([T_title, C2d_frame], axis=0)
+        C2d_frame = pd.concat([doping_title, C2d_frame], axis=0)
+        # for C1d
+        C1d_frame = pd.DataFrame(C1d_array)
+        C1d_frame = pd.concat([dn_title, C1d_frame], axis=0)
+        C1d_frame = pd.concat([T_title, C1d_frame], axis=0)
+        C1d_frame = pd.concat([doping_title, C1d_frame], axis=0)
+        # for C1n.
+        C1n_frame = pd.DataFrame(C1n_array)
+        C1n_frame = pd.concat([dn_title, C1n_frame], axis=0)
+        C1n_frame = pd.concat([T_title, C1n_frame], axis=0)
+        C1n_frame = pd.concat([doping_title, C1n_frame], axis=0)
+
+        # sanity check
+        # print(C2n_frame.head()) # expect temperatures dopings dn in 3 different rows
+        # print(np.shape(C2n_frame)) # expect 8003*3600
+        # print(np.shape(T_title)) # expect 1*3600
+        # print(np.shape(dn_title)) # expect 1*3600
+        # print(np.shape(doping_title)) # expect 1*3600
 
         if export==True:
         # export as csv file to see what happens.
             now = datetime.now()
             current_time = now.strftime("%H_%M_%S")
-            newdata.to_csv('Cdata' + str(current_time) + '.csv')
+            C2n_frame.to_csv('C2ndata' + str(current_time) + '.csv')
+            C1n_frame.to_csv('C1ndata' + str(current_time) + '.csv')
+            C2d_frame.to_csv('C2ddata' + str(current_time) + '.csv')
+            C1d_frame.to_csv('C1ddata' + str(current_time) + '.csv')
+
+        # play reminder playsound once the above steps are done:
+        playsound(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Et_regression\set11\spongbob.mp3')
 
         # return the value if requried
         if return_C == True:
-            return C1n_list, C2n_list, C1d_list, C2d_list
+            return C2n_frame, C2d_frame, C1n_frame, C1d_frame
+
 
 # %%--- The functions for chain multi-output regressor chain.
     """
@@ -1740,3 +1810,5 @@ class MyMLdata_2level:
             return y_pred
 # %%-
 # %%-
+
+# playsound(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Et_regression\set11\spongbob.mp3')
