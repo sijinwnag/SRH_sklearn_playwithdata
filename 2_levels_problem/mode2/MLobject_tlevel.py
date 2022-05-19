@@ -707,25 +707,46 @@ class MyMLdata_2level:
         # plt.show()
 
 
-def C_visiaulization(self, C2n_frame, C2d_frame, C1n_frame, C1d_frame, variable='C1d/C2d', task_name='histogram of all lifetime'):
-    """
-    This function works in general: OK to vary T and doping now.
+    def C_visiaulization(self, variable='C1d/C2d', task_name='histogram of all lifetime'):
+        """
+        This function works in general: OK to vary T and doping now.
 
-    input:
-    taskname: a string input that defines the task for visalization.
-    variable: a string input that defines the variable that we are taking.
-    """
+        input:
+        taskname: a string input that defines the task for visalization.
+        variable: a string input that defines the variable that we are taking.
+        """
+        # temperarary code when coding: instead of calculating C, read it off from temperatry file directory, ignore the first volumn becase it is just a title volume
+        C2n_frame = pd.read_csv(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Et_regression\set11\C2ndata17_59_56.csv').iloc[:,1:]
+        C2d_frame = pd.read_csv(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Et_regression\set11\C2ddata17_59_56.csv').iloc[:,1:]
+        C1d_frame = pd.read_csv(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Et_regression\set11\C1ddata17_59_56.csv').iloc[:,1:]
+        C1n_frame = pd.read_csv(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Et_regression\set11\C1ndata17_59_56.csv').iloc[:,1:]
 
-    # calcualte the parameter based on hte input:
-    if variable == 'C1d/C2n':
-        Cset = np.array(C1d_frame)/np.array(C2d_frame)
+        # calcualte the parameter based on hte input:
+        if variable == 'C1d/C2d':
+            Cset = np.array(C1d_frame)/np.array(C2d_frame)
+            # sanity check:
+            # print(np.shape(Cset)) # expect (8003,3600)
+        elif variable == 'C1n/C2n':
+            # sanity check:
+            # print(str(variable))
+            Cset = np.array(C1n_frame)/np.array(C2n_frame)
 
-    # plot the histogram of all lifetime curve.
-    if task_name == 'histogram of all lifetime':
-        # restructure the data back to 1D
-        Cset = np.flat(Cset)
-        print(np.shape(Cset))
+        # plot the histogram of all lifetime curve.
+        if task_name == 'histogram of all lifetime':
+            # restructure the data back to 1D
+            Cset = Cset.flatten()
 
+            # sanity check:
+            # print(np.shape(Cset)) # expect 3600*8003
+
+            # plot a histogram: x axis is log10 of the lifetime.
+            bins=1000
+            plt.figure()
+            plt.hist(np.log10(Cset), bins=bins)
+            # plt.xscale('log')
+            plt.title('Distribution of ratio for ' + str(variable))
+            plt.xlabel('log10 of the ratio')
+            plt.show()
 # %%-
 
 
