@@ -707,14 +707,16 @@ class MyMLdata_2level:
         # plt.show()
 
 
-    def C_visiaulization(self, variable='C1d/C2d', task_name='histogram of all lifetime'):
+    def C_visiaulization(self, variable='C1d/C2d', task_name='histogram of all lifetime', T=300):
         """
         This function works in general: OK to vary T and doping now.
 
         input:
         taskname: a string input that defines the task for visalization.
         variable: a string input that defines the variable that we are taking.
+        T: if task is to investigate the certain T, then it define the temperaure to look at, unit is in K
         """
+
         # temperarary code when coding: instead of calculating C, read it off from temperatry file directory, ignore the first volumn becase it is just a title volume
         C2n_frame = pd.read_csv(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Et_regression\set11\C2ndata17_59_56.csv').iloc[:,1:]
         C2d_frame = pd.read_csv(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Et_regression\set11\C2ddata17_59_56.csv').iloc[:,1:]
@@ -747,6 +749,13 @@ class MyMLdata_2level:
             plt.title('Distribution of ratio for ' + str(variable))
             plt.xlabel('log10 of the ratio')
             plt.show()
+
+        # plot the histogram of a spesific temperature:
+        if task_name == 'histogram at T':
+            # the temperaure to be looked up should be predefined
+            # select the Cset where the T row is equalt to the given T, where T is the secone row.
+            boolean_condition = Cset[1, :] == T
+            print(boolean_condition) # expect [False.... True....then all false]
 # %%-
 
 

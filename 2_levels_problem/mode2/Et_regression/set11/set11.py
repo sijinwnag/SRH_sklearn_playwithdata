@@ -13,11 +13,11 @@ from MLobject_tlevel import *
 # %%-- use this secion if using dell laptop
 
 # one doping level: 1e15, varying T, p, 8000 datapoints
-# df1 = MyMLdata_2level(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\set11_1e15.csv', 'bandgap1', 10)
+df1 = MyMLdata_2level(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\set11_1e15.csv', 'bandgap1', 10)
 # np.shape(df1.data)
 
 # multiple doping level: varying T, doping, p, 8000 datapoints
-df1 = MyMLdata_2level(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\set11_diff_doping.csv', 'bandgap1', 5)
+# df1 = MyMLdata_2level(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\set11_diff_doping.csv', 'bandgap1', 5)
 
 # n type doping: vary T, 1e15, n, 8000 datapoints
 # df1 = MyMLdata_2level(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\set11_1e15_ntype.csv', 'bandgap1', 5)
@@ -138,6 +138,5 @@ df1.pre_processor_insert_all_known()
 
 # %%-- Data visualization
 # histogram for C:
-df1.C_visiaulization()
-df1.C_visiaulization(variable='C1n/C2n')
+df1.C_visiaulization(task_name='histogram at T')
 # %%-
