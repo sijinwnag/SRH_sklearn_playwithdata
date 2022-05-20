@@ -1,3 +1,10 @@
+# %%-- To do list:
+'''
+1. Calculate T, doping for every 50 columes, in C1n_C2n_C1d_C2d_calculator()
+'''
+# %%-
+
+
 # %%---import libraries:
 import pandas as pd
 import numpy as np
@@ -707,7 +714,7 @@ class MyMLdata_2level:
         # plt.show()
 
 
-    def C_visiaulization(self, variable='C1d/C2d', task_name='histogram of all lifetime', T=300):
+    def C_visiaulization(self, variable='C1d/C2d', task_name='histogram of all lifetime', T=300, doping=1e15):
         """
         This function works in general: OK to vary T and doping now.
 
@@ -715,47 +722,84 @@ class MyMLdata_2level:
         taskname: a string input that defines the task for visalization.
         variable: a string input that defines the variable that we are taking.
         T: if task is to investigate the certain T, then it define the temperaure to look at, unit is in K
+        doping: if task is to investigate the certain doping, then it define the doping level to look at, unit is in cm-3
         """
-
-        # temperarary code when coding: instead of calculating C, read it off from temperatry file directory, ignore the first volumn becase it is just a title volume
-        C2n_frame = pd.read_csv(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Et_regression\set11\C2ndata17_59_56.csv').iloc[:,1:]
-        C2d_frame = pd.read_csv(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Et_regression\set11\C2ddata17_59_56.csv').iloc[:,1:]
-        C1d_frame = pd.read_csv(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Et_regression\set11\C1ddata17_59_56.csv').iloc[:,1:]
-        C1n_frame = pd.read_csv(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Et_regression\set11\C1ndata17_59_56.csv').iloc[:,1:]
 
         # calcualte the parameter based on hte input:
         if variable == 'C1d/C2d':
+            # instead of calculating C, read it off from temperatry file directory, ignore the first volumn becase it is just a title volume
+            C1d_frame = pd.read_csv(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Et_regression\set11\C1ddata17_59_56.csv').iloc[:,1:]
+            C2d_frame = pd.read_csv(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Et_regression\set11\C2ddata17_59_56.csv').iloc[:,1:]
+            # the first 3 rows are headings, we should not divide them
+            heading = C2d_frame.iloc[0:3, :]
+            # print(heading)
+            # divide the C values
             Cset = np.array(C1d_frame)/np.array(C2d_frame)
+            # replace the first 3 rows with headings
+            Cset[0:3, :] = heading
             # sanity check:
             # print(np.shape(Cset)) # expect (8003,3600)
         elif variable == 'C1n/C2n':
+            C1n_frame = pd.read_csv(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Et_regression\set11\C1ndata17_59_56.csv').iloc[:,1:]
+            C2n_frame = pd.read_csv(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Et_regression\set11\C2ndata17_59_56.csv').iloc[:,1:]
             # sanity check:
             # print(str(variable))
+            heading = C1n_frame.iloc[0:3, :]
             Cset = np.array(C1n_frame)/np.array(C2n_frame)
+            Cset[0:3, :] = heading
 
         # plot the histogram of all lifetime curve.
         if task_name == 'histogram of all lifetime':
-            # restructure the data back to 1D
-            Cset = Cset.flatten()
-
-            # sanity check:
-            # print(np.shape(Cset)) # expect 3600*8003
-
-            # plot a histogram: x axis is log10 of the lifetime.
-            bins=1000
-            plt.figure()
-            plt.hist(np.log10(Cset), bins=bins)
-            # plt.xscale('log')
-            plt.title('Distribution of ratio for ' + str(variable))
-            plt.xlabel('log10 of the ratio')
-            plt.show()
+            T = 'different T'
+            doping = 'different doping'
+            self.histogram_2D(Cset, variable, T, doping)
 
         # plot the histogram of a spesific temperature:
         if task_name == 'histogram at T':
             # the temperaure to be looked up should be predefined
             # select the Cset where the T row is equalt to the given T, where T is the secone row.
-            boolean_condition = Cset[1, :] == T
-            print(boolean_condition) # expect [False.... True....then all false]
+            boolean_condition = (Cset[1, :] == T)
+            # print(boolean_condition) # expect [False.... True....then all false]
+            Cset = Cset[:,boolean_condition]
+            # print(Cset[1, :]) # expect all 300K
+            # plot its histogram.
+            doping = 'different doping'
+            self.histogram_2D(Cset, variable, T, doping)
+
+        # plot the histogram of a spesific doping:
+        if task_name == 'histogram at doping':
+            # print(Cset[0, :]) # expect doping levels.
+            boolean_condition = (Cset[0, :] == doping)
+            # print(boolean_condition) # expect [False.... True....then all false]
+            Cset = Cset[:,boolean_condition]
+            # print(Cset[1, :]) # expect all 300K
+            # plot its histogram.
+            T = 'different T'
+            doping = "{:.2e}".format(doping)
+            self.histogram_2D(Cset, variable, T, doping)
+
+
+    def histogram_2D(self, Cset, variable, T, doping):
+        """
+        This function firstly flatten the 2D data into 1D then plot its histogram.
+
+        input: dataset: should be array like
+        """
+        # restructure the data back to 1D
+        Cset = Cset.flatten()
+
+        # sanity check:
+        # print(np.shape(Cset)) # expect 3600*8003
+
+        # plot a histogram: x axis is log10 of the lifetime.
+        bins=10000
+        plt.figure()
+        plt.hist(np.log10(Cset), bins=bins)
+        # plt.xscale('log')
+        plt.title('Distribution of ratio for ' + str(variable) + ' ' +str(T) + ' ' +str(doping))
+        plt.xlabel('log10 of the ratio')
+        plt.show()
+
 # %%-
 
 
@@ -1146,13 +1190,15 @@ class MyMLdata_2level:
             return C1n_list, C2n_list, C1d_list, C2d_list
 
 
-    def C1n_C2n_C1d_C2d_calculator(self, return_C=False, export=False):
+    def C1n_C2n_C1d_C2d_calculator(self, return_C=False, export=False, sanity_check=False):
         """
         This function work for multiple T, and doping. But only works for p type material.
 
         This function calculate C1 C2 C3 C4 for each lifetiem points.
 
         return_C: whether or not to return C at the end.
+
+        sanity_check: a boolean input that decide whether to use calculated C to calculate back tau to see if it matches the original data.
         """
         # read off the temperature and doping and excess carrier concentration from the headings.
         variable_type, temp_list, doping_level, excess_dn = self.reader_heading()
@@ -1165,6 +1211,7 @@ class MyMLdata_2level:
         T_title = []
         dn_title = []
         doping_title = []
+        sanity_check_tau = []
 
         for column_index in range(len(list(self.data.columns))):
             # if that column is a variable instead of y
@@ -1178,15 +1225,16 @@ class MyMLdata_2level:
                 ni = float(Tmodel.nieff)
                 # calcualte the minority carrier concentration by ni**2=np*p0
                 intrinsic_doping = doping_level[column_index]
-                intrinsic_minority = ni**2/doping_level[column_index]
+                p0 = (0.5 * (np.abs(intrinsic_doping - 0) + np.sqrt((0 - intrinsic_doping)**2 + 4 * ni**2)))
+                n0 = ni**2/p0
                 # calculate the vn at this temperature.
                 Vn = Tmodel.vel_th_e[0]
                 Vp = Tmodel.vel_th_h
                 # calcualte the excess carrier concentration
                 dn = excess_dn[column_index]
                 # calculate the carrier concentrations
-                p = intrinsic_doping + dn
-                n = intrinsic_minority + dn
+                p = p0 + dn
+                n = n0 + dn
                 # write the heading for this column.
                 T_title.append(str(T))
                 dn_title.append(str(dn))
@@ -1196,8 +1244,13 @@ class MyMLdata_2level:
                 C2d_list = []
                 C1n_list = []
                 C2n_list = []
+                tau_list = []
                 # now iterate through the row (different T, doping and carrier concentration)
+                # defect_counter = 0
                 for row_index in range(np.shape(self.data)[0]):
+                    # sanity check:
+                    # defect_counter += 1
+                    # if defect_counter > 10: continue
                     # read off the capcture cross sectional areas.
                     k1 = self.data._get_value(row_index, 'k_1')
                     k2 = self.data._get_value(row_index, 'k_2')
@@ -1209,9 +1262,9 @@ class MyMLdata_2level:
                     Sp2 = self.data._get_value(row_index, 'Sp_cm2_2')
                     # calculate n1 p1 and n2 p2
                     n1 = ni*np.exp(Et1/(sc.k/sc.e)/T) # k here needs to be in eV/K
-                    p1 = ni**2/n1
+                    p1 = ni*np.exp(-Et1/sc.k/sc.e/T)
                     n2 = ni*np.exp(Et2/(sc.k/sc.e)/T)
-                    p2 = ni**2/n2
+                    p2 = ni*np.exp(-Et2/sc.k/sc.e/T)
                     # calcualte C1n C2n C1d and C2d
                     C1n = (Sn1*n1*Vn + Sp1*Vp*p)/(Sp1*Vp*p1 + n*Sn1*Vn)
                     C2n = (Sn2*n*Vn + Sp2*Vp*p2)/(Sp2*Vp*p + n2*Sn2*Vn)
@@ -1222,12 +1275,17 @@ class MyMLdata_2level:
                     C2d_list.append(C2d)
                     C1n_list.append(C1n)
                     C1d_list.append(C1d)
+                    # sanity check to see if it maches the result.
+                    Nt = 1e12
+                    tau = (1 + C1n + C2n)/Nt/(n0 + p0 + dn)/(C1d + C2d)
+                    tau_list.append(tau)
 
                 # collect the lists into the array.
                 C2n_array.append(C2n_list)
                 C2d_array.append(C2d_list)
                 C1n_array.append(C1n_list)
                 C1d_array.append(C1d_list)
+                sanity_check_tau.append(tau_list)
                 # print('Finish training column ' + str(column_index))
 
 
@@ -1236,6 +1294,15 @@ class MyMLdata_2level:
         C2d_array = np.transpose(np.array(C2d_array))
         C1n_array = np.transpose(np.array(C1n_array))
         C1d_array = np.transpose(np.array(C1d_array))
+        sanity_check_tau = np.transpose(np.array(sanity_check_tau))
+
+        # sanity check part:
+        # if we export sanity check tau, we should see the same tau as the simulation data.
+        if sanity_check == True:
+            now = datetime.now()
+            current_time = now.strftime("%H_%M_%S")
+            pd.DataFrame(sanity_check_tau).to_csv('sanity check' + str(current_time) + '.csv')
+
         # print(np.shape(C1d_array)) # expect: (8000*3600)
         T_title = np.transpose(pd.DataFrame(np.transpose(np.array(T_title))))
         dn_title = np.transpose(pd.DataFrame(np.transpose(np.array(dn_title))))
