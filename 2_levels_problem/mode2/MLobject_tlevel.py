@@ -1261,10 +1261,19 @@ class MyMLdata_2level:
                     Sp1 = self.data._get_value(row_index, 'Sp_cm2_1')
                     Sp2 = self.data._get_value(row_index, 'Sp_cm2_2')
                     # calculate n1 p1 and n2 p2
-                    n1 = ni*np.exp(Et1/(sc.k/sc.e)/T) # k here needs to be in eV/K
-                    p1 = ni*np.exp(-Et1/sc.k/sc.e/T)
-                    n2 = ni*np.exp(Et2/(sc.k/sc.e)/T)
-                    p2 = ni*np.exp(-Et2/sc.k/sc.e/T)
+
+                    # sanity check.
+                    # print(sc.e)
+                    # print(Et1)
+                    # print(sc.k)
+                    # print(T)
+                    # print(ni)
+                    # print(np.exp(float(float(Et1)*sc.e/sc.k/float(T))))
+
+                    n1 = ni*np.exp(Et1*sc.e/(sc.k)/T) # k here needs to be in eV/K
+                    p1 = ni*np.exp(-Et1*sc.e/sc.k/T)
+                    n2 = ni*np.exp(Et2*sc.e/(sc.k)/T)
+                    p2 = ni*np.exp(-Et2*sc.e/sc.k/T)
                     # calcualte C1n C2n C1d and C2d
                     C1n = (Sn1*n1*Vn + Sp1*Vp*p)/(Sp1*Vp*p1 + n*Sn1*Vn)
                     C2n = (Sn2*n*Vn + Sp2*Vp*p2)/(Sp2*Vp*p + n2*Sn2*Vn)
@@ -1279,6 +1288,24 @@ class MyMLdata_2level:
                     Nt = 1e12
                     tau = (1 + C1n + C2n)/Nt/(n0 + p0 + dn)/(C1d + C2d)
                     tau_list.append(tau)
+
+                    # sanity check
+                    # print('p1 is ' + str(p1))
+                    # print('n1 is ' + str(n1))
+                    # print('p2 is ' + str(p2))
+                    # print('n2 is ' + str(n2))
+                    # print('Vn is ' + str(Vn))
+                    # print('Vp is ' + str(Vp))
+                    # print('Sn1 is ' + str(Sn1))
+                    # print('Sn2 is ' + str(Sn2))
+                    # print('Sp1 is ' + str(Sp1))
+                    # print('Sp2 is ' + str(Sp2))
+                    # print('Temperature is ' + str(T))
+                    # print('Et1 is ' + str(Et1))
+                    # print('Et2 is ' + str(Et2))
+                    # print('ni is ' + str(ni))
+                    # print('doping is ' + intrinsic_doping)
+                    print(str(tau))
 
                 # collect the lists into the array.
                 C2n_array.append(C2n_list)
