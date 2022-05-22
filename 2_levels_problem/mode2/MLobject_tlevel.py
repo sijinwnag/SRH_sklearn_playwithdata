@@ -1190,7 +1190,7 @@ class MyMLdata_2level:
             return C1n_list, C2n_list, C1d_list, C2d_list
 
 
-    def C1n_C2n_C1d_C2d_calculator(self, return_C=False, export=False, sanity_check=False):
+    def C1n_C2n_C1d_C2d_calculator(self, return_C=False, export=False, sanity_check=False, playmusic=False):
         """
         This function work for multiple T, and doping. But only works for p type material.
 
@@ -1304,8 +1304,8 @@ class MyMLdata_2level:
                     # print('Et1 is ' + str(Et1))
                     # print('Et2 is ' + str(Et2))
                     # print('ni is ' + str(ni))
-                    # print('doping is ' + intrinsic_doping)
-                    print(str(tau))
+                    # print('doping is ' + str(intrinsic_doping))
+                    # print(str(tau))
 
                 # collect the lists into the array.
                 C2n_array.append(C2n_list)
@@ -1378,7 +1378,8 @@ class MyMLdata_2level:
             C1d_frame.to_csv('C1ddata' + str(current_time) + '.csv')
 
         # play reminder playsound once the above steps are done:
-        playsound(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Et_regression\set11\spongbob.mp3')
+        if playmusic == True:
+            playsound(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Et_regression\set11\spongbob.mp3')
 
         # return the value if requried
         if return_C == True:
