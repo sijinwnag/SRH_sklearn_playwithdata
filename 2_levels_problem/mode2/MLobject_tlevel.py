@@ -959,7 +959,7 @@ class MyMLdata_2level:
                 mean_list.append(np.mean(lifetimedata_dn))
                 std_list.append(np.std(lifetimedata_dn))
 
-            # plot them on the same graph:
+            # plot them on different graphs
             plt.figure()
             plt.plot(np.log10(dn_list), np.log10(mean_list))
             plt.title('mean value vs dn')
@@ -981,6 +981,46 @@ class MyMLdata_2level:
             plt.ylabel('log of median of ' + str(variable))
             plt.show()
 
+        elif task_name == 'plot with Et1-Et2':
+
+            # read off the Et values from original data:
+            Et1 = self.data['Et_eV_1']
+            Et2 = self.data['Et_eV_2']
+            # subtraction:
+            Et_diff = np.array(Et1)-np.array(Et2)
+            # sanity check:
+            # print(np.shape(E_diff)) # expect 8000*1
+            # print(E_diff[0]) # expect 0.140651095-0.0111481=0.12955
+            # checked out.
+
+            # each row has a unique Et, so take mean, medium and std for each row of lifetime data:
+            lifetimedata = Cset[3:, :]
+            medium_list = np.median(lifetimedata, axis=1)
+            # print(np.shape(medium_list)) # expect 8000*1 # checked out
+            mean_list = np.mean(lifetimedata, axis=1)
+            std_list = np.std(lifetimedata, axis=1)
+
+            # plot them on different graphs
+            plt.figure()
+            plt.scatter(Et_diff, np.log10(mean_list), marker='.')
+            plt.title('mean value vs Et1-Et2')
+            plt.xlabel('Et1-Et2')
+            plt.ylabel('log of mean of ' + str(variable))
+            plt.show()
+
+            plt.figure()
+            plt.scatter(Et_diff, np.log10(std_list), marker='.')
+            plt.title('std vs Et1-Et2')
+            plt.xlabel('Et1-Et2')
+            plt.ylabel('log of std of ' + str(variable))
+            plt.show()
+
+            plt.figure()
+            plt.scatter(Et_diff, np.log10(medium_list), marker='.')
+            plt.title('median vs Et1-Et2')
+            plt.xlabel('Et1-Et2')
+            plt.ylabel('log of median of ' + str(variable))
+            plt.show()
 
     def histogram_2D(self, Cset, variable, T, doping):
         """

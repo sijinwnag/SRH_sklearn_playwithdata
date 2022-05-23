@@ -185,4 +185,7 @@ df1.C_visiaulization(variable='C1n/C2n', task_name='plot with doping')
 df1.C_visiaulization(variable='C1d/C2d', task_name='plot with dn')
 df1.C_visiaulization(variable='C1n/C2n', task_name='plot with dn')
 # %%-
+# %%-- E_diff vs C:
+df1.C_visiaulization(variable='C1d/C2d', task_name='plot with Et1-Et2')
+# %%-
 # %%-
