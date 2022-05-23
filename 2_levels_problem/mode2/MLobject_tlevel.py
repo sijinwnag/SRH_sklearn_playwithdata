@@ -728,25 +728,37 @@ class MyMLdata_2level:
         # calcualte the parameter based on hte input:
         if variable == 'C1d/C2d':
             # instead of calculating C, read it off from temperatry file directory, ignore the first volumn becase it is just a title volume
-            C1d_frame = pd.read_csv(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Et_regression\set11\C1ddata17_59_56.csv').iloc[:,1:]
-            C2d_frame = pd.read_csv(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Et_regression\set11\C2ddata17_59_56.csv').iloc[:,1:]
+            C1d_frame = pd.read_csv(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\code_running_results\set11\theCresults\visialization\varyT_varydoping_p_8000\C1ddata09_29_36.csv').iloc[:,1:]
+            C2d_frame = pd.read_csv(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\code_running_results\set11\theCresults\visialization\varyT_varydoping_p_8000\C2ddata09_29_36.csv').iloc[:,1:]
             # the first 3 rows are headings, we should not divide them
             heading = C2d_frame.iloc[0:3, :]
-            # print(heading)
+            # print(heading) # expect first row doping, second row T, third row dn # checked out.
             # divide the C values
-            Cset = np.array(C1d_frame)/np.array(C2d_frame)
+            Cset = np.array(C1d_frame)/np.array(C2d_frame) # in this step we divide the heading values as well, so later we need to replace the first 3 rows with the original headings.
             # replace the first 3 rows with headings
             Cset[0:3, :] = heading
             # sanity check:
             # print(np.shape(Cset)) # expect (8003,3600)
+            # print(pd.DataFrame(Cset).head()) # expect 3 rows of heading and 2 rows of ratio value, the ratio value is expected to be large. # check out.
         elif variable == 'C1n/C2n':
-            C1n_frame = pd.read_csv(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Et_regression\set11\C1ndata17_59_56.csv').iloc[:,1:]
-            C2n_frame = pd.read_csv(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Et_regression\set11\C2ndata17_59_56.csv').iloc[:,1:]
+            C1n_frame = pd.read_csv(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\code_running_results\set11\theCresults\visialization\varyT_varydoping_p_8000\C1ndata09_29_36.csv').iloc[:,1:]
+            C2n_frame = pd.read_csv(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\code_running_results\set11\theCresults\visialization\varyT_varydoping_p_8000\C2ndata09_29_36.csv').iloc[:,1:]
             # sanity check:
             # print(str(variable))
             heading = C1n_frame.iloc[0:3, :]
             Cset = np.array(C1n_frame)/np.array(C2n_frame)
             Cset[0:3, :] = heading
+        # also write down the variable case when we only want to check C
+        elif variable == 'C1n':
+            C1n_frame = pd.read_csv(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\code_running_results\set11\theCresults\visialization\varyT_varydoping_p_8000\C1ndata09_29_36.csv').iloc[:,1:]
+            Cset = np.array(C1n_frame)
+        elif variable == 'C1d':
+            Cset = np.array(pd.read_csv(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\code_running_results\set11\theCresults\visialization\varyT_varydoping_p_8000\C1ddata09_29_36.csv').iloc[:,1:])
+        elif variable == 'C2n':
+            Cset = np.array(pd.read_csv(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\code_running_results\set11\theCresults\visialization\varyT_varydoping_p_8000\C2ndata09_29_36.csv').iloc[:,1:])
+        elif variable == 'C2d':
+            Cset = np.array(pd.read_csv(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\code_running_results\set11\theCresults\visialization\varyT_varydoping_p_8000\C2ddata09_29_36.csv').iloc[:,1:])
+
 
         # plot the histogram of all lifetime curve.
         if task_name == 'histogram of all lifetime':
@@ -755,28 +767,223 @@ class MyMLdata_2level:
             self.histogram_2D(Cset, variable, T, doping)
 
         # plot the histogram of a spesific temperature:
-        if task_name == 'histogram at T':
+        elif task_name == 'histogram at T':
             # the temperaure to be looked up should be predefined
             # select the Cset where the T row is equalt to the given T, where T is the secone row.
+
+            # sanity check:
+            # if you set the T be 150K, then you expect the boolean condition to be 1 for first 50(dn)*6(doping)=300 numbers
+            # T = 150
+
             boolean_condition = (Cset[1, :] == T)
-            # print(boolean_condition) # expect [False.... True....then all false]
+
+            # print(boolean_condition[0:10]) # expect to be 1
+            # print(boolean_condition[296: 305]) # expect half 1 half 0
+            # print(boolean_condition[-10:]) # expect all 0
+            # print(np.sum(boolean_condition)) # expect to be 300
+            # checked out.
+
             Cset = Cset[:,boolean_condition]
+            # sanity check:
             # print(Cset[1, :]) # expect all 300K
+            # print(np.mean(Cset[1, :])) # expect to be the same as the setting value.
+            # print(np.max(Cset[1, :])) # expect to be the same as the setting value.
+
             # plot its histogram.
             doping = 'different doping'
             self.histogram_2D(Cset, variable, T, doping)
 
         # plot the histogram of a spesific doping:
-        if task_name == 'histogram at doping':
-            # print(Cset[0, :]) # expect doping levels.
+        elif task_name == 'histogram at doping':
+            # print(Cset[0, :]) # expect doping levels. # checked out.
             boolean_condition = (Cset[0, :] == doping)
-            # print(boolean_condition) # expect [False.... True....then all false]
-            Cset = Cset[:,boolean_condition]
+            # sanity check:
+            # print(boolean_condition) # expect 6*50 ones # checkd out.
+            # print(np.sum(boolean_condition)) # expect 300. # checkd out.
+            # # expect first 50 rows to be 1 and 300-349 to be 1 as well.
+            # print(np.min(boolean_condition[300:350]))  # expect 1
+            # print(np.min(boolean_condition[0:50])) # expect 1
+            # Cset = Cset[:,boolean_condition]
             # print(Cset[1, :]) # expect all 300K
             # plot its histogram.
             T = 'different T'
             doping = "{:.2e}".format(doping)
             self.histogram_2D(Cset, variable, T, doping)
+
+
+        elif task_name == 'plot with T':
+            # the task is to plot the scatter for different parameters
+            # plot the medium under different parameters
+            # we want the x axis to be T:
+            # for each T we have a whole colume:
+            lifetimedata = Cset[3:, :] # the lifetime data start from the 4th row.
+            # print(np.shape(lifetimedata))
+            # Sanity check:
+            # print(pd.DataFrame(lifetimedata).head()) # expect to be lifetime related # checked out.
+
+            # construct a list of T that is available in the dataset:
+            T_row = Cset[1, :] # the second row is for Temperature.
+            # make it unique:
+            T_list = np.unique(T_row)
+            # sanity check:
+            # print(T_list) # expect: [150, ...400] with a step of 50, length of the list is 6 # checked out.
+            medium_list = []
+            mean_list = []
+            std_list = []
+            for T in T_list:
+                # find out the lifetime data corresponding to this temperature:
+                boolean_condition = (T_row == T)
+                # sanity check:
+                # print(sum(boolean_condition)) # expect to be 50*6
+                # print(boolean_condition[0:10]) # expect to be 1
+                # print(boolean_condition[296: 304]) # expect half 1 half 0
+                # print(boolean_condition[-10:]) # expect all 0
+                # break
+                # checked out
+                # print(np.shape(lifetimedata))
+                lifetimedata_T = lifetimedata[:,boolean_condition]
+                # calcualte the medium, mean, and std.
+                medium_list.append(np.median(lifetimedata_T))
+                mean_list.append(np.mean(lifetimedata_T))
+                std_list.append(np.std(lifetimedata_T))
+
+            # plot them on the same graph:
+            plt.figure()
+            plt.plot(T_list, np.log10(mean_list))
+            plt.title('mean value vs T')
+            plt.xlabel('Temperature (K)')
+            plt.ylabel('log of mean of ' + str(variable))
+            plt.show()
+
+            plt.figure()
+            plt.plot(T_list, np.log10(std_list))
+            plt.title('std vs T')
+            plt.xlabel('Temperature (K)')
+            plt.ylabel('log of std of ' + str(variable))
+            plt.show()
+
+            plt.figure()
+            plt.plot(T_list, np.log10(medium_list))
+            plt.title('median vs T')
+            plt.xlabel('Temperature (K)')
+            plt.ylabel('log of median of ' + str(variable))
+            plt.show()
+
+
+        elif task_name == 'plot with doping':
+            # the task is to plot the scatter for different parameters
+            # plot the medium under different parameters
+            # we want the x axis to be T:
+            # for each T we have a whole colume:
+            lifetimedata = Cset[3:, :] # the lifetime data start from the 4th row.
+            # print(np.shape(lifetimedata))
+            # Sanity check:
+            # print(pd.DataFrame(lifetimedata).head()) # expect to be lifetime related # checked out.
+
+            # construct a list of doping that is available in the dataset:
+            doping_row = Cset[0, :] # the first row is for Temperature.
+            # make it unique:
+            doping_list = np.unique(doping_row)
+            # sanity check:
+            # print(doping_list) # expect: a list of doping values length of the list is 6 # checked out.
+            medium_list = []
+            mean_list = []
+            std_list = []
+            for doping in doping_list:
+                # find out the lifetime data corresponding to this temperature:
+                boolean_condition = (doping_row == doping)
+                # sanity check:
+                # print(sum(boolean_condition)) # expect to be 50*6
+                # print(boolean_condition[0:10]) # expect to be 1
+                # print(boolean_condition[296: 304]) # expect half 1 half 0
+                # print(boolean_condition[-10:]) # expect all 0
+                # break
+                # checked out
+                # print(np.shape(lifetimedata))
+                lifetimedata_doping = lifetimedata[:,boolean_condition]
+                # calcualte the medium, mean, and std.
+                medium_list.append(np.median(lifetimedata_doping))
+                mean_list.append(np.mean(lifetimedata_doping))
+                std_list.append(np.std(lifetimedata_doping))
+
+            # plot them on the same graph:
+            plt.figure()
+            plt.plot(np.log10(doping_list), np.log10(mean_list))
+            plt.title('mean value vs doping')
+            plt.xlabel('log of doping value cm-3')
+            plt.ylabel('log of mean of ' + str(variable))
+            plt.show()
+
+            plt.figure()
+            plt.plot(np.log10(doping_list), np.log10(std_list))
+            plt.title('std vs doping')
+            plt.xlabel('log of doping value cm-3')
+            plt.ylabel('log of std of ' + str(variable))
+            plt.show()
+
+            plt.figure()
+            plt.plot(np.log10(doping_list), np.log10(medium_list))
+            plt.title('median vs doping')
+            plt.xlabel('log of doping value cm-3')
+            plt.ylabel('log of median of ' + str(variable))
+            plt.show()
+
+
+        elif task_name == 'plot with dn':
+
+            lifetimedata = Cset[3:, :] # the lifetime data start from the 4th row.
+
+            # construct a list of doping that is available in the dataset:
+            dn_row = Cset[2, :] # the 3rd row is for dn
+            # make it unique:
+            dn_list = np.unique(dn_row)
+            # sanity check:
+            # print(dn_list) # expect: a list of dn values length of the list is 50 # checked out.
+            medium_list = []
+            mean_list = []
+            std_list = []
+            for dn in dn_list:
+                # find out the lifetime data corresponding to this temperature:
+                boolean_condition = (dn_row == dn)
+                # sanity check:
+                # print(sum(boolean_condition)) # expect to be 50*6
+                # print(boolean_condition[0:10]) # expect to be 1
+                # print(boolean_condition[296: 304]) # expect half 1 half 0
+                # print(boolean_condition[-10:]) # expect all 0
+                # break
+                # checked out
+                # print(np.shape(lifetimedata))
+                lifetimedata_dn = lifetimedata[:,boolean_condition]
+                # calcualte the medium, mean, and std.
+                medium_list.append(np.median(lifetimedata_dn))
+                mean_list.append(np.mean(lifetimedata_dn))
+                std_list.append(np.std(lifetimedata_dn))
+
+            # plot them on the same graph:
+            plt.figure()
+            plt.plot(np.log10(dn_list), np.log10(mean_list))
+            plt.title('mean value vs dn')
+            plt.xlabel('log of dn value cm-3')
+            plt.ylabel('log of mean of ' + str(variable))
+            plt.show()
+
+            plt.figure()
+            plt.plot(np.log10(dn_list), np.log10(std_list))
+            plt.title('std vs dn')
+            plt.xlabel('log of dn value cm-3')
+            plt.ylabel('log of std of ' + str(variable))
+            plt.show()
+
+            plt.figure()
+            plt.plot(np.log10(dn_list), np.log10(medium_list))
+            plt.title('median vs dn')
+            plt.xlabel('log of dn value cm-3')
+            plt.ylabel('log of median of ' + str(variable))
+            plt.show()
+
+
+
+
 
 
     def histogram_2D(self, Cset, variable, T, doping):
@@ -797,7 +1004,7 @@ class MyMLdata_2level:
         plt.hist(np.log10(Cset), bins=bins)
         # plt.xscale('log')
         plt.title('Distribution of ratio for ' + str(variable) + ' ' +str(T) + ' ' +str(doping))
-        plt.xlabel('log10 of the ratio')
+        plt.xlabel('log10 of the variable')
         plt.show()
 
 # %%-

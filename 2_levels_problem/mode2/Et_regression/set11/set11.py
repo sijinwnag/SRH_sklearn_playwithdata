@@ -19,7 +19,7 @@ from MLobject_tlevel import *
 # multiple doping level: varying T, doping, p, 8000 datapoints
 # df1 = MyMLdata_2level(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\set11_diff_doping.csv', 'bandgap1', 5)
 # multiple doping level: varying T, doping, p, 10 datapoints for sanity check.
-df1 = MyMLdata_2level(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\code_running_results\set11\theCresults\sanity_check\2022-05-22-15-44-21_advanced example - multi_level_L_datasetID_0.csv', 'bandgap1',5)
+df1 = MyMLdata_2level(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\code_running_results\set11\theCresults\visialization\varyT_varydoping_p_8000\lifetimedata.csv', 'bandgap1',5)
 
 # n type doping: vary T, 1e15, n, 8000 datapoints
 # df1 = MyMLdata_2level(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\set11_1e15_ntype.csv', 'bandgap1', 5)
@@ -136,7 +136,7 @@ df1.pre_processor_insert_all_known()
 # This equation only calcualte C while ignoring excess carrier concentration, and only works for one doping and one temperature.
 # df1.C1_C2_C3_C4_calculator()
 # this eqution works for lifetime data that vary both T and doping.
-df1.C1n_C2n_C1d_C2d_calculator(return_C=False, export=False, sanity_check=True)
+# df1.C1n_C2n_C1d_C2d_calculator(return_C=False, export=True, sanity_check=True, playmusic=True)
 # %%-
 
 # %%-- Data visualization
@@ -146,6 +146,9 @@ df1.C_visiaulization(variable='C1n/C2n')
 df1.C_visiaulization()
 # %%-
 # %%-- Histogram for different T.
+# plot for one temperauree:
+# df1.C_visiaulization(task_name='histogram at T', T=150)
+
 # plot for demoninator term.
 for T in range(150, 401, 50):
     df1.C_visiaulization(task_name='histogram at T', T=T)
@@ -155,13 +158,31 @@ for T in range(150, 401, 50):
 # why it seems like T does not change anything?
 # %%-
 # %%-- Histogram for different doping.
-# df1.C_visiaulization(task_name='histogram at doping')
-# plot for demoninator term.
-for doping in [3e14, 7e14, 1e15, 3e15, 7e15, 1e16]:
-    df1.C_visiaulization(task_name='histogram at doping', doping=doping)
-# plot for numeator term:
-for doping in [3e14, 7e14, 1e15, 3e15, 7e15, 1e16]:
-    df1.C_visiaulization(task_name='histogram at doping', doping=doping, variable='C1n/C2n')
-# why it seems like doping does not change anything either.
+df1.C_visiaulization(task_name='histogram at doping', doping=1e14)
+# # plot for demoninator term.
+# for doping in [3e14, 7e14, 1e15, 3e15, 7e15, 1e16]:
+#     df1.C_visiaulization(task_name='histogram at doping', doping=doping)
+# # plot for numeator term:
+# for doping in [3e14, 7e14, 1e15, 3e15, 7e15, 1e16]:
+#     df1.C_visiaulization(task_name='histogram at doping', doping=doping, variable='C1n/C2n')
+# # why it seems like doping does not change anything either.
+# %%-
+# %%-- Visialize individual parameters.
+df1.C_visiaulization(variable='C1n')
+df1.C_visiaulization(variable='C2n')
+df1.C_visiaulization(variable='C1d')
+df1.C_visiaulization(variable='C2d')
+# %%-
+# %%-- T vs C:
+df1.C_visiaulization(variable='C1n/C2n', task_name='plot with T')
+df1.C_visiaulization(variable='C1d/C2d', task_name='plot with T')
+# %%-
+# %%-- Doping vs C:
+df1.C_visiaulization(variable='C1d/C2d', task_name='plot with doping')
+df1.C_visiaulization(variable='C1n/C2n', task_name='plot with doping')
+# %%-
+# %%-- dn vs C:
+df1.C_visiaulization(variable='C1d/C2d', task_name='plot with dn')
+df1.C_visiaulization(variable='C1n/C2n', task_name='plot with dn')
 # %%-
 # %%-
