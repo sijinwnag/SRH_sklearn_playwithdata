@@ -982,10 +982,6 @@ class MyMLdata_2level:
             plt.show()
 
 
-
-
-
-
     def histogram_2D(self, Cset, variable, T, doping):
         """
         This function firstly flatten the 2D data into 1D then plot its histogram.
