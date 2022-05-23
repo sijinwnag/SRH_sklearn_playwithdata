@@ -981,8 +981,16 @@ class MyMLdata_2level:
             plt.ylabel('log of median of ' + str(variable))
             plt.show()
 
-
-
+        elif task_name == 'plot with Et1-Et2':
+            # read off the energy values from original dataset:
+            Et1 = self.data['Et_eV_1']
+            Et2 = self.data['Et_eV_2']
+            # subtract with each other:
+            E_diff = np.array(Et1)-np.array(Et2)
+            # E_diff should be a colume array with size of sample size and value is diff between the two energyies
+            # sanity check:
+            print(np.shape(E_diff)) # expect to be 8000*1
+            print(E_dff[3]) # expect to be 
 
 
 
