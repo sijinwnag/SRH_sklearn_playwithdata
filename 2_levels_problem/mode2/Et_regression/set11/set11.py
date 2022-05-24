@@ -56,8 +56,9 @@ df1.singletask = 'Et_eV_2_known_Et_eV_2_plus'
 r2scores = df1.regression_repeat()
 # this makes the results better but has data leakage, R2 got about 0.999.
 
-df1.singletask = 'Et_eV_2_known_Et_eV_1'
+df1.singletask = 'Et_eV_1_known_param1'
 r2scores = df1.regression_repeat()
+df1.email_reminder()
 # %%-
 # %%-
 
