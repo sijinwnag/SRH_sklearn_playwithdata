@@ -19,7 +19,7 @@ from MLobject_tlevel import *
 # multiple doping level: varying T, doping, p, 8000 datapoints
 # df1 = MyMLdata_2level(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\set11_diff_doping.csv', 'bandgap1', 5)
 # multiple doping level: varying T, doping, p, 10 datapoints for sanity check.
-df1 = MyMLdata_2level(r'C:\Users\sijin wang\Documents\GitHub\yoann_code_new\Savedir_example\outputs\2022-05-23-17-35-51_advanced example - multi_level_L_datasetID_0.csv', 'bandgap1',5)
+df1 = MyMLdata_2level(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\code_running_results\set11\theCresults\visialization\varyT_varydoping_p_8000\lifetimedata.csv', 'bandgap1',5)
 
 # n type doping: vary T, 1e15, n, 8000 datapoints
 # df1 = MyMLdata_2level(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\set11_1e15_ntype.csv', 'bandgap1', 5)
@@ -187,6 +187,6 @@ df1.C_visiaulization(variable='C1d/C2d', task_name='plot with dn')
 df1.C_visiaulization(variable='C1n/C2n', task_name='plot with dn')
 # %%-
 # %%-- E_diff vs C:
-df1.C_visiaulization(variable='C1d/C2d', task_name='plot with Et1-Et2')
+df1.C_visiaulization(variable='C1n/C2n', task_name='plot with Et1-Et2')
 # %%-
 # %%-

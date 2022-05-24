@@ -29,6 +29,8 @@ from sklearn.multioutput import RegressorChain
 from semiconductor.recombination import SRH
 import scipy.constants as sc
 from datetime import datetime
+import smtplib
+from email.message import EmailMessage
 # %%-
 
 
@@ -1217,6 +1219,11 @@ class MyMLdata_2level:
         elif singletask == 'Et_eV_1_known_bandgap1':
             y = dfk['Et_eV_1']
             X['bandgap_1'] = dfk['bandgap_1']
+        elif singletask == 'Et_eV_1_known_param1':
+            y = dfk['Et_eV_1']
+            X['Et_eV_2'] = dfk['Et_eV_2']
+            X['logSn_1'] = pd.DataFrame(self.data)['logSn_1']
+            X['logSp_1'] = pd.DataFrame(self.data)['logSp_1']
         elif singletask == 'Et_eV_1_known_predicted_bandgap_1':
             X['predicted_bandgap_1'] = dfk['predicted_bandgap_1']
             y = dfk['Et_eV_1']
@@ -1664,6 +1671,8 @@ class MyMLdata_2level:
         # return the value if requried
         if return_C == True:
             return C2n_frame, C2d_frame, C1n_frame, C1d_frame
+
+# %%-
 
 
 # %%--- The functions for chain multi-output regressor chain.
@@ -2214,6 +2223,31 @@ class MyMLdata_2level:
             y_pred = model.predict(X_scaled)
             return y_pred
 # %%-
-# %%-
 
-# playsound(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Et_regression\set11\spongbob.mp3')
+
+# # playsound(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Et_regression\set11\spongbob.mp3')
+# # %%--- Reminder functions:
+#     def email_reminder(self, subject='ML finish training', body='ML of ' + str(self.singletask) + 'finished', to='z5183876@ad.unsw.edu.au'):
+#
+#         user = "sijinwang944@gmail.com"
+#         password = 'vjvlqydqtxlpddgz'
+#
+#         msg = EmailMessage()
+#         msg.set_content(body)
+#         msg['subject'] = subject
+#         msg['to'] = to
+#         msg['from'] = user
+# 
+#
+#
+#         server = smtplib.SMTP("smtp.gmail.com", 587)
+#         server.starttls()
+#         server.login(user, password)
+#         server.send_message(msg)
+#
+#         server.quit()
+#
+#     def playmusic(self):
+#         playsound(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Et_regression\set11\spongbob.mp3')
+#
+# # %%-
