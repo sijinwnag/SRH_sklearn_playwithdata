@@ -5,56 +5,12 @@ import sys
 # use this line if on hp laptop:
 # sys.path.append(r'C:\Users\budac\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2')
 # use this line if on dell laptop
-sys.path.append(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2')
+# sys.path.append(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2')
 # use this line if on workstation
-# sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2')
+sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2')
 from MLobject_tlevel import *
 
-# %%-- use this secion if using dell laptop
-
-# one doping level: 1e15, varying T, p, 8000 datapoints
-# df1 = MyMLdata_2level(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\set11_1e15.csv', 'bandgap1', 10)
-# np.shape(df1.data)
-
-# multiple doping level: varying T, doping, p, 8000 datapoints
-# df1 = MyMLdata_2level(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\set11_diff_doping.csv', 'bandgap1', 5)
-# multiple doping level: varying T, doping, p, 10 datapoints for sanity check.
-df1 = MyMLdata_2level(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\code_running_results\set11\theCresults\visialization\varyT_varydoping_p_8000\lifetimedata.csv', 'bandgap1',5)
-
-# n type doping: vary T, 1e15, n, 8000 datapoints
-# df1 = MyMLdata_2level(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\set11_1e15_ntype.csv', 'bandgap1', 5)
-
-# all known data: add temperature, doping and excess carrier cocnentration as extra columns.
-# df1 = MyMLdata_2level(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Et_regression\set11\new_data.csv', 'bandgap1', 5)
-
-# one doping one temperature, p type:
-# 1e14 doping and 400K, p type, 8000 data points, all files below works:
-# df1 = MyMLdata_2level(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\one_doping_one_temp.csv', 'bandgap1', 50)
-# df1 = MyMLdata_2level(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\single_T_single_doping\p\400K_1e14_8000_p.csv', 'bandgap1', 50)
-# 1e15 dopiong 300K, p type: both files below works
-# df1 = MyMLdata_2level(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\1e15_300K.csv', 'bandgap1', 5)
-# df1 = MyMLdata_2level(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\single_T_single_doping\p\300K_1e15_8000_p.csv', 'bandgap1', 5)
-# 1e15 doping 400K, p type:
-# df1 = MyMLdata_2level(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\single_T_single_doping\p\400K_1e15_8000_p.csv', 'bandgap1', 5)
-# 1e14 300K, p type 8000 data points:
-# df1 = MyMLdata_2level(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\single_T_single_doping\p\300K_1e14_8000_p.csv', 'bandgap1', 5)
-# 1e15 200K, ptype, 8000 datapoints:
-# df1 = MyMLdata_2level(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\single_T_single_doping\p\200K_1e15_8000_p.csv', 'bandgap1', 5)
-# 1e15 100K, p type, 8000 datapoints:
-# df1 = MyMLdata_2level(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\single_T_single_doping\p\100K_1e15_8000_p.csv', 'bandgap1', 5)
-# 1e15 150K ptype 8000 datapints:
-# df1 = MyMLdata_2level(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\single_T_single_doping\p\150K_1e15_8000_p.csv', 'bandgap1', 5)
-# %%-
-
-# %%--use this section if using hp laptop:
-# one doping level:
-# df1 = MyMLdata_2level(r'C:\ML_databank\set11_1e15.csv', 'bandgap1', 10)
-# df1 = MyMLdata_2level(r'"C:\ML_databank\set11_1e15.csv"', 'bandgap1', 10)
-# %%-
-
-# %%--use this section if using workstation
-# df1 = MyMLdata_2level(r'', 'bandgap1', 10)
-# %%-
+df1 = MyMLdata_2level(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\yoann_code_workstation\Savedir_example\outputs\2022-05-24-14-01-02_advanced example - multi_level_L_datasetID_0.csv', 'bandgap1',5)
 # %%-
 
 # %%-- different data engineering
