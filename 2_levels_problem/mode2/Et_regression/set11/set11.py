@@ -5,9 +5,9 @@ import sys
 # use this line if on hp laptop:
 # sys.path.append(r'C:\Users\budac\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2')
 # use this line if on dell laptop
-# sys.path.append(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2')
+sys.path.append(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2')
 # use this line if on workstation
-sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2')
+# sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2')
 from MLobject_tlevel import *
 
 
@@ -58,13 +58,8 @@ df1.singletask = 'Et_eV_2_known_Et_eV_2_plus'
 r2scores = df1.regression_repeat()
 # this makes the results better but has data leakage, R2 got about 0.999.
 
-
 df1.singletask = 'Et_eV_2_known_Et_eV_1'
 r2scores = df1.regression_repeat()
-
-df1.singletask = 'Et_eV_1_known_param1'
-r2scores = df1.regression_repeat()
-df1.email_reminder()
 # %%-
 # %%-
 
@@ -83,6 +78,8 @@ chain_scores = df1.repeat_chain_regressor(repeat_num=5, regression_order=None, c
 # the plan is to first predict Et1, then predict Et1+Et2, then predict Et2 by subtracting the prediction of sum by Et1 prediction.
 # r2 = df1.sum_minus_Et1_chain(regression_order=None, plotall=True)
 model_names, y_pred_matrix, y_test, r2list = df1.repeat_subtraction_method(repeat_num=5, regression_order=None, plotall=False, return_pred=True)
+# %%-
+
 # %%-
 
 # %%-- Perform chain regression for k
@@ -133,6 +130,7 @@ df1.C_visiaulization(variable='C1n')
 df1.C_visiaulization(variable='C2n')
 df1.C_visiaulization(variable='C1d')
 df1.C_visiaulization(variable='C2d')
+df1.C_visiaulization(task_name='C histogram compare')
 # %%-
 # %%-- T vs C:
 df1.C_visiaulization(variable='C1n/C2n', task_name='plot with T')
@@ -147,6 +145,6 @@ df1.C_visiaulization(variable='C1d/C2d', task_name='plot with dn')
 df1.C_visiaulization(variable='C1n/C2n', task_name='plot with dn')
 # %%-
 # %%-- E_diff vs C:
-df1.C_visiaulization(variable='C1d/C2d', task_name='plot with Et1-Et2')
+df1.C_visiaulization(variable='C1n/C2n', task_name='plot with Et1-Et2')
 # %%-
 # %%-
