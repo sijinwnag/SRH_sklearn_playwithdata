@@ -381,7 +381,6 @@ class MyMLdata_2level:
             return f1_list, y_pred_list, y_test_list
 
 
-
     def classification_repeat(self, display_confusion_matrix=False, return_model=False):
         """
         input:
@@ -1060,7 +1059,6 @@ class MyMLdata_2level:
             plt.show()
 
 
-
     def histogram_2D(self, Cset, variable, T, doping):
         """
         This function firstly flatten the 2D data into 1D then plot its histogram.
@@ -1081,7 +1079,6 @@ class MyMLdata_2level:
         plt.title('Distribution of ratio for ' + str(variable) + ' ' +str(T) + ' ' +str(doping))
         plt.xlabel('log10 of the variable')
         plt.show()
-
 # %%-
 
 
@@ -1671,7 +1668,6 @@ class MyMLdata_2level:
         # return the value if requried
         if return_C == True:
             return C2n_frame, C2d_frame, C1n_frame, C1d_frame
-
 # %%-
 
 
@@ -2225,29 +2221,31 @@ class MyMLdata_2level:
 # %%-
 
 
-# # playsound(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Et_regression\set11\spongbob.mp3')
-# # %%--- Reminder functions:
-#     def email_reminder(self, subject='ML finish training', body='ML of ' + str(self.singletask) + 'finished', to='z5183876@ad.unsw.edu.au'):
-#
-#         user = "sijinwang944@gmail.com"
-#         password = 'vjvlqydqtxlpddgz'
-#
-#         msg = EmailMessage()
-#         msg.set_content(body)
-#         msg['subject'] = subject
-#         msg['to'] = to
-#         msg['from'] = user
-# 
-#
-#
-#         server = smtplib.SMTP("smtp.gmail.com", 587)
-#         server.starttls()
-#         server.login(user, password)
-#         server.send_message(msg)
-#
-#         server.quit()
-#
-#     def playmusic(self):
-#         playsound(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Et_regression\set11\spongbob.mp3')
-#
-# # %%-
+# %%--- Reminder functions:
+    def email_reminder(self):
+
+        subject='ML finish training'
+        body='ML of ' + str(self.singletask) + ' finished'
+        to='z5183876@ad.unsw.edu.au'
+
+        user = "sijinwang944@gmail.com"
+        password = 'vjvlqydqtxlpddgz'
+
+        msg = EmailMessage()
+        msg.set_content(body)
+        msg['subject'] = subject
+        msg['to'] = to
+        msg['from'] = user
+
+
+
+        server = smtplib.SMTP("smtp.gmail.com", 587)
+        server.starttls()
+        server.login(user, password)
+        server.send_message(msg)
+
+        server.quit()
+
+    def playmusic(self):
+        playsound(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Et_regression\set11\spongbob.mp3')
+# %%-
