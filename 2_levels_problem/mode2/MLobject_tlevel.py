@@ -1216,7 +1216,7 @@ class MyMLdata_2level:
         elif singletask == 'Et_eV_1_known_bandgap1':
             y = dfk['Et_eV_1']
             X['bandgap_1'] = dfk['bandgap_1']
-        elif singletask == 'Et_eV_1_known_param1':
+        elif singletask == 'Et_eV_2_known_param1':
             y = dfk['Et_eV_2']
             X['Et_eV_1'] = dfk['Et_eV_1']
             X['logSn_1'] = pd.DataFrame(self.data)['logSn_1']
