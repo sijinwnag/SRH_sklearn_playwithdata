@@ -19,7 +19,7 @@ from MLobject_tlevel import *
 # multiple doping level: varying T, doping, p, 8000 datapoints
 # df1 = MyMLdata_2level(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\set11_diff_doping.csv', 'bandgap1', 5)
 # multiple doping level: varying T, doping, p, 10 datapoints for sanity check.
-df1 = MyMLdata_2level(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\yoann_code_workstation\Savedir_example\outputs\2022-05-23-12-24-40_advanced example - multi_level_L_datasetID_0.csv', 'bandgap1',5)
+df1 = MyMLdata_2level(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\yoann_code_workstation\Savedir_example\outputs\2022-05-24-14-01-02_advanced example - multi_level_L_datasetID_0.csv', 'bandgap1',5)
 
 # n type doping: vary T, 1e15, n, 8000 datapoints
 # df1 = MyMLdata_2level(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\set11_1e15_ntype.csv', 'bandgap1', 5)
@@ -100,8 +100,13 @@ df1.singletask = 'Et_eV_2_known_Et_eV_2_plus'
 r2scores = df1.regression_repeat()
 # this makes the results better but has data leakage, R2 got about 0.999.
 
+
 df1.singletask = 'Et_eV_2_known_Et_eV_1'
 r2scores = df1.regression_repeat()
+
+df1.singletask = 'Et_eV_1_known_param1'
+r2scores = df1.regression_repeat()
+df1.email_reminder()
 # %%-
 # %%-
 
