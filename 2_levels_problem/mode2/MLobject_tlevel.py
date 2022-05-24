@@ -1022,6 +1022,43 @@ class MyMLdata_2level:
             plt.ylabel('log of median of ' + str(variable))
             plt.show()
 
+        elif task_name == 'C histogram compare':
+            # the purpose is to plot the histogram of C1n and C2n on the same graphs
+            # then plot C1d and C2d on the same histogram.
+
+            # extract the parameters:
+            C1d_frame = pd.read_csv(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\code_running_results\set11\theCresults\visialization\varyT_varydoping_p_8000\C1ddata09_29_36.csv').iloc[:,1:]
+            C2d_frame = pd.read_csv(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\code_running_results\set11\theCresults\visialization\varyT_varydoping_p_8000\C2ddata09_29_36.csv').iloc[:,1:]
+            C1n_frame = pd.read_csv(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\code_running_results\set11\theCresults\visialization\varyT_varydoping_p_8000\C1ndata09_29_36.csv').iloc[:,1:]
+            C2n_frame = pd.read_csv(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\code_running_results\set11\theCresults\visialization\varyT_varydoping_p_8000\C2ndata09_29_36.csv').iloc[:,1:]
+            # get rid of the headings
+            C1d = np.array(C1d_frame)[3:, :].flatten()
+            C2d = np.array(C2d_frame)[3:, :].flatten()
+            C1n = np.array(C1n_frame)[3:, :].flatten()
+            C2n = np.array(C2n_frame)[3:, :].flatten()
+
+            # plot the histogram for Cd:
+            bins = 10000
+            plt.figure()
+            plt.hist(np.log10(C1d), bins=bins, label='$C_{1d}$')
+            plt.hist(np.log10(C2d), bins=bins, label='$C_{2d}$')
+            plt.legend()
+            plt.title('Distribution of Cd')
+            plt.xlabel('log10 of Cd')
+            plt.show()
+
+            # plot the histogram for Cn:
+            bins = 10000
+            plt.figure()
+            plt.hist(np.log10(C1n), bins=bins, label='$C_{1n}$')
+            plt.hist(np.log10(C2n), bins=bins, label='$C_{2n}$')
+            plt.legend()
+            plt.title('Distribution of Cn')
+            plt.xlabel('log10 of Cn')
+            plt.show()
+
+
+
     def histogram_2D(self, Cset, variable, T, doping):
         """
         This function firstly flatten the 2D data into 1D then plot its histogram.
