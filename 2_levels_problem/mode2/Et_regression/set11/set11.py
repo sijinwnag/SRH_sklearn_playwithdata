@@ -127,8 +127,6 @@ chain_scores = df1.repeat_chain_regressor(repeat_num=5, regression_order=None, c
 model_names, y_pred_matrix, y_test, r2list = df1.repeat_subtraction_method(repeat_num=5, regression_order=None, plotall=False, return_pred=True)
 # %%-
 
-# %%-
-
 # %%-- Perform chain regression for k
 chain_scores = df1.repeat_chain_regressor(repeat_num=5, regression_order=None, chain_name = 'logk1+logk2->logk1->logk2')
 # %%-
