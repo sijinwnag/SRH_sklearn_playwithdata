@@ -725,7 +725,7 @@ class MyMLdata_2level:
         T: if task is to investigate the certain T, then it define the temperaure to look at, unit is in K
         doping: if task is to investigate the certain doping, then it define the doping level to look at, unit is in cm-3
         """
-
+        self.data = pd.read_csv(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\code_running_results\set11\theCresults\visialization\varyT_varydoping_p_8000\lifetimedata.csv')
         # calcualte the parameter based on hte input:
         if variable == 'C1d/C2d':
             # instead of calculating C, read it off from temperatry file directory, ignore the first volumn becase it is just a title volume
@@ -986,6 +986,8 @@ class MyMLdata_2level:
 
             # read off the Et values from original data:
             Et1 = self.data['Et_eV_1']
+            # sanity check:
+            # print(Et1[0]) # expect 0.140651095 # checked out.
             Et2 = self.data['Et_eV_2']
             # subtraction:
             Et_diff = np.array(Et1)-np.array(Et2)
@@ -1000,6 +1002,12 @@ class MyMLdata_2level:
             # print(np.shape(medium_list)) # expect 8000*1 # checked out
             mean_list = np.mean(lifetimedata, axis=1)
             std_list = np.std(lifetimedata, axis=1)
+
+            # denoise the data by taking the average:
+            Et_diff = self.data_averager(Et_diff)
+            medium_list = self.data_averager(medium_list)
+            mean_list = self.data_averager(mean_list)
+            std_list = self.data_averager(std_list)
 
             # plot them on different graphs
             plt.figure()
@@ -1079,6 +1087,30 @@ class MyMLdata_2level:
         plt.title('Distribution of ratio for ' + str(variable) + ' ' +str(T) + ' ' +str(doping))
         plt.xlabel('log10 of the variable')
         plt.show()
+
+
+    def data_averager(self, data, length = 1):
+        """
+        This function will take the average for every length data point and output an array.
+
+        input:
+        data: an 1-D array like function.
+        length: an integer that you want to take average for every length, it must be able to divide data size.
+
+        output: an arry that is taken average.
+        """
+
+        # reshape the data into the array:
+        # print(np.size(data))
+        data = np.reshape(data, (length,int(np.size(data)/length)))
+
+        # take the average for each row.
+        data = np.average(data, axis=0)
+
+        # take the medium for each row.
+        # data = np.min(data, axis=0)
+
+        return data
 # %%-
 
 
