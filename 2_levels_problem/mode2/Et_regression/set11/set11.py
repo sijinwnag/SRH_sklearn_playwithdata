@@ -7,7 +7,7 @@ import sys
 # use this line if on dell laptop
 sys.path.append(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2')
 # use this line if on workstation
-# sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2')
+sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2')
 from MLobject_tlevel import *
 
 df1 = MyMLdata_2level(r'C:\Users\sijin wang\Documents\GitHub\yoann_code_new\Savedir_example\outputs\2022-05-25-09-33-32_advanced example - multi_level_L_datasetID_0.csv', 'bandgap1',5)
@@ -51,7 +51,6 @@ r2scores = df1.regression_repeat()
 # %%-
 
 # %%-- Data leakage.
-# %%-- Regression for Et2 known Et1 and Et1+Et.
 df1.singletask = 'Et_eV_2_known_Et_eV_2_plus'
 r2scores = df1.regression_repeat()
 # this makes the results better but has data leakage, R2 got about 0.999.
@@ -59,7 +58,6 @@ r2scores = df1.regression_repeat()
 df1.singletask = 'Et_eV_2_known_param1'
 r2scores = df1.regression_repeat()
 df1.email_reminder()
-# %%-
 # %%-
 
 # %%-- Perform chain regression for energy levels.
