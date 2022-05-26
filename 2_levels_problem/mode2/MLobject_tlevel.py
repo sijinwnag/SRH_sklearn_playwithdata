@@ -1111,6 +1111,10 @@ class MyMLdata_2level:
         # data = np.min(data, axis=0)
 
         return data
+
+
+    # def compare_hist(self, variable='Et'):
+    #     """"""
 # %%-
 
 

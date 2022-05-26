@@ -10,7 +10,7 @@ sys.path.append(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\
 sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2')
 from MLobject_tlevel import *
 
-df1 = MyMLdata_2level(r'C:\Users\sijin wang\Documents\GitHub\yoann_code_new\Savedir_example\outputs\2022-05-25-09-33-32_advanced example - multi_level_L_datasetID_0.csv', 'bandgap1',5)
+df1 = MyMLdata_2level(r'C:\Users\sijin wang\Documents\GitHub\yoann_code_new\Savedir_example\outputs\2022-05-26-11-01-03_advanced example - multi_level_L_datasetID_0.csv', 'bandgap1',5)
 # %%-
 
 # %%-- different data engineering
@@ -25,6 +25,7 @@ df1.regression_matrix = 'Mean Absolute Error'
 r2scores = df1.regression_repeat()
 df1.singletask = 'Et_eV_2'
 r2scores = df1.regression_repeat() # R2 about 0.2 to 0.4
+df1.email_reminder()
 df1.singletask = 'Et_eV_1+Et_eV_2'
 r2scores = df1.regression_repeat()
 df1.singletask = 'Et_eV_1-Et_eV_2'
