@@ -31,6 +31,7 @@ import scipy.constants as sc
 from datetime import datetime
 import smtplib
 from email.message import EmailMessage
+import os
 # %%-
 
 
@@ -2261,7 +2262,7 @@ class MyMLdata_2level:
     def email_reminder(self):
 
         subject='ML finish training'
-        body='ML of ' + str(self.singletask) + ' finished'
+        body='ML of ' + str(self.singletask) + ' finished' + ' through the file ' + str(os.getcwd())
         to='z5183876@ad.unsw.edu.au'
 
         user = "sijinwang944@gmail.com"
