@@ -9,7 +9,7 @@ sys.path.append(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\
 sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2')
 from MLobject_tlevel import *
 
-df1 = MyMLdata_2level(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\yoann_code_new\Savedir_example\outputs\2022-05-30-11-00-59_advanced example - multi_level_L_datasetID_0.csv', 'bandgap1',5)
+df1 = MyMLdata_2level(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\yoann_code_new\Savedir_example\outputs\2022-05-30-11-50-54_advanced example - multi_level_L_datasetID_0.csv', 'bandgap1',5)
 # %%-
 
 # %%-- different data engineering
@@ -46,6 +46,10 @@ r2scores = df1.regression_repeat()
 df1.singletask = 'logSn_1'
 r2scores = df1.regression_repeat()
 df1.singletask = 'logSp_1'
+r2scores = df1.regression_repeat()
+df1.singletask = 'logSn_2'
+r2scores = df1.regression_repeat()
+df1.singletask = 'logSp_2'
 r2scores = df1.regression_repeat()
 # %%-
 # %%-
