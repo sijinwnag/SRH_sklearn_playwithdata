@@ -9,10 +9,10 @@ sys.path.append(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\
 sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2')
 from MLobject_tlevel import *
 
-df1 = MyMLdata_2level(r'C:\Users\sijin wang\Documents\GitHub\yoann_code_new\Savedir_example\outputs\2022-05-31-21-12-54_advanced example - multi_level_L_datasetID_0.csv', 'bandgap1',5)
+df1 = MyMLdata_2level(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\yoann_code_new\Savedir_example\outputs\2022-05-31-21-41-52_advanced example - multi_level_L_datasetID_0.csv', 'bandgap1',5)
 # %%-
 
-# %%-- different data engineering
+# %%-- different data engineering before training ML model.
 # multiplying lifetime by (dn+p0+n0)
 df1.pre_processor_dividX()
 # %%-
