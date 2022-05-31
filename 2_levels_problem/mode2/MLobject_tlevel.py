@@ -76,7 +76,7 @@ class MyMLdata_2level:
         'model_names': ['Random Forest', 'Gradient Boosting', 'Ada Boosting'], # a list of name for each model.
         'model_lists': [RandomForestRegressor(n_estimators=100, verbose =0, n_jobs=-1), GradientBoostingRegressor(verbose=0,loss='ls',max_depth=10), AdaBoostRegressor(base_estimator = DecisionTreeRegressor(), n_estimators=100, loss='linear')],# a list of model improted from sklearn
         'gridsearchlist': [False, False, False], # each element in this list corspond to a particular model, if True, then we will do grid search while training the model, if False, we will not do Gridsearch for this model.
-        'param_list': [{'n_estimators': [200, 100, 1000, 500, 2000], {'n_estimators':[200, 100]}, {'n_estimators':[50, 100]}]# a list of key parameters correspond to the models in the model_lists if we are going to do grid searching
+        'param_list': [{'n_estimators': [200, 100, 1000, 500, 2000]}, {'n_estimators':[200, 100]}, {'n_estimators':[50, 100]}]# a list of key parameters correspond to the models in the model_lists if we are going to do grid searching
         }
         classification_default_param = {
         'model_names': ['KNN', 'SVC', 'Decision tree', 'Random Forest',  'Gradient Boosting', 'Adaptive boosting', 'Naive Bayes', 'Neural Network'], # a list of name for each model.
