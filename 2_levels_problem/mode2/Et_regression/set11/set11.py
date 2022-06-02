@@ -9,7 +9,7 @@ sys.path.append(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\
 sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2')
 from MLobject_tlevel import *
 
-df1 = MyMLdata_2level(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\yoann_code_new\Savedir_example\outputs\2022-06-02-08-36-23_advanced example - multi_level_L_datasetID_0.csv', 'bandgap1',5)
+df1 = MyMLdata_2level(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\yoann_code_new\Savedir_example\outputs\2022-06-02-15-41-20_advanced example - multi_level_L_datasetID_0.csv', 'bandgap1',5)
 # %%-
 
 # %%-- different data engineering before training ML model.
@@ -61,6 +61,18 @@ r2scores = df1.regression_repeat()
 df1.singletask = 'logSp_2'
 r2scores = df1.regression_repeat()
 df1.email_reminder()
+# %%-
+
+# %%-- First level behaviour tester
+df1.singletask = 'Et_eV_1'
+r2scores = df1.regression_repeat()
+df1.singletask = 'logSn_1'
+r2scores = df1.regression_repeat()
+df1.singletask = 'logSp_1'
+r2scores = df1.regression_repeat()
+df1.email_reminder()
+# %%-
+
 # %%-
 
 # %%-- Data leakage.
