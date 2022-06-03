@@ -1,3 +1,10 @@
+# %%-- To do:
+"""
+1. Document the behaviour of the Et2, Sn2, Sp2.
+"""
+# %%-
+
+
 # %%-- Imports
 import sys
 # import the function file from another folder:

@@ -78,7 +78,7 @@ class MyMLdata_2level:
         # 'gridsearchlist': [False, False, False], # each element in this list corspond to a particular model, if True, then we will do grid search while training the model, if False, we will not do Gridsearch for this model.
         # 'param_list': [{'n_estimators': [200, 100, 1000, 500, 2000]}, {'n_estimators':[200, 100]}, {'n_estimators':[50, 100]}]# a list of key parameters correspond to the models in the model_lists if we are going to do grid searching
         # }
-        random forest only
+        # random forest only
         regression_default_param = {
         'model_names': ['Random Forest'], # a list of name for each model.
         'model_lists': [RandomForestRegressor(n_estimators=100, verbose =0, n_jobs=-1)],# a list of model improted from sklearn
@@ -229,7 +229,7 @@ class MyMLdata_2level:
         # print(np.shape(y_prediction_frame))
         # print(np.shape(y_test_frame))
         # print(np.shape(y_prediction_frame))
-        plt.scatter(np.array(y_test_frame)[repeat_num], np.array(y_prediction_frame)[repeat_num, :, model_num], label=('$R^2$' + '=' + str(round(np.max(r2_score_k), 3))) + ('  Mean Absolue error' + '=' + str(round(np.min(mae_score_k), 3))), marker='+')
+        plt.scatter(np.array(y_test_frame)[repeat_num], np.array(y_prediction_frame)[repeat_num, :, model_num], label=('$R^2$' + '=' + str(round(np.max(r2_score_k), 3))) + ('  Mean Absolue error' + '=' + str(round(np.min(mae_score_k), 3))), s='None', alpha=0.5)
         plt.xlabel('real value')
         plt.ylabel('predicted value')
         plt.title('real vs predicted at trial ' + str(repeat_num + 1) + ' using method ' + str(self.reg_param['model_names'][model_num]))
