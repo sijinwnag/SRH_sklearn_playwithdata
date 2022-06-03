@@ -78,7 +78,7 @@ class MyMLdata_2level:
         # 'gridsearchlist': [False, False, False], # each element in this list corspond to a particular model, if True, then we will do grid search while training the model, if False, we will not do Gridsearch for this model.
         # 'param_list': [{'n_estimators': [200, 100, 1000, 500, 2000]}, {'n_estimators':[200, 100]}, {'n_estimators':[50, 100]}]# a list of key parameters correspond to the models in the model_lists if we are going to do grid searching
         # }
-        # random forest only
+        random forest only
         regression_default_param = {
         'model_names': ['Random Forest'], # a list of name for each model.
         'model_lists': [RandomForestRegressor(n_estimators=100, verbose =0, n_jobs=-1)],# a list of model improted from sklearn
