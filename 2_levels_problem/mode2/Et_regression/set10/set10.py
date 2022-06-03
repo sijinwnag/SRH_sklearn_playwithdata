@@ -60,7 +60,6 @@ df1.singletask = 'logSn_2'
 r2scores = df1.regression_repeat()
 df1.singletask = 'logSp_2'
 r2scores = df1.regression_repeat()
-df1.email_reminder()
 # %%-
 
 # %%-- First level behaviour tester
