@@ -229,7 +229,7 @@ class MyMLdata_2level:
         # print(np.shape(y_prediction_frame))
         # print(np.shape(y_test_frame))
         # print(np.shape(y_prediction_frame))
-        plt.scatter(np.array(y_test_frame)[repeat_num], np.array(y_prediction_frame)[repeat_num, :, model_num], label=('$R^2$' + '=' + str(round(np.max(r2_score_k), 3))) + ('  Mean Absolue error' + '=' + str(round(np.min(mae_score_k), 3))), s='None', alpha=0.5)
+        plt.scatter(np.array(y_test_frame)[repeat_num], np.array(y_prediction_frame)[repeat_num, :, model_num], label=('$R^2$' + '=' + str(round(np.max(r2_score_k), 3))) + ('  Mean Absolue error' + '=' + str(round(np.min(mae_score_k), 3))), alpha=0.5)
         plt.xlabel('real value')
         plt.ylabel('predicted value')
         plt.title('real vs predicted at trial ' + str(repeat_num + 1) + ' using method ' + str(self.reg_param['model_names'][model_num]))
