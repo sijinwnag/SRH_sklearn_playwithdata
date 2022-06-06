@@ -1,6 +1,6 @@
 # %%-- To do list:
 '''
-1. Calculate T, doping for every 50 columes, in C1n_C2n_C1d_C2d_calculator()
+1. Add the multi-class classification.
 '''
 # %%-
 
@@ -79,12 +79,12 @@ class MyMLdata_2level:
         # 'param_list': [{'n_estimators': [200, 100, 1000, 500, 2000]}, {'n_estimators':[200, 100]}, {'n_estimators':[50, 100]}]# a list of key parameters correspond to the models in the model_lists if we are going to do grid searching
         # }
         # random forest only
-        # regression_default_param = {
-        # 'model_names': ['Random Forest'], # a list of name for each model.
-        # 'model_lists': [RandomForestRegressor(n_estimators=100, verbose =0, n_jobs=-1)],# a list of model improted from sklearn
-        # 'gridsearchlist': [False], # each element in this list corspond to a particular model, if True, then we will do grid search while training the model, if False, we will not do Gridsearch for this model.
-        # 'param_list': [{'n_estimators': [200, 100, 1000, 500, 2000]}]# a list of key parameters correspond to the models in the model_lists if we are going to do grid searching
-        # }
+        regression_default_param = {
+        'model_names': ['Random Forest'], # a list of name for each model.
+        'model_lists': [RandomForestRegressor(n_estimators=100, verbose =0, n_jobs=-1)],# a list of model improted from sklearn
+        'gridsearchlist': [False], # each element in this list corspond to a particular model, if True, then we will do grid search while training the model, if False, we will not do Gridsearch for this model.
+        'param_list': [{'n_estimators': [200, 100, 1000, 500, 2000]}]# a list of key parameters correspond to the models in the model_lists if we are going to do grid searching
+        }
         classification_default_param = {
         'model_names': ['KNN', 'SVC', 'Decision tree', 'Random Forest',  'Gradient Boosting', 'Adaptive boosting', 'Naive Bayes', 'Neural Network'], # a list of name for each model.
         'model_lists': [KNeighborsClassifier(n_neighbors = 5, weights='distance',n_jobs=-1), SVC(), DecisionTreeClassifier(), RandomForestClassifier(n_estimators=100, verbose =0,n_jobs=-1), GradientBoostingClassifier(verbose=0,loss='deviance'), AdaBoostClassifier(base_estimator = DecisionTreeClassifier(), n_estimators=10), GaussianNB(), MLPClassifier((100,100),alpha=0.001, activation = 'relu',verbose=0,learning_rate='adaptive')],# a list of model improted from sklearn
@@ -1300,6 +1300,8 @@ class MyMLdata_2level:
         #     y = pd.DataFrame(self.data)['logSn_1']
         # elif singletask == 'logSp_1':
         #     y = pd.DataFrame(self.data)['logSp_1']
+        elif singletask == 'multi_class_Et':
+            y = pd.DataFrame(self.data)['bandgap_1'] + pd.DataFrame(self.data)['bandgap_2']
         else:
             y = pd.DataFrame(self.data)[singletask]
         # store the X and y to the object.
@@ -2272,7 +2274,7 @@ class MyMLdata_2level:
 # %%-
 
 
-# %%--- Reminder functions:
+# %%--- Reminder functions to send reminders after finish ML trainings:
     def email_reminder(self):
 
         subject='ML finish training'
