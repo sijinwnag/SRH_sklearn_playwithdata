@@ -1,6 +1,6 @@
 # %%-- To do list:
 '''
-1. Calculate T, doping for every 50 columes, in C1n_C2n_C1d_C2d_calculator()
+1. Add the multi-class classification.
 '''
 # %%-
 
@@ -1300,6 +1300,8 @@ class MyMLdata_2level:
         #     y = pd.DataFrame(self.data)['logSn_1']
         # elif singletask == 'logSp_1':
         #     y = pd.DataFrame(self.data)['logSp_1']
+        elif singletask == 'multi_class_Et':
+            y = pd.DataFrame(self.data)['bandgap_1'] + pd.DataFrame(self.data)['bandgap_2']
         else:
             y = pd.DataFrame(self.data)[singletask]
         # store the X and y to the object.
@@ -2272,7 +2274,7 @@ class MyMLdata_2level:
 # %%-
 
 
-# %%--- Reminder functions:
+# %%--- Reminder functions to send reminders after finish ML trainings:
     def email_reminder(self):
 
         subject='ML finish training'
