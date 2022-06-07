@@ -1,6 +1,6 @@
 # %%-- To do list:
 '''
-1. Add the multi-class classification.
+1. Figure out the columes of the confusion matrix.
 '''
 # %%-
 
