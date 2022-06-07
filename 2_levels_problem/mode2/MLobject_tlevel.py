@@ -1302,6 +1302,12 @@ class MyMLdata_2level:
         #     y = pd.DataFrame(self.data)['logSp_1']
         elif singletask == 'multi_class_Et':
             y = pd.DataFrame(self.data)['bandgap_1'] + pd.DataFrame(self.data)['bandgap_2']
+        elif singletask == 'whether 10':
+            defectclass = pd.DataFrame(self.data)['bandgap_1'] + pd.DataFrame(self.data)['bandgap_2']
+            y = defectclass == 1
+        elif singletask == 'whether 11':
+            defectclass = pd.DataFrame(self.data)['bandgap_1'] + pd.DataFrame(self.data)['bandgap_2']
+            y = defectclass == 2
         else:
             y = pd.DataFrame(self.data)[singletask]
         # store the X and y to the object.
@@ -1721,6 +1727,14 @@ class MyMLdata_2level:
         # return the value if requried
         if return_C == True:
             return C2n_frame, C2d_frame, C1n_frame, C1d_frame
+
+
+    def classfilter(self, filterclass=1):
+        '''
+        this function aims to filter out a cerain class of a two level defect from the dataset.
+        '''
+        defectclass = pd.DataFrame(self.data)['bandgap_1'] + pd.DataFrame(self.data)['bandgap_2']
+        self.data = self.data[defectclass != filterclass]
 # %%-
 
 
