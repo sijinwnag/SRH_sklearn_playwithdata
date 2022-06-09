@@ -1755,7 +1755,9 @@ class MyMLdata_2level:
         integrated_data = pd.concat([data1, data2, data3])
 
         # shuffle the integrated data.
-        
+        shuffled_data = integrated_data.sample(frac=1)
+
+        print(shuffled_data)
 # %%-
 
 
