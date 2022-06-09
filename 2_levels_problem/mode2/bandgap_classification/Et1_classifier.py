@@ -1,7 +1,6 @@
 # %%-- To do:
 """
-Build a two step classifier:
-80000 size data classifying whether it is 10 or not.
+Testing the classification behaviour for large dataset.
 """
 # %%-
 
@@ -16,7 +15,7 @@ sys.path.append(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\
 sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2')
 from MLobject_tlevel import *
 # define the object
-df1 = MyMLdata_2level(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\yoann_code_new\Savedir_example\outputs\2022-06-08-10-03-38_advanced example - multi_level_L_datasetID_0.csv', 'bandgap_1',5)
+df1 = MyMLdata_2level(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\yoann_code_new\Savedir_example\outputs\large_general_data.csv', 'bandgap_1',5)
 # %%-
 
 # %%-- implement the classification task for Et1.
@@ -27,13 +26,11 @@ f1scores = df1.classification_repeat(display_confusion_matrix=True)
 # %%-- implement the classirfication task for Et2.
 df1.singletask = 'bandgap_2'
 f1scores = df1.classification_repeat()
-df1.email_reminder()
 # %%-
 
 # %%-- implement the multi-class classification task for both energy levels.
 df1.singletask = 'multi_class_Et'
 f1scores = df1.classification_repeat(display_confusion_matrix=True)
-df1.email_reminder()
 '''
 Figure out the columes for the confusion matrix mean for multi-class, the third row behaves bad, figure out what it is:
 the first row correspond to the true 0
