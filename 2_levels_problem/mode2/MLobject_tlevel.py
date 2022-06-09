@@ -1735,6 +1735,27 @@ class MyMLdata_2level:
         '''
         defectclass = pd.DataFrame(self.data)['bandgap_1'] + pd.DataFrame(self.data)['bandgap_2']
         self.data = self.data[defectclass != filterclass]
+
+
+    def dataset_integrator(self, path1, path2, path3):
+        '''
+        input: the paths of the dataset to be integrated
+
+        This function aims to:
+        1. put the 3 different dataframe into one.
+        2. shuffle them.
+        '''
+
+        # firstly: load the datasets:
+        data1 = pd.read_csv(path1)
+        data2 = pd.read_csv(path2)
+        data3 = pd.read_csv(path3)
+
+        # integrate them together.
+        integrated_data = pd.concat([data1, data2, data3])
+
+        # shuffle the integrated data.
+        
 # %%-
 
 

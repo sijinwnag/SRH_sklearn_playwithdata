@@ -1,8 +1,7 @@
 # %%-- To do:
 """
 Build a two step classifier:
-1. Whewther it is set 10.
-2. if not set10, whether 00 or 11.
+80000 size data classifying whether it is 10 or not.
 """
 # %%-
 
@@ -17,7 +16,7 @@ sys.path.append(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\
 sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2')
 from MLobject_tlevel import *
 # define the object
-df1 = MyMLdata_2level(r'C:\Users\sijin wang\Documents\GitHub\yoann_code_new\Savedir_example\outputs\2022-06-07-20-43-14_advanced example - multi_level_L_datasetID_0.csv', 'bandgap_1',5)
+df1 = MyMLdata_2level(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\yoann_code_new\Savedir_example\outputs\2022-06-08-10-03-38_advanced example - multi_level_L_datasetID_0.csv', 'bandgap_1',5)
 # %%-
 
 # %%-- implement the classification task for Et1.
@@ -54,6 +53,9 @@ df1.email_reminder()
 # %%-
 
 # %%-- Identify whether the defect is 11
+df1.classfilter(filterclass=1)
+# sanity check: expect to see a set of 0 and 2 but not 1
+# df1.data['bandgap_1']+df1.data['bandgap_2']
 df1.singletask = 'whether 11'
 f1scores = df1.classification_repeat(display_confusion_matrix=True)
 df1.email_reminder()
