@@ -1757,7 +1757,12 @@ class MyMLdata_2level:
         # shuffle the integrated data.
         shuffled_data = integrated_data.sample(frac=1)
 
-        print(shuffled_data)
+        # sanity check:
+        # print(shuffled_data)
+
+        # update the object data.
+        self.data = shuffled_data
+
 # %%-
 
 
