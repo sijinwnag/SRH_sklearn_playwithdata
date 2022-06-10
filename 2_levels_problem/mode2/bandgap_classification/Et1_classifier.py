@@ -15,7 +15,24 @@ sys.path.append(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\
 sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2')
 from MLobject_tlevel import *
 # define the object
-df1 = MyMLdata_2level(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\yoann_code_new\Savedir_example\outputs\large_general_data.csv', 'bandgap_1',5)
+df1 = MyMLdata_2level(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set00.csv', 'bandgap_1',5)
+# %%-
+
+# %%-- preprocessors.
+
+# %%-- equal number of set 11 set 10 and set 00:
+# generate set 11 set 10 and set 00 saperately with same size.
+# then integrate and shuffle them together.
+path1 = r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set00.csv'
+path2 = r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set10.csv'
+path3 = r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11.csv'
+df1.dataset_integrator(path1, path2, path3)
+# %%-
+
+# %%-- multiply by (dn+p0+n0)
+df1.pre_processor_dividX()
+# %%-
+
 # %%-
 
 # %%-- implement the classification task for Et1.
