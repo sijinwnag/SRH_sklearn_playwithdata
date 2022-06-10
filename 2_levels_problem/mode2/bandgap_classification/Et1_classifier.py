@@ -46,7 +46,6 @@ The confusion matrix told us:
 # %%-- Identify whether the defect is 10
 df1.singletask = 'whether 10'
 f1scores = df1.classification_repeat(display_confusion_matrix=True)
-df1.email_reminder()
 # %%-
 
 # %%-- Identify whether the defect is 11
