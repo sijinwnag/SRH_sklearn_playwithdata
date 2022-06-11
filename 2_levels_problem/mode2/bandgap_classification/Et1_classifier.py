@@ -15,7 +15,7 @@ sys.path.append(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\
 sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2')
 from MLobject_tlevel import *
 # define the object
-df1 = MyMLdata_2level(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\yoann_code_new\Savedir_example\outputs\large_general_data.csv', 'bandgap_1',5)
+df1 = MyMLdata_2level(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\yoann_code_new\Savedir_example\outputs\set00.csv', 'bandgap_1',5)
 # %%-
 
 # %%-- preprocessors.
@@ -23,9 +23,9 @@ df1 = MyMLdata_2level(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\yoann
 # %%-- equal number of set 11 set 10 and set 00:
 # generate set 11 set 10 and set 00 saperately with same size.
 # then integrate and shuffle them together.
-path1 = r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set00.csv'
-path2 = r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set10.csv'
-path3 = r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11.csv'
+path1 = r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\yoann_code_new\Savedir_example\outputs\set00.csv'
+path2 = r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\yoann_code_new\Savedir_example\outputs\set10.csv'
+path3 = r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\yoann_code_new\Savedir_example\outputs\set11.csv'
 df1.dataset_integrator(path1, path2, path3)
 # %%-
 
@@ -35,14 +35,19 @@ df1.pre_processor_dividX()
 
 # %%-
 
-# %%-- implement the classification task for Et1.
+# %%-- Classification method: Et1->Et2
+
+# classify Et2
 df1.singletask = 'bandgap_1'
 f1scores = df1.classification_repeat(display_confusion_matrix=True)
-# %%-
 
-# %%-- implement the classirfication task for Et2.
+# filter out the case when Et1 is 0, because if Et1<0 then Et2<0
+df1.classfilter(filterclass=0)
+
+# classify Et2 given Et1>0
 df1.singletask = 'bandgap_2'
 f1scores = df1.classification_repeat()
+
 # %%-
 
 # %%-- implement the multi-class classification task for both energy levels.
