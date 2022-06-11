@@ -443,7 +443,7 @@ class MyMLdata_2level:
 
         # now f1_frame is a list of list containing the values for each trial for each model.
         # convert it into dataframe for box plot.
-        f1_frame = pd.DataFrame(f1_frame, columns=['KNN', 'SVC', 'Decision tree', 'Random Forest',  'Gradient Boosting', 'Adaptive boosting', 'Naive Bayes', 'Neural Network'])
+        f1_frame = pd.DataFrame(f1_frame, columns=self.cla_param['model_names'])
         f1_av = np.average(f1_frame, axis=0)
         f1_std = np.std(f1_frame, axis=0)
         labels = []
