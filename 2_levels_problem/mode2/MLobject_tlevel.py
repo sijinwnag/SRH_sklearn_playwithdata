@@ -1772,6 +1772,33 @@ class MyMLdata_2level:
         # update the object data.
         self.data = shuffled_data
 
+
+    def dataset_integrator2(self, path1, path2):
+        '''
+        input: the paths of the dataset to be integrated
+
+        This function aims to:
+        1. put the 3 different dataframe into one.
+        2. shuffle them.
+        '''
+
+        # firstly: load the datasets:
+        data1 = pd.read_csv(path1)
+        data2 = pd.read_csv(path2)
+        # data3 = pd.read_csv(path3)
+
+        # integrate them together.
+        integrated_data = pd.concat([data1, data2])
+
+        # shuffle the integrated data.
+        shuffled_data = integrated_data.sample(frac=1)
+
+        # sanity check:
+        # print(shuffled_data)
+
+        # update the object data.
+        self.data = shuffled_data
+
 # %%-
 
 
