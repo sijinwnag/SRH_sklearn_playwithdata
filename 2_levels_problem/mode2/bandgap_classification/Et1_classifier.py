@@ -45,7 +45,7 @@ f1scores = df1.classification_repeat(display_confusion_matrix=True)
 # %%-- classify Et2 given Et1>0
 path2 = r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set10.csv"
 path3 = r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11.csv"
-df1.dataset_integrator(path1, path2, path3)
+df1.dataset_integrator2(path2, path3)
 df1.singletask = 'bandgap_2'
 f1scores = df1.classification_repeat()
 df1.email_reminder()
@@ -64,6 +64,7 @@ The confusion matrix told us:
 3. if the defect belongs to set 00, it is likely to be misclassfied as 10.
 2. if the defect belongs to set 11, it is likely to be misclassified as 10
 '''
+df1.email_reminder()
 # %%-
 
 # %%-- Identify whether the defect is 10
