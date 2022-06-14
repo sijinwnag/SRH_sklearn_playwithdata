@@ -1,6 +1,6 @@
 # %%-- To do:
 """
-Testing the classification behaviour for large dataset.
+
 """
 # %%-
 
@@ -35,9 +35,8 @@ df1.pre_processor_dividX()
 
 # %%-
 
-# %%-- Classification method: Et1->Et2
-
-# classify Et2
+# %%-- Classification method: Et1
+# classify Et1
 df1.singletask = 'bandgap_1'
 f1scores = df1.classification_repeat(display_confusion_matrix=True)
 # %%-
