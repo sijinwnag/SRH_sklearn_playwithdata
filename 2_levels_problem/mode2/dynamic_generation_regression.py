@@ -195,7 +195,9 @@ class Dynamic_regression:
             row_data = validationset.iloc[row_index]
             # extract the lifetime data:
             X = row_data[select_X_list]
-            X = np.log10(X)
+            # print(np.shape(X))
+            # print(np.min(X))
+            X = np.log10(np.array(X.astype(np.float64)))
             # iterate for each step of dynamic regression:
             counter = 0
             for tasks in self.task:
@@ -207,13 +209,13 @@ class Dynamic_regression:
                 #     # otherwise, generate data for this step:
                 #
                 # train the model for this step:
-                model_list, scaler_list = datatraining(trainingset_path, self.n_repeat, tasks)
+                model_list, scaler_list = self.datatraining(trainingset_path, self.n_repeat, tasks)
                 # iterate through each single task in each step:
                 # create empty list to collect the predictions
                 prediction_list = []
                 for k in range(len(tasks)):
                     # scale the X data for the model.
-                    X_scaled = scaler[k].transform(X)
+                    X_scaled = scaler_list[k].transform(X)
                     # make the prediction:
-                    y_predict = model[k].predict(X_scaled)
+                    y_predict = model_list[k].predict(X_scaled)
                     prediction_list.append(y_predict)
