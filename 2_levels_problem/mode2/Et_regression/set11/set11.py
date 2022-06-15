@@ -217,7 +217,7 @@ for parameter in step1_parameter:
     # now we have the prediction from the first step: try to generate the new data.
 # %%-
 
-# %%---
+# %%-- test the dynamic regression object.
 dy = Dynamic_regression()
 training_path = r'C:\Users\sijin wang\Documents\GitHub\yoann_code_new\Savedir_example\outputs\small_dataset.csv'
 validation_path = r'C:\Users\sijin wang\Documents\GitHub\yoann_code_new\Savedir_example\outputs\dummy_validation_11.csv'

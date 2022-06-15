@@ -215,7 +215,9 @@ class Dynamic_regression:
                 prediction_list = []
                 for k in range(len(tasks)):
                     # scale the X data for the model.
-                    X_scaled = scaler_list[k].transform(X)
+                    print(np.shape(X))
+                    print(np.shape(X.reshape(-1, 1)))
+                    X_scaled = scaler_list[k].transform(np.transpose(X.reshape(-1, 1)))
                     # make the prediction:
                     y_predict = model_list[k].predict(X_scaled)
                     prediction_list.append(y_predict)
