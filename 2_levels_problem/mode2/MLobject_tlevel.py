@@ -65,12 +65,12 @@ class MyMLdata_2level:
         # 'param_list': [{'hidden_layer_sizes':((100, 300, 300, 100), (100, 300, 500, 300, 100), (200, 600, 600, 200), (200, 600, 900, 600, 200), (100, 300, 500, 700, 500, 300, 100)), 'alpha': [0.001], 'learning_rate':['adaptive']}# a list of key parameters correspond to the models in the model_lists if we are going to do grid searching
         # ]}
         # only the quick ones
-        # regression_default_param = {
-        # 'model_names': ['KNN', 'Ridge Linear Regression'], # a list of name for each model.
-        # 'model_lists': [KNeighborsRegressor(), Ridge()],# a list of model improted from sklearn
-        # 'gridsearchlist': [True, True], # each element in this list corspond to a particular model, if True, then we will do grid search while training the model, if False, we will not do Gridsearch for this model.
-        # 'param_list': [{'n_neighbors':range(1, 30)}, {'alpha': [0.01, 0.1, 1, 10]}]
-        # }
+        regression_default_param = {
+        'model_names': ['KNN', 'Ridge Linear Regression'], # a list of name for each model.
+        'model_lists': [KNeighborsRegressor(), Ridge()],# a list of model improted from sklearn
+        'gridsearchlist': [True, True], # each element in this list corspond to a particular model, if True, then we will do grid search while training the model, if False, we will not do Gridsearch for this model.
+        'param_list': [{'n_neighbors':range(1, 30)}, {'alpha': [0.01, 0.1, 1, 10]}]
+        }
         # only the decision tree based estimators:
         # regression_default_param = {
         # 'model_names': ['Random Forest', 'Gradient Boosting', 'Ada Boosting'], # a list of name for each model.
@@ -79,12 +79,12 @@ class MyMLdata_2level:
         # 'param_list': [{'n_estimators': [200, 100, 1000, 500, 2000]}, {'n_estimators':[200, 100]}, {'n_estimators':[50, 100]}]# a list of key parameters correspond to the models in the model_lists if we are going to do grid searching
         # }
         # random forest only
-        regression_default_param = {
-        'model_names': ['Random Forest'], # a list of name for each model.
-        'model_lists': [RandomForestRegressor(n_estimators=100, verbose =0, n_jobs=-1)],# a list of model improted from sklearn
-        'gridsearchlist': [False], # each element in this list corspond to a particular model, if True, then we will do grid search while training the model, if False, we will not do Gridsearch for this model.
-        'param_list': [{'n_estimators': [200, 100, 1000, 500, 2000]}]# a list of key parameters correspond to the models in the model_lists if we are going to do grid searching
-        }
+        # regression_default_param = {
+        # 'model_names': ['Random Forest'], # a list of name for each model.
+        # 'model_lists': [RandomForestRegressor(n_estimators=100, verbose =0, n_jobs=-1)],# a list of model improted from sklearn
+        # 'gridsearchlist': [False], # each element in this list corspond to a particular model, if True, then we will do grid search while training the model, if False, we will not do Gridsearch for this model.
+        # 'param_list': [{'n_estimators': [200, 100, 1000, 500, 2000]}]# a list of key parameters correspond to the models in the model_lists if we are going to do grid searching
+        # }
         # # all classification models:
         # classification_default_param = {
         # 'model_names': ['KNN', 'SVC', 'Decision tree', 'Random Forest',  'Gradient Boosting', 'Adaptive boosting', 'Naive Bayes', 'Neural Network'], # a list of name for each model.
@@ -131,14 +131,16 @@ class MyMLdata_2level:
         5. Keep track of the r2 score after each training.
 
         input:
-            X: the features.
-            y: the target values.
-            n_repeat: the number of times you want to repeat training test split and fitting the model.
             plot: if True, then predicted vs real will be plotted for each model after each training. if False, it will not plot anything.
-
+            output_y_pred: if True, it will output both the prediction value and the trained model.
         output:
             r2_frame: a dataframe, each row correspond to a trial and each column correspond to a model name.
             Also plot a boxplot of different model's R2 score
+            Also plot a real vs prediction for the best trial best model.
+            y_prediction_frame: the y prediction.
+            y_test_frame: the y test set
+            best_model: the model that has the best average score, since we have multiple trials, it will return the first trial model.
+            scaler_return: the scaler associated with the first trial for the best model.
         """
 
 
@@ -149,6 +151,7 @@ class MyMLdata_2level:
         meanabs_frame = []
         y_prediction_frame = []
         y_test_frame = []
+        trained_model_frame = []
         while counter < n_repeat:
             # update the counter
             counter = counter + 1
@@ -159,16 +162,20 @@ class MyMLdata_2level:
             X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1)
             # scale the data:
             scaler = MinMaxScaler()
+            # when asked to return the best model, we need to return its corresponding scaler as well, since the best model will be the first trial, return the scaler for first trial as well:
+            if counter == 1:
+                scaler_return = scaler
             X_train_scaled = scaler.fit_transform(X_train)
             # we must apply the scaling to the test set that we computed for the training set
             X_test_scaled = scaler.transform(X_test)
             # train the different models and collect the r2 score.
             # if output_y_pred == True: # if we plan to collect the y predction
-            r2score, mae_list, y_prediction, y_test = self.regression_training(X_train_scaled=X_train_scaled, X_test_scaled=X_test_scaled, y_train=y_train, y_test=y_test, plot=plot, output_y_pred=True)
+            r2score, mae_list, y_prediction, y_test, trained_model_list = self.regression_training(X_train_scaled=X_train_scaled, X_test_scaled=X_test_scaled, y_train=y_train, y_test=y_test, plot=plot, output_y_pred=True)
             r2_frame.append(r2score)
             meanabs_frame.append(mae_list) # the dimension is repeatition * different models.
             y_prediction_frame.append(y_prediction)
             y_test_frame.append(y_test)
+            trained_model_frame.append(trained_model_list)
             # else: # when we do not need to collect the y prediction
             # r2score = self.regression_training(X_train_scaled=X_train_scaled, X_test_scaled=X_test_scaled, y_train=y_train, y_test=y_test, plot=plot)
             # r2_frame.append(r2score)
@@ -247,8 +254,12 @@ class MyMLdata_2level:
 
         if output_y_pred == False:
             return r2_frame
+
         else:
-            return r2_frame, y_prediction_frame, y_test_frame
+            # the dimension of the model frame is [different models][trials]
+            # pick the model that has the highest average score.
+            best_model = trained_model_frame[0][model_num]
+            return r2_frame, y_prediction_frame, y_test_frame, best_model, scaler_return
 
 
     def regression_training(self, X_train_scaled, X_test_scaled, y_train, y_test, plot=False, output_y_pred=False):
@@ -278,7 +289,9 @@ class MyMLdata_2level:
         r2_list = []
         # prepare an empty list to collect the mean absolute errors.
         mae_list = []
-        # train everything in a for loop
+        # prepare an empty list to collect the trained models.
+        model_trained_list = []
+        # train everything in a for loop,  for each model.
         for modelindex in range(np.shape(model_names)[0]):
             # read the name, model and parameter from the lists
             name = model_names[modelindex]
@@ -296,13 +309,16 @@ class MyMLdata_2level:
                 grid.fit(X_train_scaled, y_train)
                 # use the trained model to predict the y
                 y_pred = grid.predict(X_test_scaled)
+                # collect the trained model.
+                model_trained_list.append(grid)
             else:
                 # just use the original model.
                 model.fit(X_train_scaled, y_train)
                 # predict with the original model using defalt settings
                 y_pred = model.predict(X_test_scaled)
-
-            # collect hte y values
+                # collect the trained model.
+                model_trained_list.append(model)
+            # collect the y values
             y_pred_list.append(y_pred)
             y_test_list.append(y_test)
             # evaluate the model using R2 score:
@@ -329,10 +345,21 @@ class MyMLdata_2level:
         y_output.columns = model_names
         # output hte prediction only if necessary:
         if output_y_pred == True:
-            return r2_list, mae_list, y_output, y_test
+            return r2_list, mae_list, y_output, y_test, model_trained_list
         # this function will return all 2r scores and mean absolute errors
         else:
             return r2_list, mae_list
+
+
+    # def regression_validation(self, model, y_name):
+    #     '''
+    #     What it does: it evaluate the input model that predict the y given by y_name using both R2 and mean absolute error method.
+    #     Notice that if the training and validation set comes from the same dataset, we don't need to use this function because the validation step is already included in the regression_repeat function.
+    #
+    #     input:
+    #     model: a list of model that is trained already.
+    #     y_name: the name of the colume that we want to do validation on.
+    #     '''
 # %%-
 
 
@@ -1262,10 +1289,10 @@ class MyMLdata_2level:
         # create a list to select X columns: if the column string contains cm, then identify it as X.
         select_X_list = []
         for string in dfk.columns.tolist():
-            if string.find('cm')!=-1:
+            if string[0].isdigit():
                 select_X_list.append(string)
         X = dfk[select_X_list] # take the lifetime as X, delete any column that does not start with a number.
-        X = np.log(X) # take the log of lifetime data.
+        X = np.log10(X) # take the log of lifetime data.
         # in case we want to do some combination, pre-process the data based on the single task.
         if singletask == 'logk_1+logk_2':
             y = dfk['logk_1'] + dfk['logk_2']
@@ -1762,6 +1789,33 @@ class MyMLdata_2level:
 
         # integrate them together.
         integrated_data = pd.concat([data1, data2, data3])
+
+        # shuffle the integrated data.
+        shuffled_data = integrated_data.sample(frac=1)
+
+        # sanity check:
+        # print(shuffled_data)
+
+        # update the object data.
+        self.data = shuffled_data
+
+
+    def dataset_integrator2(self, path1, path2):
+        '''
+        input: the paths of the dataset to be integrated
+
+        This function aims to:
+        1. put the 3 different dataframe into one.
+        2. shuffle them.
+        '''
+
+        # firstly: load the datasets:
+        data1 = pd.read_csv(path1)
+        data2 = pd.read_csv(path2)
+        # data3 = pd.read_csv(path3)
+
+        # integrate them together.
+        integrated_data = pd.concat([data1, data2])
 
         # shuffle the integrated data.
         shuffled_data = integrated_data.sample(frac=1)

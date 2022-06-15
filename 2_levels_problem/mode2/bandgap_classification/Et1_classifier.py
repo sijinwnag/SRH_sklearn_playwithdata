@@ -1,6 +1,6 @@
 # %%-- To do:
 """
-Testing the classification behaviour for large dataset.
+
 """
 # %%-
 
@@ -23,9 +23,9 @@ df1 = MyMLdata_2level(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\yoann
 # %%-- equal number of set 11 set 10 and set 00:
 # generate set 11 set 10 and set 00 saperately with same size.
 # then integrate and shuffle them together.
-path1 = r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\yoann_code_new\Savedir_example\outputs\set00.csv'
-path2 = r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\yoann_code_new\Savedir_example\outputs\set10.csv'
-path3 = r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\yoann_code_new\Savedir_example\outputs\set11.csv'
+path1 = r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set00.csv"
+path2 = r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set10.csv"
+path3 = r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11.csv"
 df1.dataset_integrator(path1, path2, path3)
 # %%-
 
@@ -35,19 +35,19 @@ df1.pre_processor_dividX()
 
 # %%-
 
-# %%-- Classification method: Et1->Et2
-
-# classify Et2
+# %%-- Classification method: Et1
+# classify Et1
 df1.singletask = 'bandgap_1'
 f1scores = df1.classification_repeat(display_confusion_matrix=True)
+# %%-
 
-# filter out the case when Et1 is 0, because if Et1<0 then Et2<0
-df1.classfilter(filterclass=0)
-
-# classify Et2 given Et1>0
+# %%-- classify Et2 given Et1>0
+path2 = r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set10.csv"
+path3 = r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11.csv"
+df1.dataset_integrator2(path2, path3)
 df1.singletask = 'bandgap_2'
 f1scores = df1.classification_repeat()
-
+df1.email_reminder()
 # %%-
 
 # %%-- implement the multi-class classification task for both energy levels.

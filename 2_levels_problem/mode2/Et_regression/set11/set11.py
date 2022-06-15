@@ -1,6 +1,6 @@
 # %%-- To do:
 """
-1. Document the behaviour of the Et2, Sn2, Sp2.
+1. Write the two steps into one.
 """
 # %%-
 
@@ -15,8 +15,9 @@ sys.path.append(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\
 # use this line if on workstation
 sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2')
 from MLobject_tlevel import *
+from dynamic_generation_regression import *
 
-df1 = MyMLdata_2level(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\yoann_code_new\Savedir_example\outputs\2022-06-03-16-14-41_advanced example - multi_level_L_datasetID_0.csv', 'bandgap1',5)
+df1 = MyMLdata_2level(r'C:\Users\sijin wang\Documents\GitHub\yoann_code_new\Savedir_example\outputs\small_dataset.csv', 'bandgap1',2)
 # %%-
 
 # %%-- different data engineering before training ML model.
@@ -177,4 +178,50 @@ df1.C_visiaulization(variable='C1n/C2n', task_name='plot with dn')
 df1.C_visiaulization(variable='C1n/C2n', task_name='plot with Et1-Et2')
 df1.C_visiaulization(variable='C1d/C2d', task_name='plot with Et1-Et2')
 # %%-
+# %%-
+
+# %%-- test the overall function: the dynamic data generation method.
+# define the maching learning object for step training.
+training_step1 = MyMLdata_2level(r'C:\Users\sijin wang\Documents\GitHub\yoann_code_new\Savedir_example\outputs\small_dataset.csv', 'bandgap1',2)
+# see if the function can return the model correctly for predicting first step.
+step1_parameter = ['Et_eV_1', 'Sn_cm2_1', 'Sp_cm2_1']
+# prepare an empty list to collect model for each task:
+model_list = []
+# pr4epare an empty list to collect prediction for each task:
+predict_list = []
+# prepare an empty list to collect the R2 score for each task:
+r2_list = []
+# defien the set we want to do validation on
+prediction_step1 = MyMLdata_2level(r'C:\Users\sijin wang\Documents\GitHub\yoann_code_new\Savedir_example\outputs\dummy_validation_11.csv', 'bandgap1',2)
+# iterate for each parameter
+for parameter in step1_parameter:
+    print(parameter)
+    # defein the y to be trained using machine learning.
+    training_step1.singletask = parameter
+    # try to make it return the best R2 score model for all trials all models.
+    r2_frame, y_prediction_frame, y_test_frame, selected_model, scaler = training_step1.regression_repeat(output_y_pred=True)
+    # sanity check: see if it can select the best model based on the average R2 or mean absolute error.
+    # print(selected_model)
+    model_list.append(selected_model)
+    # extract the data using pre-processor: X is the log of lifetime data, y is the colume we want to predict.
+    prediction_step1.singletask = parameter
+    X_test, y_test = prediction_step1.pre_processor()
+    # scale the data, the data which the model is trained and validated should be the same scalter.
+    X_scaled = scaler.fit_transform(X_test)
+    # now do the prediction.
+    y_predict = selected_model.predict(X_scaled) # the dimension of this array is: [datasize in validation list]*[different tasks]
+    predict_list.append(y_predict)
+    # evaluate the model using both R2 score and mean absolute error.
+    r2 = r2_score(y_test, y_predict) # this is a float.
+    r2_list.append(r2)
+    # now we have the prediction from the first step: try to generate the new data.
+# %%-
+
+# %%---
+dy = Dynamic_regression()
+training_path = r'C:\Users\sijin wang\Documents\GitHub\yoann_code_new\Savedir_example\outputs\small_dataset.csv'
+validation_path = r'C:\Users\sijin wang\Documents\GitHub\yoann_code_new\Savedir_example\outputs\dummy_validation_11.csv'
+# dy.datatraining(training_path, validation_path, 2, ['Et_eV_1', 'Sn_cm2_1', 'Sp_cm2_1'])
+# dy.dynamic_simulator()
+dy.dynamic_regressor()
 # %%-
