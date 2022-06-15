@@ -1289,10 +1289,10 @@ class MyMLdata_2level:
         # create a list to select X columns: if the column string contains cm, then identify it as X.
         select_X_list = []
         for string in dfk.columns.tolist():
-            if string.find('cm')!=-1:
+            if string[0].isdigit():
                 select_X_list.append(string)
         X = dfk[select_X_list] # take the lifetime as X, delete any column that does not start with a number.
-        X = np.log(X) # take the log of lifetime data.
+        X = np.log10(X) # take the log of lifetime data.
         # in case we want to do some combination, pre-process the data based on the single task.
         if singletask == 'logk_1+logk_2':
             y = dfk['logk_1'] + dfk['logk_2']
