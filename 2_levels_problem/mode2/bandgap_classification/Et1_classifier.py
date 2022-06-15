@@ -15,7 +15,7 @@ sys.path.append(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\
 sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2')
 from MLobject_tlevel import *
 # define the object
-df1 = MyMLdata_2level(r'C:\Users\sijin wang\Documents\GitHub\yoann_code_new\Savedir_example\outputs\small_dataset.csv', 'bandgap_1',5)
+df1 = MyMLdata_2level(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\yoann_code_new\Savedir_example\outputs\set00.csv', 'bandgap_1',5)
 # %%-
 
 # %%-- preprocessors.
@@ -63,6 +63,7 @@ The confusion matrix told us:
 3. if the defect belongs to set 00, it is likely to be misclassfied as 10.
 2. if the defect belongs to set 11, it is likely to be misclassified as 10
 '''
+df1.email_reminder()
 # %%-
 
 # %%-- Identify whether the defect is 10
