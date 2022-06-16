@@ -1,6 +1,7 @@
 # %%-- to do:
 '''
 integrate the dynamic generation method into one object.
+lets first make sure that the ML can do only 2 steps so we do not need to code 3 layers of for loop.
 '''
 # %%-
 
@@ -187,10 +188,11 @@ class Dynamic_regression:
                 select_X_list.append(string)
         # print(select_X_list)
         # sekect_X_list is a list of string of the lifetime data headings (anything ends with cm in heading)
+
         # iterate for each point in validation set.
         for row_index in range(np.shape(validationset)[0]):
             # sanitcy check: expect to be from 0 to 7, checked out.
-            # print(row_index)
+            print('working on validation point ' + str(row_index))
             # read off the row dataset.
             row_data = validationset.iloc[row_index]
             # extract the lifetime data:
@@ -198,10 +200,12 @@ class Dynamic_regression:
             # print(np.shape(X))
             # print(np.min(X))
             X = np.log10(np.array(X.astype(np.float64)))
+
             # iterate for each step of dynamic regression:
             counter = 0
             for tasks in self.task:
                 counter =+ 1
+                print('working on step ' + str(counter) + ' of the chain.')
                 # if this is the first step, no need to generate data, just load from self.first_step_training_path
                 if counter == 1:
                     trainingset_path = self.first_step_training_path
@@ -210,12 +214,15 @@ class Dynamic_regression:
                 #
                 # train the model for this step:
                 model_list, scaler_list = self.datatraining(trainingset_path, self.n_repeat, tasks)
+
                 # iterate through each single task in each step:
                 # create empty list to collect the predictions
                 prediction_list = []
                 for k in range(len(tasks)):
                     # scale the X data for the model.
-                    X_scaled = scaler_list[k].transform(X)
+                    # print(np.shape(X))
+                    # print(np.shape(X.reshape(-1, 1)))
+                    X_scaled = scaler_list[k].transform(np.transpose(X.reshape(-1, 1)))
                     # make the prediction:
                     y_predict = model_list[k].predict(X_scaled)
                     prediction_list.append(y_predict)
