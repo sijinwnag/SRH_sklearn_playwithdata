@@ -17,7 +17,7 @@ sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn
 from MLobject_tlevel import *
 from dynamic_generation_regression import *
 
-df1 = MyMLdata_2level(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\yoann_code_new\Savedir_example\outputs\set11_800000.csv', 'bandgap1',2)
+df1 = MyMLdata_2level(r'C:\Users\sijin wang\Documents\GitHub\yoann_code_new\Savedir_example\outputs\dummy_validation_11.csv', 'bandgap1',2)
 # %%-
 
 # %%-- different data engineering before training ML model.
@@ -221,7 +221,7 @@ for parameter in step1_parameter:
 dy = Dynamic_regression()
 training_path = r'C:\Users\sijin wang\Documents\GitHub\yoann_code_new\Savedir_example\outputs\small_dataset.csv'
 validation_path = r'C:\Users\sijin wang\Documents\GitHub\yoann_code_new\Savedir_example\outputs\dummy_validation_11.csv'
-# dy.datatraining(training_path, validation_path, 2, ['Et_eV_1', 'Sn_cm2_1', 'Sp_cm2_1'])
-# dy.dynamic_simulator()
-dy.dynamic_regressor()
+# dy.datatraining(training_path, 2, ['Et_eV_1', 'Sn_cm2_1', 'Sp_cm2_1'])
+dy.dynamic_simulator()
+# dy.dynamic_regressor()
 # %%-

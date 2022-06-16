@@ -89,6 +89,9 @@ class Dynamic_regression:
         output:
         model_list: a list of trained model corresponding to each parameter.
         scaler_list: a list of scaler corresponding to each model, because the model is trained based on scale(log(X)) and Y
+        y_predictions: the prediction for each task for each dataset.
+
+        for the flow chart of this function, see the file: dynamic_regressor.ppt
         '''
         # print(self.task)
         # define the maching learning object for step training.
@@ -98,6 +101,7 @@ class Dynamic_regression:
         # prepare an empty list to collect model for each task:
         model_list = []
         scaler_list = []
+        y_predictions = []
         # iterate for each parameter
         for parameter in step1_parameter:
             print('training ' + str(parameter))
@@ -110,14 +114,46 @@ class Dynamic_regression:
             model_list.append(selected_model)
             scaler_list.append(scaler)
 
-        return model_list, scaler_list
+            # use the trained model to predict the validation lifetime dataset:
+            # load the validation lifetime data from the object:
+            validationset = self.validationdata
+            # extract the validation lifetime data:
+            # create a list to select X columns: if the column string contains cm, then identify it as X.
+            select_X_list = []
+            for string in validationset.columns.tolist():
+                if string[0].isdigit():
+                    select_X_list.append(string)
+            validationlifetime = validationset[select_X_list]
+            # take the log10 and make the name shorter
+            X = validationlifetime
+            X = np.log10(np.array(X.astype(np.float64)))
+            # go through the scaler:
+            X_scaled = scaler.transform(X)
+            # make the prediction:
+            y_predict = selected_model.predict(X_scaled)
+            y_predictions.append(y_predict)
+
+        return model_list, scaler_list, y_predictions
 
 
-    def dynamic_simulator(self, fix_dictionary = {'Et_eV_1'}):
+    def dynamic_simulator(self, fix_dictionary = {'Et_min_1':0,             #   Minimum defect energy level
+    'Et_max_1':0.55,              #   Maximum defect energy level
+    'Et_min_2':0,             #   Minimum defect energy level
+    'Et_max_2':0.55,              #   Maximum defect energy level
+    'S_min_1_p':1E-17,              #   Minimum capture cross section for hole.
+    'S_min_1_n':1E-17,          #   Minimum capture cross section for electron.
+    'S_max_1_p':1E-13,              #   Maximum capture cross section for hole.
+    'S_max_1_n':1E-13,              # maximum capcture cross section for electron.
+    'S_min_2_p':1E-17,              #   Minimum capture cross section for hole.
+    'S_min_2_n':1E-17,          #   Minimum capture cross section for electron.
+    'S_max_2_p':1E-13,              #   Maximum capture cross section for hole.
+    'S_max_2_n':1E-13}):
         '''
         This function will simulate a new dataset.
 
         input: a dictionary of fixed parameters.
+
+        output: a dataframe of lifetime and defect parameters.
         '''
         # inputs:
         SAVEDIR = r"C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Savedir_example" # you can change this to your own path
@@ -173,8 +209,9 @@ class Dynamic_regression:
             '1':'Single two-level',
         }
         # export the data.
-        exp.exportDataset()
-
+        # exp.exportDataset()
+        # print(dataDf)
+        return dataDf
 
     def dynamic_regressor(self):
         # print which dynamic chain we are doing.
