@@ -75,6 +75,7 @@ class Dynamic_regression:
             self.validation_path = r'C:\Users\sijin wang\Documents\GitHub\yoann_code_new\Savedir_example\outputs\dummy_validation_11.csv'
             self.n_repeat = 2
             self.validationdata = pd.read_csv(self.validation_path)
+            self.simulate_size = 80
 
 
     def datatraining(self, trainingset_path, repeat, parameter):
@@ -132,11 +133,12 @@ class Dynamic_regression:
             # make the prediction:
             y_predict = selected_model.predict(X_scaled)
             y_predictions.append(y_predict)
+        self.firststep_prediction = y_predictions
 
         return model_list, scaler_list, y_predictions
 
 
-    def dynamic_simulator(self, fixlist = ['Et_eV_1', 0.1]):
+    def dynamic_simulator(self, fixlist = [['Et_eV_1', 'logSn_1', 'logSp_1'], [0.060040545422049535, -13.0, -15.839891398434329]]):
         '''
         This function will simulate a new dataset.
 
@@ -161,29 +163,49 @@ class Dynamic_regression:
                         'name':'advanced example - multi_level_L',
                         'save': False,   # True to save a copy of the printed log, the outputed model and data
                         'logML':False,   #   Log the output of the console to a text file
-                        'n_defects': 8, # Size of simulated defect data set for machine learning
+                        'n_defects': self.simulate_size, # Size of simulated defect data set for machine learning
                         'dn_range' : np.logspace(13,17,100),# Number of points to interpolate the curves on
                         'non-feature_col':['Mode','Label',"Name","Et_eV_1","Sn_cm2_1","Sp_cm2_1",'k_1','logSn_1','logSp_1','logk_1','bandgap_1',"Et_eV_2","Sn_cm2_2","Sp_cm2_2",'k_2','logSn_2','logSp_2','logk_2','bandgap_2']
                     }
         PARAM = {
-                            'type': 'p',                #   Wafer doping type
-                            'Et_min_1':0,             #   Minimum defect energy level
-                            'Et_max_1':0.55,              #   Maximum defect energy level
-                            'Et_min_2':0,             #   Minimum defect energy level
-                            'Et_max_2':0.55,              #   Maximum defect energy level
-                            'S_min_1_p':1E-17,              #   Minimum capture cross section for hole.
-                            'S_min_1_n':1E-17,          #   Minimum capture cross section for electron.
-                            'S_max_1_p':1E-13,              #   Maximum capture cross section for hole.
-                            'S_max_1_n':1E-13,              # maximum capcture cross section for electron.
-                            'S_min_2_p':1E-17,              #   Minimum capture cross section for hole.
-                            'S_min_2_n':1E-17,          #   Minimum capture cross section for electron.
-                            'S_max_2_p':1E-13,              #   Maximum capture cross section for hole.
-                            'S_max_2_n':1E-13,              # maximum capcture cross section for electron.
-                            'Nt':1E12,                  #   Defect density
-                            'check_auger':True,     #   Check wether to resample if lifetime is auger-limited
-                            'noise':'',             #   Enable noiseparam
-                            'noiseparam':0,         #   Adds noise proportional to the log of Delta n
+                    'type': 'p',                #   Wafer doping type
+                    'Et_min_1':0,             #   Minimum defect energy level
+                    'Et_max_1':0.55,              #   Maximum defect energy level
+                    'Et_min_2':0,             #   Minimum defect energy level
+                    'Et_max_2':0.55,              #   Maximum defect energy level
+                    'S_min_1_p':1E-17,              #   Minimum capture cross section for hole.
+                    'S_min_1_n':1E-17,          #   Minimum capture cross section for electron.
+                    'S_max_1_p':1E-13,              #   Maximum capture cross section for hole.
+                    'S_max_1_n':1E-13,              # maximum capcture cross section for electron.
+                    'S_min_2_p':1E-17,              #   Minimum capture cross section for hole.
+                    'S_min_2_n':1E-17,          #   Minimum capture cross section for electron.
+                    'S_max_2_p':1E-13,              #   Maximum capture cross section for hole.
+                    'S_max_2_n':1E-13,              # maximum capcture cross section for electron.
+                    'Nt':1E12,                  #   Defect density
+                    'check_auger':True,     #   Check wether to resample if lifetime is auger-limited
+                    'noise':'',             #   Enable noiseparam
+                    'noiseparam':0,         #   Adds noise proportional to the log of Delta n
                     }
+
+        # update hte PARAM using if statement:
+        counter = 0
+        for param_name in fixlist[0]:
+            # print(counter)
+            if param_name == 'Et_eV_1':
+                PARAM.update({'Et_min_1':fixlist[1][counter], 'Et_max_1':fixlist[1][counter]})
+            elif param_name == 'logSn_1':
+                PARAM.update({'S_min_1_n':10**(fixlist[1][counter]), 'S_max_1_n':10**(fixlist[1][counter])})
+            elif param_name == 'logSp_1':
+                PARAM.update({'S_min_1_p':10**(fixlist[1][counter]), 'S_max_1_p':10**(fixlist[1][counter])})
+            elif param_name == 'Et_eV_2':
+                PARAM.update({'Et_min_2':fixlist[1][counter], 'Et_max_2':fixlist[1][counter]})
+            elif param_name == 'logSn_2':
+                PARAM.update({'S_min_2_n':10**(fixlist[1][counter]), 'S_max_2_n':10**(fixlist[1][counter])})
+            elif param_name == 'logSp_2':
+                PARAM.update({'S_min_2_p':10**(fixlist[1][counter]), 'S_max_2_p':10**(fixlist[1][counter])})
+            # update the counter:
+            counter = counter + 1
+
         # define the experiement.
         exp = Experiment(SaveDir=SAVEDIR, Parameters=PARAMETERS)
         # simulate single two level lifetime data.
@@ -202,53 +224,106 @@ class Dynamic_regression:
         # print(dataDf)
         return dataDf
 
-    def dynamic_regressor(self):
-        # print which dynamic chain we are doing.
+
+    def t_step_train_predict(self):
+        '''
+        This function takes in the prediction from the first step, then dynamically generate the new dataset
+        to train the new model then predict the second step parameters.
+        '''
         print('The dynamic regressor chain is ' + str(self.task))
-        # load the validation data.
+
+        # make the first step prediction from the given dataset:
+        model_list, scaler_list, y_predictions_1 = self.datatraining(self.first_step_training_path, self.n_repeat, self.task[0])
+
+        # read off the task name from first step:
+        tasks1 = self.task[0]
+
+        # extract the validation lifetime data:
         validationset = self.validationdata
         # create a list to select X columns: if the column string contains cm, then identify it as X.
         select_X_list = []
         for string in validationset.columns.tolist():
             if string[0].isdigit():
                 select_X_list.append(string)
-        # print(select_X_list)
-        # sekect_X_list is a list of string of the lifetime data headings (anything ends with cm in heading)
+        validationset = validationset[select_X_list]
 
-        # iterate for each point in validation set.
-        for row_index in range(np.shape(validationset)[0]):
-            # sanitcy check: expect to be from 0 to 7, checked out.
-            print('working on validation point ' + str(row_index))
-            # read off the row dataset.
-            row_data = validationset.iloc[row_index]
-            # extract the lifetime data:
-            X = row_data[select_X_list]
-            # print(np.shape(X))
-            # print(np.min(X))
-            X = np.log10(np.array(X.astype(np.float64)))
+        # print(np.shape(y_predictions_1))
+        # now we got the first step prediction y_predictions_1 with dimension [first step tasks]*[datasize] (3, 8)
+        # create emtply list to collect the prediction for each validation point.
+        y_predictions_2 = []
+        # iterate for each prediction from validation set:
+        counter = 0
+        for prediction in np.transpose(y_predictions_1):
+            # update the counter.
+            counter = counter + 1
+            # print which validation point we are up to and how many are there in total
+            print('the validation data size is ' + str(np.shape(self.validationdata)[0]))
+            print('generating data for validation data point ' + str(counter))
+            validationpoint = validationset.iloc[counter-1, :]
+            # print(prediction.tolist())
+            # simulate the new dataset with the fixed first step prediction values.
+            fixlist = [tasks1, prediction.tolist()]
+            data2 = self.dynamic_simulator(fixlist = fixlist)
+            # print(fixlist) this is correct
+            # create empty list to collect prediction for each task.'
+            y_predictions = []
+            # iterate through each second step ML tasks:
+            for task2 in self.task[1]:
+                print('for task ' + str(task2))
+                # train the ML model for this task, define the maching learning object.
+                training_step2 = MyMLdata_2level(self.first_step_training_path, 'bandgap1', self.n_repeat)
+                # update the step 2 training data as data2
+                training_step2.data = data2
+                # update the ML task for second step training.
+                training_step2.singletask = task2
+                # try to make it return the best R2 score model for all trials all models.
+                r2_frame, y_prediction_frame, y_test_frame, selected_model, scaler = training_step2.regression_repeat(output_y_pred=True)
+                # apply the same model and scaler on the validation set lifetime:
 
-            # iterate for each step of dynamic regression:
-            counter = 0
-            for tasks in self.task:
-                counter =+ 1
-                print('working on step ' + str(counter) + ' of the chain.')
-                # if this is the first step, no need to generate data, just load from self.first_step_training_path
-                if counter == 1:
-                    trainingset_path = self.first_step_training_path
-                # else:
-                #     # otherwise, generate data for this step:
-                #
-                # train the model for this step:
-                model_list, scaler_list = self.datatraining(trainingset_path, self.n_repeat, tasks)
+                # take the log10 and make the name shorter
+                X = np.array(validationpoint).reshape(1, -1)
+                X = np.log10(np.array(X.astype(np.float64)))
+                # go through the scaler:
+                X_scaled = scaler.transform(X)
+                # make the prediction:
+                y_predict = selected_model.predict(X_scaled)
+                # print(y_predict) # expect one value # checked out.
+                y_predictions.append(y_predict)
+            # collect the prediction list for each task into the frame.
+            y_predictions_2.append(y_predictions)
 
-                # iterate through each single task in each step:
-                # create empty list to collect the predictions
-                prediction_list = []
-                for k in range(len(tasks)):
-                    # scale the X data for the model.
-                    # print(np.shape(X))
-                    # print(np.shape(X.reshape(-1, 1)))
-                    X_scaled = scaler_list[k].transform(np.transpose(X.reshape(-1, 1)))
-                    # make the prediction:
-                    y_predict = model_list[k].predict(X_scaled)
-                    prediction_list.append(y_predict)
+            # store the prediction into the object.
+            # self.y_predictions_1 = y_predictions_1
+            # self.y_predictions_2 = y_predictions_2
+
+        return y_predictions_1, y_predictions_2
+
+
+    def evaluation(self):
+        '''
+        This function will evaluate prediction from this object with the original value.
+        '''
+        # get the prediction results from both steps
+        y_predictions_1, y_predictions_2 = self.t_step_train_predict()
+
+        # cascade the two predictions together:
+        # cascade the name:
+        tasks = list(np.concatenate(self.task).flat)
+        # concanate the values:
+        # print(np.shape(y_predictions_1))
+        # y_predictions_2 = np.reshape(np.array(y_predictions_2).flat, np.shape(y_predictions_1))
+        # print(np.shape(y_predictions_2))
+        # print(np.array(np.transpose(y_predictions_2)).reshape(np.shape(y_predictions_1)))
+        # print(np.array(y_predictions_1))
+        y_predictions_1 = np.array(y_predictions_1)
+        y_predictions_2 = np.reshape(np.array(y_predictions_2).flat, np.shape(y_predictions_1))
+        y_predictions = np.concatenate((y_predictions_1, y_predictions_2))
+        # print(np.shape(y_predictions))
+
+        # extract the validations y data:
+        y_validation = self.validationdata[tasks]
+
+        print(y_predictions)
+        print(y_validation)
+        print(y_predictions_1)
+        print(y_predictions_2)

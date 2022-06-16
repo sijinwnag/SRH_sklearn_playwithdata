@@ -41,7 +41,7 @@ class MyMLdata_2level:
     MyMLdata is an object that is a panda dataframe containing the lifetime data.
     """
 # %%--- Initialize the object
-    def __init__(self, path, task, repeat):
+    def __init__(self, path, task, repeat, load_data_from_path = True):
         """
         1.  Load the data through the inputting path.
         2.  Define the task:  input as a string.
