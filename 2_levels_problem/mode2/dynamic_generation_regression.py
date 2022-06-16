@@ -136,18 +136,7 @@ class Dynamic_regression:
         return model_list, scaler_list, y_predictions
 
 
-    def dynamic_simulator(self, fix_dictionary = {'Et_min_1':0,             #   Minimum defect energy level
-    'Et_max_1':0.55,              #   Maximum defect energy level
-    'Et_min_2':0,             #   Minimum defect energy level
-    'Et_max_2':0.55,              #   Maximum defect energy level
-    'S_min_1_p':1E-17,              #   Minimum capture cross section for hole.
-    'S_min_1_n':1E-17,          #   Minimum capture cross section for electron.
-    'S_max_1_p':1E-13,              #   Maximum capture cross section for hole.
-    'S_max_1_n':1E-13,              # maximum capcture cross section for electron.
-    'S_min_2_p':1E-17,              #   Minimum capture cross section for hole.
-    'S_min_2_n':1E-17,          #   Minimum capture cross section for electron.
-    'S_max_2_p':1E-13,              #   Maximum capture cross section for hole.
-    'S_max_2_n':1E-13}):
+    def dynamic_simulator(self, fixlist = ['Et_eV_1', 0.1]):
         '''
         This function will simulate a new dataset.
 
