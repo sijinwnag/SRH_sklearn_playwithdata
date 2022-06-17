@@ -1,5 +1,6 @@
 # %%-- To do:
 """
+1. test the dynamic method using different chains.
 1. play with the tolerance factor when fixing for dynamic data generations.
 """
 # %%-
@@ -16,8 +17,7 @@ sys.path.append(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\
 sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2')
 from MLobject_tlevel import *
 from dynamic_generation_regression import *
-
-df1 = MyMLdata_2level(r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11_800.csv", 'bandgap1',2)
+# df1 = MyMLdata_2level(r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11_800.csv", 'bandgap1',2)
 # %%-
 
 # %%-- different data engineering before training ML model.
@@ -218,9 +218,9 @@ for parameter in step1_parameter:
 # %%-
 
 # %%-- test the dynamic regression object.
-dy = Dynamic_regression()
-dy.first_step_training_path = r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11.csv"
-dy.validation_path = r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11_800.csv"
-dy.simulate_size = 8000
+training_path = r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\set11_80000.csv"
+validation_path = r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\set11_50.csv"
+dy = Dynamic_regression(training_path=training_path, validation_path = validation_path)
 dy.evaluation()
+dy.email_reminder()
 # %%-

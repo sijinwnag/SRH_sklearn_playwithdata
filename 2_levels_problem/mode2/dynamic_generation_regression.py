@@ -66,14 +66,14 @@ class Dynamic_regression:
     """
     MyMLdata is an object that does the multi_step dynamic data generatino regression.
     """
-    def __init__(self):
+    def __init__(self, training_path, validation_path, simulate_size = 8000, n_repeat = 2, task = [['Et_eV_1', 'logSn_1', 'logSp_1'], ['Et_eV_2', 'logSn_2', 'logSp_2']]):
             # define the default parameter for data simulation.
-            self.task = [['Et_eV_1', 'logSn_1', 'logSp_1'], ['Et_eV_2', 'logSn_2', 'logSp_2']]
-            self.first_step_training_path = r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11.csv"
-            self.validation_path = r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11_800.csv"
-            self.n_repeat = 2
+            self.task = task
+            self.first_step_training_path = training_path
+            self.validation_path = validation_path
+            self.n_repeat = n_repeat
             self.validationdata = pd.read_csv(self.validation_path)
-            self.simulate_size = 80
+            self.simulate_size = simulate_size
 
 
     def datatraining(self, trainingset_path, repeat, parameter):
@@ -353,3 +353,28 @@ class Dynamic_regression:
             plt.title('The prediction for ' + str(taskname))
             plt.legend()
             plt.show()
+
+
+    def email_reminder(self):
+
+        subject='ML finish training'
+        body='ML of ' + str(self.task) + ' finished' + ' through the file ' + str(os.getcwd())
+        to='z5183876@ad.unsw.edu.au'
+
+        user = "sijinwang944@gmail.com"
+        password = 'vjvlqydqtxlpddgz'
+
+        msg = EmailMessage()
+        msg.set_content(body)
+        msg['subject'] = subject
+        msg['to'] = to
+        msg['from'] = user
+
+
+
+        server = smtplib.SMTP("smtp.gmail.com", 587)
+        server.starttls()
+        server.login(user, password)
+        server.send_message(msg)
+
+        server.quit()
