@@ -14,7 +14,7 @@ from sklearn.model_selection import train_test_split, GridSearchCV
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.neighbors import KNeighborsRegressor, KNeighborsClassifier
-from sklearn.metrics import r2_score, mean_absolute_error, confusion_matrix, f1_score, accuracy_score
+from sklearn.metrics import r2_score, mean_absolute_error, confusion_matrix, f1_score, accuracy_score, mean_squared_error
 from sklearn.linear_model import LinearRegression, Ridge
 import matplotlib.pyplot as plt
 from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor, AdaBoostRegressor, RandomForestClassifier, GradientBoostingClassifier, AdaBoostClassifier
@@ -68,11 +68,9 @@ class Dynamic_regression:
     """
     def __init__(self):
             # define the default parameter for data simulation.
-
-
             self.task = [['Et_eV_1', 'logSn_1', 'logSp_1'], ['Et_eV_2', 'logSn_2', 'logSp_2']]
-            self.first_step_training_path = r'C:\Users\sijin wang\Documents\GitHub\yoann_code_new\Savedir_example\outputs\small_dataset.csv'
-            self.validation_path = r'C:\Users\sijin wang\Documents\GitHub\yoann_code_new\Savedir_example\outputs\dummy_validation_11.csv'
+            self.first_step_training_path = r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11.csv"
+            self.validation_path = r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11_800.csv"
             self.n_repeat = 2
             self.validationdata = pd.read_csv(self.validation_path)
             self.simulate_size = 80
@@ -189,6 +187,8 @@ class Dynamic_regression:
 
         # update hte PARAM using if statement:
         counter = 0
+        # make a noise factor to generate data in a band instead of a level.
+        noise_factor = 1
         for param_name in fixlist[0]:
             # print(counter)
             if param_name == 'Et_eV_1':
@@ -316,14 +316,40 @@ class Dynamic_regression:
         # print(np.array(np.transpose(y_predictions_2)).reshape(np.shape(y_predictions_1)))
         # print(np.array(y_predictions_1))
         y_predictions_1 = np.array(y_predictions_1)
-        y_predictions_2 = np.reshape(np.array(y_predictions_2).flat, np.shape(y_predictions_1))
+        y_predictions_2 = np.reshape(np.array(np.transpose(y_predictions_2)).flat, np.shape(y_predictions_1))
         y_predictions = np.concatenate((y_predictions_1, y_predictions_2))
         # print(np.shape(y_predictions))
 
         # extract the validations y data:
         y_validation = self.validationdata[tasks]
 
-        print(y_predictions)
-        print(y_validation)
-        print(y_predictions_1)
-        print(y_predictions_2)
+        # sanity check.
+        # print(y_predictions)
+        # print(y_validation)
+        # print(y_predictions_1)
+        # print(y_predictions_2)
+
+        # for each validation variable: 1. Calculate R2 score. 2. Calculate mean absolute error. 3. calculate rms. 4. plot real vs predicted.
+        for k in range(len(tasks)):
+            # extract the task name:
+            taskname = tasks[k]
+            print('evaluating the results for ' + str(taskname))
+            # extract the prediction value:
+            prediction = y_predictions[k, :]
+            # extract the validation value:
+            # print(np.shape(y_validation))
+            v_true = np.transpose(np.array(y_validation)[:, k])
+
+            # calcualte the evaluation matrixes:
+            r2 = r2_score(v_true, prediction)
+            mae = mean_absolute_error(v_true, prediction)
+            rmse = mean_squared_error(v_true, prediction)
+
+            # plot the real vs predicted:
+            plt.figure()
+            plt.scatter(v_true, prediction, label=('$R^2$' + '=' + str(round(r2, 3))) + ('  Mean Absolue error' + '=' + str(round(mae, 3))) + ' rmse=' + str(round(rmse, 3)), alpha=0.5)
+            plt.xlabel('real value')
+            plt.ylabel('predictions')
+            plt.title('The prediction for ' + str(taskname))
+            plt.legend()
+            plt.show()
