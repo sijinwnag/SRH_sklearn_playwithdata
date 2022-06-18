@@ -258,7 +258,7 @@ class Dynamic_regression:
             counter = counter + 1
             # print which validation point we are up to and how many are there in total
             print('the validation data size is ' + str(np.shape(self.validationdata)[0]))
-            print('generating data for validation data point ' + str(counter))
+            print('generating data for validation data point ' + str(counter) + ' ' + str(prediction))
             validationpoint = validationset.iloc[counter-1, :]
             # print(prediction.tolist())
             # simulate the new dataset with the fixed first step prediction values.
