@@ -133,7 +133,7 @@ class MyMLdata_2level:
 
 
     def regression_repeat(self, plot=False, output_y_pred=False):
-        # extract the X and y from previous step.
+        # extract the X and y from previous step: here X is log(lifetime)
         X, y = self.pre_processor()
         # n_repeat is the number of reeptition for this task
         n_repeat = self.repetition
@@ -167,6 +167,7 @@ class MyMLdata_2level:
         y_prediction_frame = []
         y_test_frame = []
         trained_model_frame = []
+        # iterate for each repeatition:
         while counter < n_repeat:
             # update the counter
             counter = counter + 1
@@ -177,10 +178,10 @@ class MyMLdata_2level:
             X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1)
             # scale the data:
             scaler = MinMaxScaler()
+            X_train_scaled = scaler.fit_transform(X_train)
             # when asked to return the best model, we need to return its corresponding scaler as well, since the best model will be the first trial, return the scaler for first trial as well:
             if counter == 1:
                 scaler_return = scaler
-            X_train_scaled = scaler.fit_transform(X_train)
             # we must apply the scaling to the test set that we computed for the training set
             X_test_scaled = scaler.transform(X_test)
             # train the different models and collect the r2 score.
@@ -365,16 +366,6 @@ class MyMLdata_2level:
         else:
             return r2_list, mae_list
 
-
-    # def regression_validation(self, model, y_name):
-    #     '''
-    #     What it does: it evaluate the input model that predict the y given by y_name using both R2 and mean absolute error method.
-    #     Notice that if the training and validation set comes from the same dataset, we don't need to use this function because the validation step is already included in the regression_repeat function.
-    #
-    #     input:
-    #     model: a list of model that is trained already.
-    #     y_name: the name of the colume that we want to do validation on.
-    #     '''
 # %%-
 
 

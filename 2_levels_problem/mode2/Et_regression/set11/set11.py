@@ -1,11 +1,11 @@
 # %%-- To do:
 """
-1. test the dynamic method using different chains, make sure there is no coding error.
-2. play with the tolerance factor when fixing for dynamic data generations.
-3. notice Et2 does not always work, build some visualization method to see which area it is working (Et1, Sn1, Sp1)
+1. test the dynamic method using different chains, make sure there is no coding error. (done)
+2. play with the tolerance factor when fixing for dynamic data generations.  (keep it 0)
+3. notice Et2 does not always work, build some visualization method to see which area it is working (Et1, Sn1, Sp1) (do that later)
 4. The first tiral result is very bad:
-    a. see if there is any coding problem. -> make the code output the y prediction to see whether we wrongly order the y_predictions_2 (also make the validation set to be size 1)
-    b. maybe the reason is the Et2 low training score in second step? but why Sp2 and Sn2 are bad as well?
+    a. see if there is any coding problem. -> make the code output the y prediction to see whether we wrongly order the y_predictions_2 (also make the validation set to be size 1) (seems they are same)
+    b. maybe the reason is the Et2 low training score in second step? but why Sp2 and Sn2 are bad as well? -> the mistake in the first step matters!
 """
 # %%-
 
@@ -223,8 +223,14 @@ for parameter in step1_parameter:
 
 # %%-- test the dynamic regression object.
 training_path = r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\set11_80000.csv"
-validation_path = r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\set11_20.csv"
-dy = Dynamic_regression(training_path=training_path, validation_path = validation_path)
+validation_path = r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\set11_1.csv"
+dy = Dynamic_regression(training_path=training_path, validation_path = validation_path, noise_factor=0, simulate_size=8000)
 dy.evaluation()
-dy.email_reminder()
+dy.email_reminder(body=str(dy.predictions_1) + str(dy.predictions_2))
 # %%-
+
+dy.y_predictions_1
+dy.y_predictions_2
+dy.validationdata
+# we have a problme here, why the real value is about 0.33 but the first prediction is about 0.30 twice
+# figure out why the first prediction is always 0.3 instead of 0.33eV

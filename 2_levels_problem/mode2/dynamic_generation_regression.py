@@ -66,14 +66,19 @@ class Dynamic_regression:
     """
     MyMLdata is an object that does the multi_step dynamic data generatino regression.
     """
-    def __init__(self, training_path, validation_path, simulate_size = 8000, n_repeat = 2, task = [['Et_eV_1', 'logSn_1', 'logSp_1'], ['Et_eV_2', 'logSn_2', 'logSp_2']]):
-            # define the default parameter for data simulation.
-            self.task = task
-            self.first_step_training_path = training_path
-            self.validation_path = validation_path
-            self.n_repeat = n_repeat
-            self.validationdata = pd.read_csv(self.validation_path)
-            self.simulate_size = simulate_size
+    def __init__(self, training_path, validation_path, simulate_size = 8000, n_repeat = 2, task = [['Et_eV_1', 'logSn_1', 'logSp_1'], ['Et_eV_2', 'logSn_2', 'logSp_2']], noise_factor=0):
+        '''
+        input:
+        noise_factor: a float that instead of fixing the first step value, we do a small band of it, it determine how large is the band, when it is equal to 0 that means fixing complteley.
+        '''
+        # define the default parameter for data simulation.
+        self.task = task
+        self.first_step_training_path = training_path
+        self.validation_path = validation_path
+        self.n_repeat = n_repeat
+        self.validationdata = pd.read_csv(self.validation_path)
+        self.simulate_size = simulate_size
+        self.noise_factor = noise_factor
 
 
     def datatraining(self, trainingset_path, repeat, parameter):
@@ -131,6 +136,8 @@ class Dynamic_regression:
             # make the prediction:
             y_predict = selected_model.predict(X_scaled)
             y_predictions.append(y_predict)
+
+        # store the first step prediction into the object.
         self.firststep_prediction = y_predictions
 
         return model_list, scaler_list, y_predictions
@@ -188,21 +195,21 @@ class Dynamic_regression:
         # update hte PARAM using if statement:
         counter = 0
         # make a noise factor to generate data in a band instead of a level.
-        noise_factor = 1
+        noise_factor = self.noise_factor
         for param_name in fixlist[0]:
             # print(counter)
             if param_name == 'Et_eV_1':
-                PARAM.update({'Et_min_1':fixlist[1][counter], 'Et_max_1':fixlist[1][counter]})
+                PARAM.update({'Et_min_1':fixlist[1][counter]*(1-noise_factor), 'Et_max_1':fixlist[1][counter]*(1+noise_factor)})
             elif param_name == 'logSn_1':
-                PARAM.update({'S_min_1_n':10**(fixlist[1][counter]), 'S_max_1_n':10**(fixlist[1][counter])})
+                PARAM.update({'S_min_1_n':10**(fixlist[1][counter]*(1-noise_factor)), 'S_max_1_n':10**(fixlist[1][counter]*(1+noise_factor))})
             elif param_name == 'logSp_1':
-                PARAM.update({'S_min_1_p':10**(fixlist[1][counter]), 'S_max_1_p':10**(fixlist[1][counter])})
+                PARAM.update({'S_min_1_p':10**(fixlist[1][counter]*(1-noise_factor)), 'S_max_1_p':10**(fixlist[1][counter]*(1+noise_factor))})
             elif param_name == 'Et_eV_2':
-                PARAM.update({'Et_min_2':fixlist[1][counter], 'Et_max_2':fixlist[1][counter]})
+                PARAM.update({'Et_min_2':fixlist[1][counter]*(1-noise_factor), 'Et_max_2':fixlist[1][counter]*(1+noise_factor)})
             elif param_name == 'logSn_2':
-                PARAM.update({'S_min_2_n':10**(fixlist[1][counter]), 'S_max_2_n':10**(fixlist[1][counter])})
+                PARAM.update({'S_min_2_n':10**(fixlist[1][counter]*(1-noise_factor)), 'S_max_2_n':10**(fixlist[1][counter]*(1+noise_factor))})
             elif param_name == 'logSp_2':
-                PARAM.update({'S_min_2_p':10**(fixlist[1][counter]), 'S_max_2_p':10**(fixlist[1][counter])})
+                PARAM.update({'S_min_2_p':10**(fixlist[1][counter]*(1-noise_factor)), 'S_max_2_p':10**(fixlist[1][counter]*(1+noise_factor))})
             # update the counter:
             counter = counter + 1
 
@@ -355,10 +362,10 @@ class Dynamic_regression:
             plt.show()
 
 
-    def email_reminder(self):
+    def email_reminder(self, body='ML ' + ' finished' + ' through the file ' + str(os.getcwd())):
 
         subject='ML finish training'
-        body='ML of ' + str(self.task) + ' finished' + ' through the file ' + str(os.getcwd())
+        body=body + str(os.getcwd()) +  str(self.task)
         to='z5183876@ad.unsw.edu.au'
 
         user = "sijinwang944@gmail.com"
