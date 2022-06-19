@@ -117,6 +117,21 @@ class MyMLdata_2level:
 
 
 # %%--- Regression machine learning tasks.
+
+
+    def transparency_calculator(self, datasize):
+        '''
+        This function will calcualte a suitable data transparency given the datasize for a scatter plot.
+
+        input: datasize: an integer.
+        '''
+        if datasize>8000:
+            alpha = 8000/datasize*0.5
+        else:
+            alpha = 0.5
+        return alpha
+
+
     def regression_repeat(self, plot=False, output_y_pred=False):
         # extract the X and y from previous step.
         X, y = self.pre_processor()
@@ -245,7 +260,7 @@ class MyMLdata_2level:
         # print(np.shape(y_prediction_frame))
         # print(np.shape(y_test_frame))
         # print(np.shape(y_prediction_frame))
-        plt.scatter(np.array(y_test_frame)[repeat_num], np.array(y_prediction_frame)[repeat_num, :, model_num], label=('$R^2$' + '=' + str(round(np.max(r2_score_k), 3))) + ('  Mean Absolue error' + '=' + str(round(np.min(mae_score_k), 3))), alpha=0.5)
+        plt.scatter(np.array(y_test_frame)[repeat_num], np.array(y_prediction_frame)[repeat_num, :, model_num], label=('$R^2$' + '=' + str(round(np.max(r2_score_k), 3))) + ('  Mean Absolue error' + '=' + str(round(np.min(mae_score_k), 3))), alpha=self.transparency_calculator(len(np.array(y_test_frame)[repeat_num])))
         plt.xlabel('real value')
         plt.ylabel('predicted value')
         plt.title('real vs predicted at trial ' + str(repeat_num + 1) + ' using method ' + str(self.reg_param['model_names'][model_num]) + ' for task ' + str(self.singletask))

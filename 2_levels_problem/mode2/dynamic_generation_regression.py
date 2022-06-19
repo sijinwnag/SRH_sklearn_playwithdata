@@ -293,8 +293,8 @@ class Dynamic_regression:
             y_predictions_2.append(y_predictions)
 
             # store the prediction into the object.
-            # self.y_predictions_1 = y_predictions_1
-            # self.y_predictions_2 = y_predictions_2
+            self.y_predictions_1 = y_predictions_1
+            self.y_predictions_2 = y_predictions_2
 
         return y_predictions_1, y_predictions_2
 
@@ -347,7 +347,7 @@ class Dynamic_regression:
 
             # plot the real vs predicted:
             plt.figure()
-            plt.scatter(v_true, prediction, label=('$R^2$' + '=' + str(round(r2, 3))) + ('  Mean Absolue error' + '=' + str(round(mae, 3))) + ' rmse=' + str(round(rmse, 3)), alpha=0.5)
+            plt.scatter(v_true, prediction, label=('$R^2$' + '=' + str(round(r2, 3))) + ('  Mean Absolue error' + '=' + str(round(mae, 3))) + ' rmse=' + str(round(rmse, 3)), alpha=self.transparency_calculator(len(v_true)))
             plt.xlabel('real value')
             plt.ylabel('predictions')
             plt.title('The prediction for ' + str(taskname))
@@ -378,3 +378,15 @@ class Dynamic_regression:
         server.send_message(msg)
 
         server.quit()
+
+
+    def transparency_calculator(self, datasize):
+        '''
+        This function will calcualte a suitable data transparency given the datasize for a scatter plot.
+
+        input: datasize: an integer.
+        '''
+        alpha = 8000/datasize*0.5
+        if alpha>1:
+            alpha=0.9
+        return alpha

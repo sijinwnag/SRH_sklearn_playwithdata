@@ -9,7 +9,7 @@ sys.path.append(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\
 sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2')
 from MLobject_tlevel import *
 
-df1 = MyMLdata_2level(r'C:\Users\sijin wang\Documents\GitHub\yoann_code_new\Savedir_example\outputs\2022-06-05-17-22-23_advanced example - multi_level_L_datasetID_0.csv', 'bandgap1',5)
+df1 = MyMLdata_2level(r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\set11_20.csv", 'bandgap1',5)
 # %%-
 
 # %%-- different data engineering before training ML model.

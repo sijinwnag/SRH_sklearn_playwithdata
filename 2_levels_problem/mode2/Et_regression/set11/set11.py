@@ -1,7 +1,11 @@
 # %%-- To do:
 """
-1. test the dynamic method using different chains.
-1. play with the tolerance factor when fixing for dynamic data generations.
+1. test the dynamic method using different chains, make sure there is no coding error.
+2. play with the tolerance factor when fixing for dynamic data generations.
+3. notice Et2 does not always work, build some visualization method to see which area it is working (Et1, Sn1, Sp1)
+4. The first tiral result is very bad:
+    a. see if there is any coding problem. -> make the code output the y prediction to see whether we wrongly order the y_predictions_2 (also make the validation set to be size 1)
+    b. maybe the reason is the Et2 low training score in second step? but why Sp2 and Sn2 are bad as well?
 """
 # %%-
 
@@ -219,7 +223,7 @@ for parameter in step1_parameter:
 
 # %%-- test the dynamic regression object.
 training_path = r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\set11_80000.csv"
-validation_path = r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\set11_50.csv"
+validation_path = r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\set11_20.csv"
 dy = Dynamic_regression(training_path=training_path, validation_path = validation_path)
 dy.evaluation()
 dy.email_reminder()
