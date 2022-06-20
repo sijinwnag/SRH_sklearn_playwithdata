@@ -20,6 +20,7 @@ import sys
 sys.path.append(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2')
 # use this line if on workstation
 sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2')
+sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\DPML')
 from MLobject_tlevel import *
 from dynamic_generation_regression import *
 # df1 = MyMLdata_2level(r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11_800.csv", 'bandgap1',2)
@@ -223,8 +224,8 @@ for parameter in step1_parameter:
 # %%-
 
 # %%-- test the dynamic regression object.
-training_path = r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\set11_80000.csv"
-validation_path = r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\set11_50.csv"
+training_path = r"G:\study\thesis_data_storage\set11\set11_80000.csv"
+validation_path = r"G:\study\thesis_data_storage\set11\set11_50.csv"
 dy = Dynamic_regression(training_path=training_path, validation_path = validation_path, noise_factor=0, simulate_size=8000)
 dy.evaluation()
 dy.email_reminder(body=str(dy.y_predictions_1) + str(dy.y_predictions_2))

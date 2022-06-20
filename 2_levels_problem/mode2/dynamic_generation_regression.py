@@ -51,6 +51,7 @@ import sys
 sys.path.append(r'C:\Users\sijin wang\Documents\GitHub\yoann_code_new')
 # use this line for workstation:
 sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\yoann_code_new\DPML')
+sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\yoann_code_new')
 from DPML import *
 import numpy as np
 import matplotlib.pyplot as plt
