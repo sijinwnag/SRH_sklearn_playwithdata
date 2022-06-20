@@ -21,6 +21,7 @@ sys.path.append(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\
 # use this line if on workstation
 sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2')
 sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\DPML')
+sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Savedir_example')
 from MLobject_tlevel import *
 from dynamic_generation_regression import *
 # df1 = MyMLdata_2level(r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11_800.csv", 'bandgap1',2)
@@ -238,4 +239,8 @@ dy.validationdata
 # figure out why the prediction for Et1 is always smaller than the real value, check the scalor.
 # the scalor seems to be fine, maybe because of the particular validation we are having tend to be predicted smaller
 # lets check it with larger validation set (100), if we still have Et1 prediction less than Et2, then we must have a systematic error.
+# seems we do have a systematic error:
+# 1. just focus on the first step.
+# 2. check the scalour.
+
 # %%-
