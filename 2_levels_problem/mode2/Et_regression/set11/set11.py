@@ -225,14 +225,14 @@ for parameter in step1_parameter:
 # %%-
 
 # %%-- test the dynamic regression object.
-training_path = r"G:\study\thesis_data_storage\set11\set11_80000.csv"
-validation_path = r"G:\study\thesis_data_storage\set11\set11_50.csv"
+# training_path = r"G:\study\thesis_data_storage\set11\set11_80000.csv"
+# validation_path = r"G:\study\thesis_data_storage\set11\set11_50.csv"
+validation_path = r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\set11_50.csv"
+training_path = r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\set11_80000.csv"
 dy = Dynamic_regression(training_path=training_path, validation_path = validation_path, noise_factor=0, simulate_size=8000)
-dy.evaluation()
+dy.datatraining()
 dy.email_reminder(body=str(dy.y_predictions_1) + str(dy.y_predictions_2))
 
-dy.y_predictions_1
-dy.y_predictions_2
 dy.validationdata
 # we have a problme here, why the real value is about 0.33 but the first prediction is about 0.30 twice
 # figure out why the first prediction is always 0.3 instead of 0.33eV
