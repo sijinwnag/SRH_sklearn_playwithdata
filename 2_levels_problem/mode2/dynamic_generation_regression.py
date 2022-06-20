@@ -82,7 +82,7 @@ class Dynamic_regression:
         self.noise_factor = noise_factor
 
 
-    def datatraining(self, trainingset_path, repeat, parameter):
+    def datatraining(self):
         '''
         This function input two dataset: one is training, the other is validation, and output the perdiction from training, the models and the evaluation results.
 
@@ -98,6 +98,9 @@ class Dynamic_regression:
 
         for the flow chart of this function, see the file: dynamic_regressor.ppt
         '''
+        trainingset_path = self.first_step_training_path
+        repeat = self.n_repeat
+        parameter = self.task[0]
         # print(self.task)
         # define the maching learning object for step training.
         training_step1 = MyMLdata_2level(trainingset_path, 'bandgap1', repeat)
@@ -140,6 +143,31 @@ class Dynamic_regression:
 
         # store the first step prediction into the object.
         self.firststep_prediction = y_predictions
+
+        # evaluate the first step predictions:
+        for k in range(np.shape(y_predictions)[0]):
+            # extract the task name:
+            taskname = parameter[k]
+            print('evaluating the results for ' + str(taskname))
+            # extract the prediction value:
+            prediction = y_predictions[k, :]
+            # extract the validation value:
+            # print(np.shape(y_validation))
+            v_true = np.transpose(np.array(y_validation)[:, k])
+
+            # calcualte the evaluation matrixes:
+            r2 = r2_score(v_true, prediction)
+            mae = mean_absolute_error(v_true, prediction)
+            rmse = mean_squared_error(v_true, prediction)
+
+            # plot the real vs predicted:
+            plt.figure()
+            plt.scatter(v_true, prediction, label=('$R^2$' + '=' + str(round(r2, 3))) + ('  Mean Absolue error' + '=' + str(round(mae, 3))) + ' rmse=' + str(round(rmse, 3)), alpha=self.transparency_calculator(len(v_true)))
+            plt.xlabel('real value')
+            plt.ylabel('predictions')
+            plt.title('The prediction for ' + str(taskname))
+            plt.legend()
+            plt.show()
 
         return model_list, scaler_list, y_predictions
 
@@ -243,7 +271,7 @@ class Dynamic_regression:
         print('The dynamic regressor chain is ' + str(self.task))
 
         # make the first step prediction from the given dataset:
-        model_list, scaler_list, y_predictions_1 = self.datatraining(self.first_step_training_path, self.n_repeat, self.task[0])
+        model_list, scaler_list, y_predictions_1 = self.datatraining()
 
         # read off the task name from first step:
         tasks1 = self.task[0]
