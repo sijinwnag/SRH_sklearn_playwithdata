@@ -125,8 +125,8 @@ class MyMLdata_2level:
 
         input: datasize: an integer.
         '''
-        if datasize>8000:
-            alpha = 8000/datasize*0.5
+        if datasize>800:
+            alpha = 800/datasize*0.5
         else:
             alpha = 0.5
         return alpha
@@ -181,7 +181,7 @@ class MyMLdata_2level:
             X_train_scaled = scaler.fit_transform(X_train)
             # when asked to return the best model, we need to return its corresponding scaler as well, since the best model will be the first trial, return the scaler for first trial as well:
             if counter == 1:
-                scaler_return = scaler
+                scaler_return = scaler # return the first iteration scaler
             # we must apply the scaling to the test set that we computed for the training set
             X_test_scaled = scaler.transform(X_test)
             # train the different models and collect the r2 score.
@@ -261,7 +261,10 @@ class MyMLdata_2level:
         # print(np.shape(y_prediction_frame))
         # print(np.shape(y_test_frame))
         # print(np.shape(y_prediction_frame))
-        plt.scatter(np.array(y_test_frame)[repeat_num], np.array(y_prediction_frame)[repeat_num, :, model_num], label=('$R^2$' + '=' + str(round(np.max(r2_score_k), 3))) + ('  Mean Absolue error' + '=' + str(round(np.min(mae_score_k), 3))), alpha=self.transparency_calculator(len(np.array(y_test_frame)[repeat_num])))
+        # calculate the transparency:
+        alpha=self.transparency_calculator(len(np.array(y_test_frame)[repeat_num]))
+        print('transparency of scattering plot is ' + str(alpha))
+        plt.scatter(np.array(y_test_frame)[repeat_num], np.array(y_prediction_frame)[repeat_num, :, model_num], label=('$R^2$' + '=' + str(round(np.max(r2_score_k), 3))) + ('  Mean Absolue error' + '=' + str(round(np.min(mae_score_k), 3))), alpha=alpha)
         plt.xlabel('real value')
         plt.ylabel('predicted value')
         plt.title('real vs predicted at trial ' + str(repeat_num + 1) + ' using method ' + str(self.reg_param['model_names'][model_num]) + ' for task ' + str(self.singletask))

@@ -303,6 +303,10 @@ class Dynamic_regression:
             self.y_predictions_1 = y_predictions_1
             self.y_predictions_2 = y_predictions_2
 
+            # print the predictions and the real values:
+            print('The prediction for the tasks are ' + str(y_predictions_1) + str(y_predictions_2))
+            print('The real values are: ' + str(self.validationdata[list(np.concatenate(self.task).flat)].iloc[counter-1, :]))
+
         return y_predictions_1, y_predictions_2
 
 
@@ -393,7 +397,7 @@ class Dynamic_regression:
 
         input: datasize: an integer.
         '''
-        alpha = 8000/datasize*0.5
+        alpha = 800/datasize*0.5
         if alpha>1:
-            alpha=0.9
+            alpha=0.5
         return alpha
