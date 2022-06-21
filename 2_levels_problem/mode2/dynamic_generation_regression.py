@@ -155,7 +155,8 @@ class Dynamic_regression:
             prediction = np.array(y_predictions)[k, :]
             # extract the validation value:
             # print(np.shape(y_validation))
-            v_true = np.transpose(np.array(y_validation)[:, k])
+            y_validation = self.validationdata[taskname]
+            v_true = np.array(y_validation)
 
             # calcualte the evaluation matrixes:
             r2 = r2_score(v_true, prediction)
@@ -432,5 +433,5 @@ class Dynamic_regression:
         '''
         alpha = 800/datasize*0.5
         if alpha>1:
-            alpha=0.5
+            alpha=1
         return alpha
