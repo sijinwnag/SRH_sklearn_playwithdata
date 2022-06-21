@@ -147,10 +147,12 @@ class Dynamic_regression:
         # evaluate the first step predictions:
         for k in range(np.shape(y_predictions)[0]):
             # extract the task name:
-            taskname = parameter[k]
+            taskname = step1_parameter[k]
+            # print(parameter)
+            # print(y_predictions)
             print('evaluating the results for ' + str(taskname))
             # extract the prediction value:
-            prediction = y_predictions[k, :]
+            prediction = np.array(y_predictions)[k, :]
             # extract the validation value:
             # print(np.shape(y_validation))
             v_true = np.transpose(np.array(y_validation)[:, k])
