@@ -406,8 +406,8 @@ class Dynamic_regression:
         body=body + str(os.getcwd()) +  str(self.task)
         to='z5183876@ad.unsw.edu.au'
 
-        user = "sijinwang944@gmail.com"
-        password = 'vjvlqydqtxlpddgz'
+        user = "sijinwang@yahoo.com"
+        password = 'gdfkzhzhaokjivek'
 
         msg = EmailMessage()
         msg.set_content(body)
@@ -417,7 +417,7 @@ class Dynamic_regression:
 
 
 
-        server = smtplib.SMTP("smtp.gmail.com", 587)
+        server = smtplib.SMTP("smtp.mail.yahoo.com", 587)
         server.starttls()
         server.login(user, password)
         server.send_message(msg)
