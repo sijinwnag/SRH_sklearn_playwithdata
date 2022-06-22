@@ -230,10 +230,9 @@ for parameter in step1_parameter:
 validation_path = r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\set11_50.csv"
 training_path = r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\set11_80000.csv"
 dy = Dynamic_regression(training_path=training_path, validation_path = validation_path, noise_factor=0, simulate_size=8000)
-dy.datatraining()
-# dy.email_reminder()
+dy.evaluation()
+dy.email_reminder()
 
-dy.validationdata
 # we have a problme here, why the real value is about 0.33 but the first prediction is about 0.30 twice
 # figure out why the first prediction is always 0.3 instead of 0.33eV
 # figure out why the prediction for Et1 is always smaller than the real value, check the scalor.
@@ -242,5 +241,9 @@ dy.validationdata
 # seems we do have a systematic error:
 # 1. just focus on the first step.
 # 2. check the scalour.
-
+# first step works!
+# lets try to do validation.
+# check is there anything wrong with the second step?
+pd.DataFrame(dy.y_predictions_1).to_csv(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\code_running_results\dynamic_generation]\x.csv')
+pd.DataFrame(dy.y_predictions_1).to_csv(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\code_running_results\dynamic_generation]\y.csv')
 # %%-

@@ -186,7 +186,7 @@ class Dynamic_regression:
         # inputs:
 
         SAVEDIR = r"C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Savedir_example" # you can change this to your own path
-        SAVEDIR = r"C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\yoann_code_new\Savedir_example"
+        # SAVEDIR = r"C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\yoann_code_new\Savedir_example"
         FILEPATH = "advanced_example\\data\\sample_original_L.csv"
         TEMPERATURE = [150, 200, 250, 300, 350, 400] # below 400K
         # DOPING = [1e14, 5e14, 1e15, 5e15, 1e16] # *len(TEMPERATURE) # make sure T and doping have same length
@@ -301,6 +301,9 @@ class Dynamic_regression:
             print('the validation data size is ' + str(np.shape(self.validationdata)[0]))
             print('generating data for validation data point ' + str(counter) + ' ' + str(prediction))
             validationpoint = validationset.iloc[counter-1, :]
+            # print the predictions and the real values:
+            # print('The prediction for the tasks are ' + str(y_predictions_1) + str(y_predictions_2))
+            print('The real values are: ' + str(self.validationdata[list(np.concatenate(self.task).flat)].iloc[counter-1, :]))
             # print(prediction.tolist())
             # simulate the new dataset with the fixed first step prediction values.
             fixlist = [tasks1, prediction.tolist()]
@@ -337,9 +340,7 @@ class Dynamic_regression:
             self.y_predictions_1 = y_predictions_1
             self.y_predictions_2 = y_predictions_2
 
-            # print the predictions and the real values:
-            # print('The prediction for the tasks are ' + str(y_predictions_1) + str(y_predictions_2))
-            print('The real values are: ' + str(self.validationdata[list(np.concatenate(self.task).flat)].iloc[counter-1, :]))
+
 
         return y_predictions_1, y_predictions_2
 
