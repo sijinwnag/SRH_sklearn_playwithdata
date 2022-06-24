@@ -82,7 +82,7 @@ class Dynamic_regression:
         self.noise_factor = noise_factor
 
 
-    def datatraining(self):
+    def datatraining(self, step1=True):
         '''
         This function input two dataset: one is training, the other is validation, and output the perdiction from training, the models and the evaluation results.
 
@@ -98,12 +98,21 @@ class Dynamic_regression:
 
         for the flow chart of this function, see the file: dynamic_regressor.ppt
         '''
-        trainingset_path = self.first_step_training_path
-        repeat = self.n_repeat
-        parameter = self.task[0]
-        # print(self.task)
-        # define the maching learning object for step training.
-        training_step1 = MyMLdata_2level(trainingset_path, 'bandgap1', repeat)
+        if step1 == True:
+            trainingset_path = self.first_step_training_path
+            repeat = self.n_repeat
+            parameter = self.task[0]
+            # print(self.task)
+            # define the maching learning object for step training.
+            training_step1 = MyMLdata_2level(trainingset_path, 'bandgap1', repeat)
+        else:
+            trainingset_path = self.first_step_training_path
+            repeat = self.n_repeat
+            parameter = self.task[1]
+            # print(self.task)
+            # define the maching learning object for step training.
+            training_step1 = MyMLdata_2level(trainingset_path, 'bandgap1', repeat)
+            training_step1.data = self.generated_data
         # see if the function can return the model correctly for predicting first step.
         step1_parameter = parameter
         # prepare an empty list to collect model for each task:
@@ -263,6 +272,7 @@ class Dynamic_regression:
         # export the data.
         # exp.exportDataset()
         # print(dataDf)
+        self.generated_data = dataDf
         return dataDf
 
 
@@ -299,7 +309,7 @@ class Dynamic_regression:
             counter = counter + 1
             # print which validation point we are up to and how many are there in total
             print('the validation data size is ' + str(np.shape(self.validationdata)[0]))
-            print('generating data for validation data point ' + str(counter) + ' ' + str(prediction))
+
             validationpoint = validationset.iloc[counter-1, :]
             # print the predictions and the real values:
             # print('The prediction for the tasks are ' + str(y_predictions_1) + str(y_predictions_2))
@@ -307,6 +317,7 @@ class Dynamic_regression:
             # print(prediction.tolist())
             # simulate the new dataset with the fixed first step prediction values.
             fixlist = [tasks1, prediction.tolist()]
+            print('generating data for validation data point ' + str(fixlist))
             data2 = self.dynamic_simulator(fixlist = fixlist)
             # print(fixlist) this is correct
             # create empty list to collect prediction for each task.'
@@ -335,6 +346,7 @@ class Dynamic_regression:
                 y_predictions.append(y_predict)
             # collect the prediction list for each task into the frame.
             y_predictions_2.append(y_predictions)
+            print('The second step predictions are ' + str(y_predictions))
 
         y_predictions_2 = np.reshape(np.array(np.transpose(y_predictions_2)).flat, np.shape(y_predictions_1))
 
@@ -346,6 +358,18 @@ class Dynamic_regression:
 
         return y_predictions_1, y_predictions_2
 
+
+    # def t_step_train_predict_v2(self):
+    #     print('The dynamic regressor chain is ' + str(self.task))
+    #
+    #     # make the first step prediction from the given dataset:
+    #     model_list, scaler_list, y_predictions_1 = self.datatraining()
+    #
+    #     # generate the data:
+    #
+    #
+    #     # then do the second step:
+    #     model_list, scaler_list, y_predictions_2 = self.datatraining(step1=False)
 
     def evaluation(self):
         '''
