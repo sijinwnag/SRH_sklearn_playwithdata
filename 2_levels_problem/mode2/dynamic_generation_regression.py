@@ -336,9 +336,11 @@ class Dynamic_regression:
             # collect the prediction list for each task into the frame.
             y_predictions_2.append(y_predictions)
 
-            # store the prediction into the object.
-            self.y_predictions_1 = y_predictions_1
-            self.y_predictions_2 = y_predictions_2
+        y_predictions_2 = np.reshape(np.array(np.transpose(y_predictions_2)).flat, np.shape(y_predictions_1))
+
+        # store the prediction into the object.
+        self.y_predictions_1 = y_predictions_1
+        self.y_predictions_2 = y_predictions_2
 
 
 
@@ -362,7 +364,8 @@ class Dynamic_regression:
         # print(np.array(np.transpose(y_predictions_2)).reshape(np.shape(y_predictions_1)))
         # print(np.array(y_predictions_1))
         y_predictions_1 = np.array(y_predictions_1)
-        y_predictions_2 = np.reshape(np.array(np.transpose(y_predictions_2)).flat, np.shape(y_predictions_1))
+        # y_predictions_2 = np.reshape(np.array(np.transpose(y_predictions_2)).flat, np.shape(y_predictions_1))
+        y_predictions_2 = np.array(y_predictions_2)
         y_predictions = np.concatenate((y_predictions_1, y_predictions_2))
         # print(np.shape(y_predictions))
 
