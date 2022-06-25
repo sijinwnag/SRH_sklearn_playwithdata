@@ -230,7 +230,7 @@ for parameter in step1_parameter:
 # validation_path = r"G:\study\thesis_data_storage\set11\set11_50.csv"
 validation_path = r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\set11_50.csv"
 training_path = r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\set11_80000.csv"
-dy = Dynamic_regression(training_path=training_path, validation_path = validation_path, noise_factor=0, simulate_size=8000)
+dy = Dynamic_regression(training_path=training_path, validation_path = validation_path, noise_factor=0, simulate_size=8000, n_repeat=1)
 dy.evaluation()
 # export the data
 pd.DataFrame(dy.y_predictions_1).to_csv(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\code_running_results\dynamic_generation]\x.csv')
