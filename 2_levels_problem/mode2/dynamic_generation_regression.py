@@ -324,26 +324,75 @@ class Dynamic_regression:
             y_predictions = []
             # iterate through each second step ML tasks:
             for task2 in self.task[1]:
-                print('for task ' + str(task2))
-                # train the ML model for this task, define the maching learning object.
-                training_step2 = MyMLdata_2level(self.first_step_training_path, 'bandgap1', self.n_repeat)
-                # update the step 2 training data as data2
-                training_step2.data = data2
-                # update the ML task for second step training.
-                training_step2.singletask = task2
-                # try to make it return the best R2 score model for all trials all models.
-                r2_frame, y_prediction_frame, y_test_frame, selected_model, scaler = training_step2.regression_repeat(output_y_pred=True)
-                # apply the same model and scaler on the validation set lifetime:
+                # print('for task ' + str(task2))
+                # # train the ML model for this task, define the maching learning object.
+                # training_step2 = MyMLdata_2level(self.first_step_training_path, 'bandgap1', self.n_repeat)
+                # # update the step 2 training data as data2
+                # training_step2.data = data2
+                # # update the ML task for second step training.
+                # training_step2.singletask = task2
+                # # try to make it return the best R2 score model for all trials all models.
+                # r2_frame, y_prediction_frame, y_test_frame, selected_model, scaler = training_step2.regression_repeat(output_y_pred=True)
+                # # apply the same model and scaler on the validation set lifetime:
 
-                # take the log10 and make the name shorter
-                X = np.array(validationpoint).reshape(1, -1)
-                X = np.log10(np.array(X.astype(np.float64)))
-                # go through the scaler:
+
+
+                # # take the log10 and make the name shorter
+                # X = np.array(validationpoint).reshape(1, -1)
+                # X = np.log10(np.array(X.astype(np.float64)))
+                # # go through the scaler:
+                # X_scaled = scaler.transform(X)
+                # # make the prediction:
+                # y_predict = selected_model.predict(X_scaled)
+                # # print(y_predict) # expect one value # checked out.
+                # y_predictions.append(y_predict)
+
+                ###################### lets try to do everything manually
+                # waht we have: data2, task2
+                # what to do: 1. extract the lifetime data from data2.
+                # 2. take the log10 of lifetime.
+                # 3. use a scaler to pre-process the lifetime.
+                # 4. use the random forest model with 100 trees to train it.
+                # 5. take the log10 of the validation set X.
+                # 6. use the previsou scaler to process validation X.
+                # 7. use the trained ML model to predict based on the processed X.
+
+                # 1. extract the lifetime data: collect the colums taht starts with a number:
+                # extract the training lifetime data:
+                # create a list to select X columns: if the column string contains cm, then identify it as X. (we could move this for loop out if the comcept works.)
+                select_X_list = []
+                for string in data2.columns.tolist():
+                    if string[0].isdigit():
+                        select_X_list.append(string)
+                data2_X = data2[select_X_list]
+                y = data2[str(task2)]
+
+                # 2. take the log10 of lifetime:
+                data2_X = np.log10(data2_X)
+
+                # 3. apply mean max scaler:
+                scaler = MinMaxScaler()
+                scaler.fit_transform(data2_X)
+
+                # 4. random forest model training:
+                model = RandomForestRegressor(n_estimators=150)
+                model.fit(data2_X, y)
+
+                # 5. take the log of validation X.
+                # X = np.array(validationpoint).reshape(1, -1)
+                # X = np.log10(np.array(X.astype(np.float64)))
+                # convert the X back to datafarame with correct feature names.
+                X = pd.DataFrame(validationpoint)
+                for colume in X.columns.tolist():
+                    X[str(colume)] = np.log10(X[str(colume)])
+
+                # 6. use scaler to X:
                 X_scaled = scaler.transform(X)
-                # make the prediction:
-                y_predict = selected_model.predict(X_scaled)
-                # print(y_predict) # expect one value # checked out.
+
+                # 7. apply model on X scaled for predictions:
+                y_predict = model.predict(X_scaled)
                 y_predictions.append(y_predict)
+
             # collect the prediction list for each task into the frame.
             y_predictions_2.append(y_predictions)
             print('The second step predictions are ' + str(y_predictions))

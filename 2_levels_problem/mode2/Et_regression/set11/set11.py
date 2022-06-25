@@ -248,6 +248,4 @@ dy.email_reminder()
 # first step works!
 # lets try to do validation.
 # check is there anything wrong with the second step?
-
-
 # %%-
