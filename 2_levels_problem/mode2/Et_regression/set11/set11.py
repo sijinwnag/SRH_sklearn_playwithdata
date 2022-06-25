@@ -24,7 +24,7 @@ sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn
 sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Savedir_example')
 from MLobject_tlevel import *
 from dynamic_generation_regression import *
-df1 = MyMLdata_2level(r"G:\study\thesis_data_storage\set10\set10_800000.csv", 'bandgap1',2)
+# df1 = MyMLdata_2level(r"G:\study\thesis_data_storage\set10\set10_800000.csv", 'bandgap1',2)
 # df1.data.head()
 # %%-
 
@@ -228,9 +228,9 @@ for parameter in step1_parameter:
 # %%-- test the dynamic regression object.
 # training_path = r"G:\study\thesis_data_storage\set11\set11_80000.csv"
 # validation_path = r"G:\study\thesis_data_storage\set11\set11_50.csv"
-validation_path = r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\set11_1.csv"
+validation_path = r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\set11_50.csv"
 training_path = r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\set11_80000.csv"
-dy = Dynamic_regression(training_path=training_path, validation_path = validation_path, noise_factor=0, simulate_size=8000)
+dy = Dynamic_regression(training_path=training_path, validation_path = validation_path, noise_factor=0, simulate_size=8000, n_repeat=1)
 dy.evaluation()
 # export the data
 pd.DataFrame(dy.y_predictions_1).to_csv(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\code_running_results\dynamic_generation]\x.csv')
