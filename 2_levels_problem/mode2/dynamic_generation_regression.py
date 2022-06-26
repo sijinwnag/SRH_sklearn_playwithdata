@@ -382,12 +382,13 @@ class Dynamic_regression:
 
                 # 5. take the log of validation X.
                 X = validationpoint
-                print(X)
+                # print(X)
 
                 # 6. use scaler to X:
-                X_scaled = scaler.transform(np.array(X).reshape(1, -1))
-                X_scaled = pd.DataFrame(X_scaled)
-                X_scaled.coumns = validationpoint.columns.tolist()
+                X = pd.DataFrame(X)
+                X_scaled = scaler.transform(np.transpose(X))
+                X_scaled = pd.DataFrame(X_scaled, columns = np.transpose(X).columns.tolist())
+                # print(X_scaled)
 
                 # 7. apply model on X scaled for predictions:
                 y_predict = model.predict(X_scaled)

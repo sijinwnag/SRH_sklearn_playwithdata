@@ -230,12 +230,12 @@ for parameter in step1_parameter:
 # validation_path = r"G:\study\thesis_data_storage\set11\set11_50.csv"
 validation_path = r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\set11_50.csv"
 training_path = r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\set11_80000.csv"
-dy = Dynamic_regression(training_path=training_path, validation_path = validation_path, noise_factor=0, simulate_size=8000, n_repeat=1)
+dy = Dynamic_regression(training_path=training_path, validation_path = validation_path, noise_factor=0, simulate_size=80, n_repeat=1)
 dy.evaluation()
 # export the data
 pd.DataFrame(dy.y_predictions_1).to_csv(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\code_running_results\dynamic_generation]\x.csv')
 pd.DataFrame(dy.y_predictions_2).to_csv(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\code_running_results\dynamic_generation]\y.csv')
-dy.email_reminder()
+# dy.email_reminder()
 
 # we have a problme here, why the real value is about 0.33 but the first prediction is about 0.30 twice
 # figure out why the first prediction is always 0.3 instead of 0.33eV
@@ -247,5 +247,5 @@ dy.email_reminder()
 # 2. check the scalour.
 # first step works!
 # lets try to do validation.
-# check is there anything wrong with the second step?
+# check is there anything wrong with the second step? maybe because it does not have any column name for second step training?
 # %%-
