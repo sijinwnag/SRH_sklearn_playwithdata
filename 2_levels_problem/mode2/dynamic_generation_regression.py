@@ -367,7 +367,7 @@ class Dynamic_regression:
                 data2_X = data2[select_X_list]
                 y = data2[str(task2)]
 
-                # 2. take the log10 of lifetime:
+                # 2. take the log10 of training lifetime:
                 data2_X = np.log10(data2_X)
 
                 # 3. apply mean max scaler:
@@ -383,8 +383,9 @@ class Dynamic_regression:
                 # X = np.log10(np.array(X.astype(np.float64)))
                 # convert the X back to datafarame with correct feature names.
                 X = pd.DataFrame(validationpoint)
-                for colume in X.columns.tolist():
+                for colume in validationset.columns.tolist():
                     print(colume)
+                    print(type(X))
                     X[str(colume)] = np.log10(X[str(colume)])
 
                 # 6. use scaler to X:
