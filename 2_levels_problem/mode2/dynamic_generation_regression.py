@@ -384,6 +384,7 @@ class Dynamic_regression:
                 # convert the X back to datafarame with correct feature names.
                 X = pd.DataFrame(validationpoint)
                 for colume in X.columns.tolist():
+                    print(colume)
                     X[str(colume)] = np.log10(X[str(colume)])
 
                 # 6. use scaler to X:
