@@ -293,10 +293,12 @@ class Dynamic_regression:
         validationset = self.validationdata
         # create a list to select X columns: if the column string contains cm, then identify it as X.
         select_X_list = []
+        validationsetX = validationset
         for string in validationset.columns.tolist():
             if string[0].isdigit():
+                validationsetX[string] = np.log10(validationset[string])
                 select_X_list.append(string)
-        validationset = validationset[select_X_list]
+        validationsetX = validationsetX[select_X_list]
 
         # print(np.shape(y_predictions_1))
         # now we got the first step prediction y_predictions_1 with dimension [first step tasks]*[datasize] (3, 8)
@@ -310,7 +312,7 @@ class Dynamic_regression:
             # print which validation point we are up to and how many are there in total
             print('the validation data size is ' + str(np.shape(self.validationdata)[0]))
 
-            validationpoint = validationset.iloc[counter-1, :]
+            validationpoint = validationsetX.iloc[counter-1, :]
             # print the predictions and the real values:
             # print('The prediction for the tasks are ' + str(y_predictions_1) + str(y_predictions_2))
             print('The real values are: ' + str(self.validationdata[list(np.concatenate(self.task).flat)].iloc[counter-1, :]))
@@ -379,17 +381,13 @@ class Dynamic_regression:
                 model.fit(data2_X, y)
 
                 # 5. take the log of validation X.
-                # X = np.array(validationpoint).reshape(1, -1)
-                # X = np.log10(np.array(X.astype(np.float64)))
-                # convert the X back to datafarame with correct feature names.
-                X = pd.DataFrame(validationpoint)
-                for colume in validationset.columns.tolist():
-                    print(colume)
-                    print(type(X))
-                    X[str(colume)] = np.log10(X[str(colume)])
+                X = validationpoint
+                print(X)
 
                 # 6. use scaler to X:
-                X_scaled = scaler.transform(X)
+                X_scaled = scaler.transform(np.array(X).reshape(1, -1))
+                X_scaled = pd.DataFrame(X_scaled)
+                X_scaled.coumns = validationpoint.columns.tolist()
 
                 # 7. apply model on X scaled for predictions:
                 y_predict = model.predict(X_scaled)
