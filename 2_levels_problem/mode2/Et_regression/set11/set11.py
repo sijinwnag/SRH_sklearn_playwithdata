@@ -50,7 +50,7 @@ sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn
 sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Savedir_example')
 from MLobject_tlevel import *
 from dynamic_generation_regression import *
-df1 = MyMLdata_2level(r"C:\Users\sijin wang\Documents\GitHub\yoann_code_new\Savedir_example\outputs\2022-06-27-12-34-34_advanced example - multi_level_L_datasetID_0.csv", 'bandgap1',1)
+df1 = MyMLdata_2level(r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\dynamic_method\set11_predictedEt1.csv", 'bandgap1',1)
 # df1.data.head()
 # %%-
 
@@ -214,7 +214,37 @@ df1.C_visiaulization(variable='C1d/C2d', task_name='plot with Et1-Et2')
 # %%-
 # %%-
 
-# %%-- test the idea of dynamic generation method: use ML object.
+# %%-- test the first of dynamic generation method: use ML object.
+df1 = MyMLdata_2level(r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\set11_80000.csv", 'bandgap1',1)
+
+# predict Et1:
+df1.singletask='logSp_1'
+r2_frame, y_prediction_frame, y_test_frame, best_model, scaler_return = df1.regression_repeat(output_y_pred=True)
+# now we have new lifetiem data from another file: load the lifetime data:
+validationdata = pd.read_csv(r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\set11_1.csv")
+# validationdata = pd.read_csv(r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\set11_1.csv")
+# extract the lifetime data:
+select_X_list = []
+validationsetX = validationdata
+for string in validationdata.columns.tolist():
+    if string[0].isdigit():
+        # take the log of the data.
+        select_X_list.append(string)
+# extract the lifetime data.
+validationsetX = validationdata[select_X_list]
+# print(validationsetX)
+# take the log:
+validationsetX = np.log10(validationsetX)
+# print(validationsetX)
+# go through the scaler.
+validationsetX = scaler_return.transform(validationsetX)
+# print(validationsetX)
+# Model to predict:
+y_pred = best_model.predict(validationsetX)
+print(y_pred)
+# %%-
+
+# %%-- test the second of dynamic generation method: use ML object.
 # assume at this step the data generation for second step is done:
 df1.singletask = 'logSp_2'
 
@@ -223,6 +253,7 @@ r2_frame, y_prediction_frame, y_test_frame, best_model, scaler_return = df1.regr
 
 # now we have new lifetiem data from another file: load the lifetime data:
 validationdata = pd.read_csv(r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\set11_1.csv")
+# validationdata = pd.read_csv(r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\set11_1.csv")
 # extract the lifetime data:
 select_X_list = []
 validationsetX = validationdata
@@ -246,7 +277,7 @@ print(y_pred)
 
 # %%-- test the idea of dynamic genration method: from scrach, no scaler nor log10.
 # assume at this step the data generation for second step is done: load the data:
-trainingset = pd.read_csv(r'C:\Users\sijin wang\Documents\GitHub\yoann_code_new\Savedir_example\outputs\2022-06-27-12-34-34_advanced example - multi_level_L_datasetID_0.csv')
+trainingset = pd.read_csv(r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\dynamic_method\set11_realEt1.csv")
 
 # extract the lifeitme training data.
 select_X_list = []
@@ -276,9 +307,9 @@ y_pred = model.predict(validationsetX)
 print(y_pred)
 # %%-
 
-# %%-- test the idea of dynamic genration method: from scrach, but with log10 and scalers.
+# %%-- test the idea of dynamic genration method: from scrach, but with log10 and scalers. (using predicted Et1, Sn1, Sp1)
 # assume at this step the data generation for second step is done: load the data:
-trainingset = pd.read_csv(r'C:\Users\sijin wang\Documents\GitHub\yoann_code_new\Savedir_example\outputs\2022-06-27-12-34-34_advanced example - multi_level_L_datasetID_0.csv')
+trainingset = pd.read_csv(r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\dynamic_method\set11_realEt1.csv")
 
 # extract the lifeitme training data.
 select_X_list = []
@@ -292,6 +323,8 @@ trainingX = trainingset[select_X_list]
 trainingX = np.log10(trainingX)
 
 # apply a scaler on the data.
+scaler = MinMaxScaler()
+scaler.fit_transform(trainingX)
 
 # define the ML model.
 model = RandomForestRegressor(n_estimators=150)
@@ -307,6 +340,11 @@ validationdata = pd.read_csv(r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\sim
 
 # extract the lifetime data.
 validationsetX = validationdata[select_X_list]
+
+# take the log for validation data.
+validationsetX = np.log10(validationsetX)
+# go through the scaler.
+validtionsetX = scaler.transform(validationsetX)
 
 # Model to predict:
 y_pred = model.predict(validationsetX)
