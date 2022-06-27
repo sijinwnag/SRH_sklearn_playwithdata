@@ -246,7 +246,7 @@ print(y_pred)
 
 # %%-- test the second of dynamic generation method: use ML object.
 # assume at this step the data generation for second step is done:
-df1.singletask = 'logSp_2'
+df1.singletask = 'Et_eV_2'
 
 # try to do without pre processor or manually.
 r2_frame, y_prediction_frame, y_test_frame, best_model, scaler_return = df1.regression_repeat(output_y_pred=True)
