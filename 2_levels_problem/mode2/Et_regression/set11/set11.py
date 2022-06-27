@@ -12,6 +12,32 @@
 
 
 # %%-- Imports
+import pandas as pd
+import numpy as np
+import seaborn as sn
+from sklearn.model_selection import train_test_split, GridSearchCV
+import matplotlib.pyplot as plt
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.neighbors import KNeighborsRegressor, KNeighborsClassifier
+from sklearn.metrics import r2_score, mean_absolute_error, confusion_matrix, f1_score, accuracy_score
+from sklearn.linear_model import LinearRegression, Ridge
+import matplotlib.pyplot as plt
+from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor, AdaBoostRegressor, RandomForestClassifier, GradientBoostingClassifier, AdaBoostClassifier
+from sklearn.neural_network import MLPRegressor, MLPClassifier
+from sklearn.svm import SVR, SVC
+import sys
+from sklearn.tree import DecisionTreeRegressor, DecisionTreeClassifier
+from sklearn.naive_bayes import GaussianNB
+# uncomment the below line for dell laptop only
+from playsound import playsound
+from sklearn.model_selection import cross_val_score, RepeatedKFold
+from sklearn.multioutput import RegressorChain
+from semiconductor.recombination import SRH
+import scipy.constants as sc
+from datetime import datetime
+import smtplib
+from email.message import EmailMessage
+import os
 import sys
 # import the function file from another folder:
 # use this line if on hp laptop:
@@ -24,7 +50,7 @@ sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn
 sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Savedir_example')
 from MLobject_tlevel import *
 from dynamic_generation_regression import *
-# df1 = MyMLdata_2level(r"G:\study\thesis_data_storage\set11\set11_800000.csv", 'bandgap1',2)
+df1 = MyMLdata_2level(r"C:\Users\sijin wang\Documents\GitHub\yoann_code_new\Savedir_example\outputs\2022-06-27-12-34-34_advanced example - multi_level_L_datasetID_0.csv", 'bandgap1',1)
 # df1.data.head()
 # %%-
 
@@ -71,11 +97,11 @@ df1.email_reminder()
 
 # %%-- Two level behaviour tester
 df1.singletask = 'Et_eV_2'
-r2scores = df1.regression_repeat()
-df1.singletask = 'logSn_2'
-r2scores = df1.regression_repeat()
-df1.singletask = 'logSp_2'
-r2scores = df1.regression_repeat()
+r2_frame, y_prediction_frame, y_test_frame, best_model, scaler_return = df1.regression_repeat(output_y_pred=True)
+# df1.singletask = 'logSn_2'
+# r2scores = df1.regression_repeat()
+# df1.singletask = 'logSp_2'
+# r2scores = df1.regression_repeat()
 df1.email_reminder()
 # %%-
 
@@ -188,41 +214,103 @@ df1.C_visiaulization(variable='C1d/C2d', task_name='plot with Et1-Et2')
 # %%-
 # %%-
 
-# %%-- test the overall function: the dynamic data generation method.
-# define the maching learning object for step training.
-training_step1 = MyMLdata_2level(r'C:\Users\sijin wang\Documents\GitHub\yoann_code_new\Savedir_example\outputs\small_dataset.csv', 'bandgap1',2)
-# see if the function can return the model correctly for predicting first step.
-step1_parameter = ['Et_eV_1', 'Sn_cm2_1', 'Sp_cm2_1']
-# prepare an empty list to collect model for each task:
-model_list = []
-# pr4epare an empty list to collect prediction for each task:
-predict_list = []
-# prepare an empty list to collect the R2 score for each task:
-r2_list = []
-# defien the set we want to do validation on
-prediction_step1 = MyMLdata_2level(r'C:\Users\sijin wang\Documents\GitHub\yoann_code_new\Savedir_example\outputs\dummy_validation_11.csv', 'bandgap1',2)
-# iterate for each parameter
-for parameter in step1_parameter:
-    print(parameter)
-    # defein the y to be trained using machine learning.
-    training_step1.singletask = parameter
-    # try to make it return the best R2 score model for all trials all models.
-    r2_frame, y_prediction_frame, y_test_frame, selected_model, scaler = training_step1.regression_repeat(output_y_pred=True)
-    # sanity check: see if it can select the best model based on the average R2 or mean absolute error.
-    # print(selected_model)
-    model_list.append(selected_model)
-    # extract the data using pre-processor: X is the log of lifetime data, y is the colume we want to predict.
-    prediction_step1.singletask = parameter
-    X_test, y_test = prediction_step1.pre_processor()
-    # scale the data, the data which the model is trained and validated should be the same scalter.
-    X_scaled = scaler.fit_transform(X_test)
-    # now do the prediction.
-    y_predict = selected_model.predict(X_scaled) # the dimension of this array is: [datasize in validation list]*[different tasks]
-    predict_list.append(y_predict)
-    # evaluate the model using both R2 score and mean absolute error.
-    r2 = r2_score(y_test, y_predict) # this is a float.
-    r2_list.append(r2)
-    # now we have the prediction from the first step: try to generate the new data.
+# %%-- test the idea of dynamic generation method: use ML object.
+# assume at this step the data generation for second step is done:
+df1.singletask = 'logSp_2'
+
+# try to do without pre processor or manually.
+r2_frame, y_prediction_frame, y_test_frame, best_model, scaler_return = df1.regression_repeat(output_y_pred=True)
+
+# now we have new lifetiem data from another file: load the lifetime data:
+validationdata = pd.read_csv(r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\set11_1.csv")
+# extract the lifetime data:
+select_X_list = []
+validationsetX = validationdata
+for string in validationdata.columns.tolist():
+    if string[0].isdigit():
+        # take the log of the data.
+        select_X_list.append(string)
+# extract the lifetime data.
+validationsetX = validationdata[select_X_list]
+# print(validationsetX)
+# take the log:
+validationsetX = np.log10(validationsetX)
+# print(validationsetX)
+# go through the scaler.
+validationsetX = scaler_return.transform(validationsetX)
+# print(validationsetX)
+# Model to predict:
+y_pred = best_model.predict(validationsetX)
+print(y_pred)
+# %%-
+
+# %%-- test the idea of dynamic genration method: from scrach, no scaler nor log10.
+# assume at this step the data generation for second step is done: load the data:
+trainingset = pd.read_csv(r'C:\Users\sijin wang\Documents\GitHub\yoann_code_new\Savedir_example\outputs\2022-06-27-12-34-34_advanced example - multi_level_L_datasetID_0.csv')
+
+# extract the lifeitme training data.
+select_X_list = []
+for string in trainingset.columns.tolist():
+    if string[0].isdigit():
+        # take the log of the data.
+        select_X_list.append(string)
+trainingX = trainingset[select_X_list]
+
+# define the ML model.
+model = RandomForestRegressor(n_estimators=150)
+
+# extract the target value:
+y = trainingset['logSp_2']
+
+# traing the model.
+model.fit(trainingX, y)
+
+# now we have new lifetiem data from another file: load the lifetime data:
+validationdata = pd.read_csv(r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\set11_1.csv")
+
+# extract the lifetime data.
+validationsetX = validationdata[select_X_list]
+
+# Model to predict:
+y_pred = model.predict(validationsetX)
+print(y_pred)
+# %%-
+
+# %%-- test the idea of dynamic genration method: from scrach, but with log10 and scalers.
+# assume at this step the data generation for second step is done: load the data:
+trainingset = pd.read_csv(r'C:\Users\sijin wang\Documents\GitHub\yoann_code_new\Savedir_example\outputs\2022-06-27-12-34-34_advanced example - multi_level_L_datasetID_0.csv')
+
+# extract the lifeitme training data.
+select_X_list = []
+for string in trainingset.columns.tolist():
+    if string[0].isdigit():
+        # take the log of the data.
+        select_X_list.append(string)
+trainingX = trainingset[select_X_list]
+
+# take log10 of the data.
+trainingX = np.log10(trainingX)
+
+# apply a scaler on the data.
+
+# define the ML model.
+model = RandomForestRegressor(n_estimators=150)
+
+# extract the target value:
+y = trainingset['logSp_2']
+
+# traing the model.
+model.fit(trainingX, y)
+
+# now we have new lifetiem data from another file: load the lifetime data:
+validationdata = pd.read_csv(r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\set11_1.csv")
+
+# extract the lifetime data.
+validationsetX = validationdata[select_X_list]
+
+# Model to predict:
+y_pred = model.predict(validationsetX)
+print(y_pred)
 # %%-
 
 # %%-- test the dynamic regression object.
@@ -230,12 +318,12 @@ for parameter in step1_parameter:
 # validation_path = r"G:\study\thesis_data_storage\set11\set11_50.csv"
 validation_path = r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\set11_50.csv"
 training_path = r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\set11_80000.csv"
-dy = Dynamic_regression(training_path=training_path, validation_path = validation_path, noise_factor=0, simulate_size=80, n_repeat=1)
+dy = Dynamic_regression(training_path=training_path, validation_path = validation_path, noise_factor=0, simulate_size=8000, n_repeat=1)
 dy.evaluation()
 # export the data
 pd.DataFrame(dy.y_predictions_1).to_csv(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\code_running_results\dynamic_generation]\x.csv')
 pd.DataFrame(dy.y_predictions_2).to_csv(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\code_running_results\dynamic_generation]\y.csv')
-# dy.email_reminder()
+dy.email_reminder()
 
 # we have a problme here, why the real value is about 0.33 but the first prediction is about 0.30 twice
 # figure out why the first prediction is always 0.3 instead of 0.33eV
