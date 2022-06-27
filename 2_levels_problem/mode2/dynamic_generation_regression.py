@@ -285,6 +285,7 @@ class Dynamic_regression:
 
         # make the first step prediction from the given dataset:
         model_list, scaler_list, y_predictions_1 = self.datatraining()
+        # y_predictions_1 = [0.31, -14.55313122, -13.7839938]
 
         # read off the task name from first step:
         tasks1 = self.task[0]
@@ -297,10 +298,11 @@ class Dynamic_regression:
         for string in validationset.columns.tolist():
             if string[0].isdigit():
                 # take the log of the data.
-                validationsetX[string] = np.log10(validationset[string])
+                # validationsetX[string] = np.log10(validationset[string])
                 select_X_list.append(string)
         # extract the lifetime data.
         validationsetX = validationsetX[select_X_list]
+        validationsetX = np.log10(validationsetX)
 
         # print(np.shape(y_predictions_1))
         # now we got the first step prediction y_predictions_1 with dimension [first step tasks]*[datasize] (3, 8)
@@ -322,7 +324,10 @@ class Dynamic_regression:
             # simulate the new dataset with the fixed first step prediction values.
             fixlist = [tasks1, prediction.tolist()]
             print('generating data for validation data point ' + str(fixlist))
+            # fixlist = [['Et_eV_1', 'logSn_1', 'logSp_1'], [0.31, -14.55313122, -13.7839938]]
+            # print(fixlist)
             data2 = self.dynamic_simulator(fixlist = fixlist)
+             #data2 = pd.read_csv(r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\dynamic_method\set11_predictedEt1.csv")
             # print(fixlist) this is correct
             # create empty list to collect prediction for each task.'
             y_predictions = []
@@ -348,6 +353,7 @@ class Dynamic_regression:
                 X_scaled = scaler.transform(X)
                 # make the prediction:
                 y_predict = selected_model.predict(X_scaled)
+                print('prediction for this task is ' + str(y_predict))
                 # print(y_predict) # expect one value # checked out.
                 y_predictions.append(y_predict)
 

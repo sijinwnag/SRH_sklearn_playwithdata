@@ -246,7 +246,7 @@ print(y_pred)
 
 # %%-- test the second of dynamic generation method: use ML object.
 # assume at this step the data generation for second step is done:
-df1.singletask = 'Et_eV_2'
+df1.singletask = 'logSp_2'
 
 # try to do without pre processor or manually.
 r2_frame, y_prediction_frame, y_test_frame, best_model, scaler_return = df1.regression_repeat(output_y_pred=True)
@@ -354,14 +354,14 @@ print(y_pred)
 # %%-- test the dynamic regression object.
 # training_path = r"G:\study\thesis_data_storage\set11\set11_80000.csv"
 # validation_path = r"G:\study\thesis_data_storage\set11\set11_50.csv"
-validation_path = r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\set11_50.csv"
+validation_path = r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\set11_1.csv"
 training_path = r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\set11_80000.csv"
 dy = Dynamic_regression(training_path=training_path, validation_path = validation_path, noise_factor=0, simulate_size=8000, n_repeat=1)
-dy.evaluation()
+dy.t_step_train_predict()
 # export the data
-pd.DataFrame(dy.y_predictions_1).to_csv(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\code_running_results\dynamic_generation]\x.csv')
-pd.DataFrame(dy.y_predictions_2).to_csv(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\code_running_results\dynamic_generation]\y.csv')
-dy.email_reminder()
+# pd.DataFrame(dy.y_predictions_1).to_csv(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\code_running_results\dynamic_generation]\x.csv')
+# pd.DataFrame(dy.y_predictions_2).to_csv(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\code_running_results\dynamic_generation]\y.csv')
+# dy.email_reminder()
 
 # we have a problme here, why the real value is about 0.33 but the first prediction is about 0.30 twice
 # figure out why the first prediction is always 0.3 instead of 0.33eV
