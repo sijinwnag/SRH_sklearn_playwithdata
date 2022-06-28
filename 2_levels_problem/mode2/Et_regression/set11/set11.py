@@ -263,12 +263,15 @@ for string in validationdata.columns.tolist():
         select_X_list.append(string)
 # extract the lifetime data.
 validationsetX = validationdata[select_X_list]
+print(validationsetX)
 # print(validationsetX)
 # take the log:
 validationsetX = np.log10(validationsetX)
+print(validationsetX)
 # print(validationsetX)
 # go through the scaler.
 validationsetX = scaler_return.transform(validationsetX)
+print(validationsetX)
 # print(validationsetX)
 # Model to predict:
 y_pred = best_model.predict(validationsetX)
@@ -375,3 +378,5 @@ dy.t_step_train_predict()
 # lets try to do validation.
 # check is there anything wrong with the second step? maybe because it does not have any column name for second step training?
 # %%-
+
+dy.generated_data

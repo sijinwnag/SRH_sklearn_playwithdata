@@ -302,8 +302,9 @@ class Dynamic_regression:
                 select_X_list.append(string)
         # extract the lifetime data.
         validationsetX = validationsetX[select_X_list]
+        print(validationsetX)
         validationsetX = np.log10(validationsetX)
-
+        print(validationsetX)
         # print(np.shape(y_predictions_1))
         # now we got the first step prediction y_predictions_1 with dimension [first step tasks]*[datasize] (3, 8)
         # create emtply list to collect the prediction for each validation point.
@@ -317,6 +318,7 @@ class Dynamic_regression:
             print('the validation data size is ' + str(np.shape(self.validationdata)[0]))
 
             validationpoint = validationsetX.iloc[counter-1, :]
+            print(validationpoint) # should be equal to validationsetX
             # print the predictions and the real values:
             # print('The prediction for the tasks are ' + str(y_predictions_1) + str(y_predictions_2))
             print('The real values are: ' + str(self.validationdata[list(np.concatenate(self.task).flat)].iloc[counter-1, :]))
@@ -346,11 +348,13 @@ class Dynamic_regression:
 
 
 
-                # take the log10 of validation X (done in previous steps)
+                # take the validation X (done in previous steps)
                 X = np.array(validationpoint).reshape(1, -1)
+                print(X) # should be equal to validationsetX
                 # X = np.log10(np.array(X.astype(np.float64)))
                 # go through the scaler:
                 X_scaled = scaler.transform(X)
+                print(X_scaled) # should be equal to validtionsetX in set11 file
                 # make the prediction:
                 y_predict = selected_model.predict(X_scaled)
                 print('prediction for this task is ' + str(y_predict))
