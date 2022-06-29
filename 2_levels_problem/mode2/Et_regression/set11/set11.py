@@ -282,7 +282,7 @@ print(y_pred)
 
 # %%-- test the idea of dynamic genration method: from scrach, no scaler nor log10.
 # assume at this step the data generation for second step is done: load the data:
-trainingset = pd.read_csv(r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\dynamic_method\set11_realEt1.csv")
+trainingset = pd.read_csv(r"G:\study\thesis_data_storage\set11\ddgm\point1\dataset2_withAuger.csv")
 
 # extract the lifeitme training data.
 select_X_list = []
@@ -302,7 +302,7 @@ y = trainingset['logSp_2']
 model.fit(trainingX, y)
 
 # now we have new lifetiem data from another file: load the lifetime data:
-validationdata = pd.read_csv(r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\set11_1.csv")
+validationdata = pd.read_csv(r"G:\study\thesis_data_storage\set11\ddgm\point1\set11_50_1.csv")
 
 # extract the lifetime data.
 validationsetX = validationdata[select_X_list]
@@ -314,7 +314,7 @@ print(y_pred)
 
 # %%-- test the idea of dynamic genration method: from scrach, but with log10 and scalers. (using predicted Et1, Sn1, Sp1)
 # assume at this step the data generation for second step is done: load the data:
-trainingset = pd.read_csv(r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\dynamic_method\set11_realEt1.csv")
+trainingset = pd.read_csv(r"G:\study\thesis_data_storage\set11\ddgm\point1\dataset2_withAuger.csv")
 
 # extract the lifeitme training data.
 select_X_list = []
@@ -341,7 +341,7 @@ y = trainingset['logSp_2']
 model.fit(trainingX, y)
 
 # now we have new lifetiem data from another file: load the lifetime data:
-validationdata = pd.read_csv(r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\set11_1.csv")
+validationdata = pd.read_csv(r"G:\study\thesis_data_storage\set11\ddgm\point1\set11_50_1.csv")
 
 # extract the lifetime data.
 validationsetX = validationdata[select_X_list]
@@ -381,4 +381,4 @@ dy.t_step_train_predict()
 # check is there anything wrong with the second step? maybe because it does not have any column name for second step training?
 # %%-
 
-dy.generated_data
+df1.email_reminder()
