@@ -247,13 +247,14 @@ df1.email_reminder()
 
 # %%-- test the second of dynamic generation method: use ML object.
 # assume at this step the data generation for second step is done:
+df1 = MyMLdata_2level(r"G:\study\thesis_data_storage\set11\ddgm\point1\dataset2_withAuger.csv", 'bandgap1',1)
 df1.singletask = 'logSp_2'
 
 # try to do without pre processor or manually.
 r2_frame, y_prediction_frame, y_test_frame, best_model, scaler_return = df1.regression_repeat(output_y_pred=True)
 
 # now we have new lifetiem data from another file: load the lifetime data:
-validationdata = pd.read_csv(r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\set11_1.csv")
+validationdata = pd.read_csv(r"G:\study\thesis_data_storage\set11\ddgm\point1\set11_50_1.csv")
 # validationdata = pd.read_csv(r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\set11_1.csv")
 # extract the lifetime data:
 select_X_list = []
