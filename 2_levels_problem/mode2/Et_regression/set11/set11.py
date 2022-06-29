@@ -14,7 +14,7 @@
 # %%-- Imports
 import pandas as pd
 import numpy as np
-# import seaborn as sn
+import seaborn as sn
 from sklearn.model_selection import train_test_split, GridSearchCV
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import MinMaxScaler
@@ -218,10 +218,10 @@ df1.C_visiaulization(variable='C1d/C2d', task_name='plot with Et1-Et2')
 df1 = MyMLdata_2level(r"G:\study\thesis_data_storage\set11\set11_80000.csv", 'bandgap1',1)
 
 # predict Et1:
-df1.singletask='logSn_1'
+df1.singletask='logSp_1'
 r2_frame, y_prediction_frame, y_test_frame, best_model, scaler_return = df1.regression_repeat(output_y_pred=True)
 # now we have new lifetiem data from another file: load the lifetime data:
-validationdata = pd.read_csv(r"C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn_playwithdata\lifetimedata\point3\set11_50_1.xlsx")
+validationdata = pd.read_csv(r"C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn_playwithdata\lifetimedata\point3\set11_50_1.csv")
 # validationdata = pd.read_csv(r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\set11_1.csv")
 # extract the lifetime data:
 select_X_list = []
