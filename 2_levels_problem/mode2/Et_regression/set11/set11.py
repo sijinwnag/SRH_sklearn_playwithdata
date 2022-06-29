@@ -14,7 +14,7 @@
 # %%-- Imports
 import pandas as pd
 import numpy as np
-import seaborn as sn
+# import seaborn as sn
 from sklearn.model_selection import train_test_split, GridSearchCV
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import MinMaxScaler
