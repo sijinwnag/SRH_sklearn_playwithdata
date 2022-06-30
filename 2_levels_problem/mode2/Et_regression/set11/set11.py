@@ -98,10 +98,10 @@ df1.email_reminder()
 # %%-- Two level behaviour tester
 df1.singletask = 'Et_eV_2'
 r2_frame, y_prediction_frame, y_test_frame, best_model, scaler_return = df1.regression_repeat(output_y_pred=True)
-# df1.singletask = 'logSn_2'
-# r2scores = df1.regression_repeat()
-# df1.singletask = 'logSp_2'
-# r2scores = df1.regression_repeat()
+df1.singletask = 'logSn_2'
+r2scores = df1.regression_repeat()
+df1.singletask = 'logSp_2'
+r2scores = df1.regression_repeat()
 df1.email_reminder()
 # %%-
 
