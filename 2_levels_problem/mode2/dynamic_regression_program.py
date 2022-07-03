@@ -61,6 +61,7 @@ import os
 # %%-
 
 
+# %%-- some simple predefined function: try not to make too many layers of function, so it is easier to debug.
 def transparency_calculator(datasize):
     '''
     This function will calcualte a suitable data transparency given the datasize for a scatter plot.
@@ -72,9 +73,10 @@ def transparency_calculator(datasize):
     else:
         alpha = 0.5
     return alpha
+# %%-
 
 
-# %%--- Step 1: train and test the Et_eV_1
+# %%--- Step 1: train and test the Et_eV_1, logS_n1, logS_p1.
 '''
 Plan:
 1. load the data.
@@ -92,7 +94,7 @@ Plan:
 # the dataset0 (the real validation set)
 dataset0 = pd.read_csv(r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\set11_1.csv")
 # the dtaset1 (the dataset that varies everytyhing to train Et1, Sn1, Sp1)
-dataset1 = pd.read_csv(r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\set11_80000.csv")
+dataset1 = pd.read_csv(r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\set11_50.csv")
 
 # select the lifeitme columes, the criteria is whether the colume title start with a number:
 select_X_list = []
@@ -149,3 +151,6 @@ for taskname in ['Et_eV_1', 'logSn_1', 'logSp_1']:
 model_step1 = model_Et1_logSn1_logSp1
 scaler_step1 = scaler
 # %%-
+
+
+# %%-- Step2:
