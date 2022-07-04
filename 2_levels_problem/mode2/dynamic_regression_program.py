@@ -94,7 +94,7 @@ Plan:
 # the dataset0 (the real validation set)
 dataset0 = pd.read_csv(r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\set11_1.csv")
 # the dtaset1 (the dataset that varies everytyhing to train Et1, Sn1, Sp1)
-dataset1 = pd.read_csv(r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\set11_50.csv")
+dataset1 = pd.read_csv(r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\set11_80000.csv")
 
 # select the lifeitme columes, the criteria is whether the colume title start with a number:
 select_X_list = []
@@ -148,9 +148,50 @@ for taskname in ['Et_eV_1', 'logSn_1', 'logSp_1']:
     plt.legend()
     plt.show()
 
-model_step1 = model_Et1_logSn1_logSp1
-scaler_step1 = scaler
+model_step1 = model_Et1_logSn1_logSp1 # this is a list a model.
+scaler_step1 = scaler # this is just one scaler.
 # %%-
 
 
-# %%-- Step2:
+# %%-- Step2: take the model 1 to predict Et1, Sn1, Sp1 from the validation point.
+'''
+plan:
+1. load the validationset.
+2. select the lifetime data of the validationset.
+3. take the log of the vlidationset.
+4. take the X through the scaler we had.
+5. use the trained model to predict the processed lifetime.
+6. return the prediction.
+7. plot the real vs predicted.
+'''
+
+# load the validationset
+# the dataset0 (the real validation set)
+dataset0 = pd.read_csv(r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\set11_1.csv")
+
+# select the lifetime data of hte validationste by choosing hte colume names start with a number.
+# select the lifeitme columes, the criteria is whether the colume title start with a number:
+select_X_list = []
+for string in dataset0.columns.tolist():
+    if string[0].isdigit():
+        select_X_list.append(string)
+X_dataset0 = dataset0[select_X_list]
+
+# take the log of validationset X.
+X_log_dataset0 = np.log10(X_dataset0)
+
+y_list = []
+# iterate through each task:
+for k in range(len(model_step1)):
+    # select the correct machine learning model.
+    model = model_step1[k]
+    # select the correct scaler.
+    scaler = scaler_step1
+    # process the data through the scaler.
+    X_log_scaled_dataset0 = scaler.transform(X_log_dataset0)
+    # ask ML to predict y
+    y_pred_set0 = model.predict(X_log_scaled_dataset0)
+    # collect the prediction into hte list: it should be [Et1_predicted, logSn1_predicted, logSp1_predicted]
+    y_list.append(y_pred_set0)
+
+# %%-
