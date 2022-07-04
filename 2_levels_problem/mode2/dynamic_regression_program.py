@@ -217,8 +217,9 @@ for k in range(len(model_step1)):
 print(y_list)
 # %%-
 
-# %%-- for each point, given the y prediction, dynamically generate new data.
+# %%-- for each point, given the y prediction, dynamically generate new data. (second datapoint)
 # read off the second line from dataset0
+dataset0 = pd.read_csv(r"G:\study\thesis_data_storage\set11\set11_10.csv")
 data1 = dataset0.iloc[1,:]
 Et1_real = data1['Et_eV_1']
 logSn1_real = data1['logSn_1']
@@ -310,8 +311,116 @@ vocab={
 # %%-
 
 generated_data = db_sah
+db_sah
+# %%-
+
+# %%-- train and save model 2 (second datapoint)
+# load the data:
+# the dataset0 (the real validation set)
+# dataset0 = pd.read_csv(r"G:\study\thesis_data_storage\set11\set11_1.csv")
+# the dtaset1 (the dataset that varies everytyhing to train Et1, Sn1, Sp1)
+dataset2 = generated_data
+
+# select the lifeitme columes, the criteria is whether the colume title start with a number:
+select_X_list = []
+for string in dataset1.columns.tolist():
+    if string[0].isdigit():
+        select_X_list.append(string)
+X_dataset2 = dataset2[select_X_list]
+
+# take the log10 of the lifetime from dataset1
+X_log_dataset2 = np.log10(X_dataset2)
+
+# define the scaler:
+scaler = MinMaxScaler()
+# train the scaler and let the processed lifetime go through the scaler.
+X_log_scaled_dataset2 = scaler.fit_transform(X_log_dataset2)
+
+# create a list to collect the models:
+model_Et2_logSn2_logSp2 = []
+
+# iterate for each y task.
+for taskname in ['Et_eV_2', 'logSn_2', 'logSp_2']:
+
+    # define the y for the ML model.
+    y = dataset2[taskname]
+
+    # train test split:
+    X_train, X_test, y_train, y_test = train_test_split(X_log_scaled_dataset2, y, test_size=0.1)
+
+    # define, train and save the model.
+    model = RandomForestRegressor()
+    print('training ' + str(model) + ' for ' + str(taskname))
+    model.fit(X_train, y_train)
+    model_Et2_logSn2_logSp2.append(model)
+
+    # plot the real vs prediction for validation set.
+    y_predict = model.predict(X_test)
+    r2=r2_score(y_test, y_predict)
+    mae = mean_absolute_error(y_test, y_predict)
+    plt.figure()
+    # print(np.shape(r2_frame))
+    # print(np.shape(y_prediction_frame))
+    # print(np.shape(y_test_frame))
+    # print(np.shape(y_prediction_frame))
+    # calculate the transparency:
+
+
+    alpha=transparency_calculator(len(y_predict))
+    print('transparency of scattering plot is ' + str(alpha))
+    plt.scatter(y_test, y_predict, label=('$R^2$' + '=' + str(round(r2, 3))) + ('  Mean Absolue error' + '=' + str(round(mae, 3))), alpha=alpha)
+    plt.xlabel('real value')
+    plt.ylabel('predicted value')
+    plt.title('real vs predicted at trial ' + ' for task ' + str(taskname))
+    plt.legend()
+    plt.show()
+
+model_step2 = model_Et2_logSn2_logSp2 # this is a list a model.
+scaler_step2 = scaler # this is just one scaler.
 
 # %%-
+
+# %%-- use model 2 to make prediction on dataset0 (second datapoint)
+'''
+plan:
+1. load the dataset and define the datapoint.
+2. extract the lifetime part of the dataset0.
+3. go through the log10 and MinMaxScaler for dataset0 lifetime.
+4. use the trained model2 to make prediction on Et2, Sn2, Sp2.
+5. plot the real vs predicted to see if it works.
+'''
+# load the dataset.
+dataset0 = pd.read_csv(r"G:\study\thesis_data_storage\set11\set11_10.csv")
+# deinfe the datapoint
+datapoint = dataset0.iloc[1,:]
+
+# extract the lifetime of this datapoint:
+select_X_list = []
+for string in dataset0.columns.tolist():
+    if string[0].isdigit():
+        select_X_list.append(string)
+X_datapoint = datapoint[select_X_list]
+
+# go through log10 and the scaler from model2.
+X_datapoint = np.log10(X_datapoint)
+scaler_step2.transform(X_datapoint)
+
+# iterate through each task:
+k = -1
+predictset = []
+for task in ['Et_eV_2', 'logSn_1', 'logSp_1']:
+    # update the counter.
+    k = k + 1
+    # apply model 2 on the X_datapoint:
+    y_predict = model_step2[k].predict(X_datapoint)
+    # collect the prediction.
+    predictset.append(y_predict)
+    # for comparison
+    print(y_predict)
+    print(dataset0[task])
+
+# %%-
+
 
 # %%-- Email reminder
 def email_reminder():
