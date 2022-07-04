@@ -92,9 +92,9 @@ Plan:
 
 # load the data:
 # the dataset0 (the real validation set)
-dataset0 = pd.read_csv(r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\set11_1.csv")
+dataset0 = pd.read_csv(r"G:\study\thesis_data_storage\set11\set11_50.csv")
 # the dtaset1 (the dataset that varies everytyhing to train Et1, Sn1, Sp1)
-dataset1 = pd.read_csv(r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\set11\set11_80000.csv")
+dataset1 = pd.read_csv(r"G:\study\thesis_data_storage\set11\set11_80000.csv")
 
 # select the lifeitme columes, the criteria is whether the colume title start with a number:
 select_X_list = []
@@ -162,7 +162,7 @@ plan:
 4. take the X through the scaler we had.
 5. use the trained model to predict the processed lifetime.
 6. return the prediction.
-7. plot the real vs predicted.
+7. plot the real vs predicted. (next step is to apply step 2 on a single validation datapoint) (leave iteration through each validation point till the end)
 '''
 
 # load the validationset
@@ -194,4 +194,34 @@ for k in range(len(model_step1)):
     # collect the prediction into hte list: it should be [Et1_predicted, logSn1_predicted, logSp1_predicted]
     y_list.append(y_pred_set0)
 
+print(y_list)
+# %%-
+
+
+# %%-- Email reminder
+def email_reminder():
+
+    subject='ML finish training'
+    body='ML finished' + ' through the file ' + str(os.getcwd())
+    to='z5183876@ad.unsw.edu.au'
+
+    user = "sijinwang@yahoo.com"
+    password = 'gdfkzhzhaokjivek'
+
+    msg = EmailMessage()
+    msg.set_content(body)
+    msg['subject'] = subject
+    msg['to'] = to
+    msg['from'] = user
+
+
+
+    server = smtplib.SMTP("smtp.mail.yahoo.com", 587)
+    server.starttls()
+    server.login(user, password)
+    server.send_message(msg)
+
+    server.quit()
+
+email_reminder()
 # %%-
