@@ -92,7 +92,7 @@ Plan:
 
 # load the data:
 # the dataset0 (the real validation set)
-dataset0 = pd.read_csv(r"G:\study\thesis_data_storage\set11\set11_50.csv")
+dataset0 = pd.read_csv(r"G:\study\thesis_data_storage\set11\set11_8k.csv")
 # the dtaset1 (the dataset that varies everytyhing to train Et1, Sn1, Sp1)
 dataset1 = pd.read_csv(r"G:\study\thesis_data_storage\set11\set11_80000.csv")
 
