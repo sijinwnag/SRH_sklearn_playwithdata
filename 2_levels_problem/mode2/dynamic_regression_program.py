@@ -58,6 +58,7 @@ import pandas as pd
 import smtplib
 from email.message import EmailMessage
 import os
+import math
 # %%-
 
 
@@ -217,6 +218,7 @@ for k in range(len(model_step1)):
 print(y_list)
 # %%-
 
+
 # %%-- for each point, given the y prediction, dynamically generate new data. (second datapoint)
 # read off the second line from dataset0
 dataset0 = pd.read_csv(r"G:\study\thesis_data_storage\set11\set11_10.csv")
@@ -226,11 +228,11 @@ logSn1_real = data1['logSn_1']
 logSp1_real = data1['logSp_1']
 # suppose we have predicted Et1, logSn1, logSn2:
 Et1_real
-Et1_pred = 0.37315143
+Et1_pred = 0.371
 logSn1_real
-logSn1_pred = -16.47345516
+logSn1_pred = -16.4
 logSp1_real
-logSp1_pred = -15.32641967
+logSp1_pred = -15.7
 
 # %%-- Inputs
 SAVEDIR = r"C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\yoann_code_new\Savedir_example" # you can change this to your own path
@@ -245,18 +247,6 @@ DOPING = [1e15] *len(TEMPERATURE) # make sure T and doping have same length
 # TEMPERATURE
 WAFERTYPE = 'p'
 NAME = 'advanced example - multi_level_L'
-# %%-
-
-# %%-- Run this section only if you need multiple doping levels
-New_T = []
-for temp in TEMPERATURE:
-    for k in range(len(DOPING)):
-        New_T.append(temp)
-# repeat the whole doping 6 times.
-DOPING=DOPING*len(DOPING)
-# len(DOPING)
-TEMPERATURE=New_T
-# print(New_T)
 # %%-
 
 # %%-- Hyper-parameters
@@ -314,6 +304,7 @@ generated_data = db_sah
 db_sah
 # %%-
 
+
 # %%-- train and save model 2 (second datapoint)
 # load the data:
 # the dataset0 (the real validation set)
@@ -335,7 +326,6 @@ X_log_dataset2 = np.log10(X_dataset2)
 scaler = MinMaxScaler()
 # train the scaler and let the processed lifetime go through the scaler.
 X_log_scaled_dataset2 = scaler.fit_transform(X_log_dataset2)
-
 # create a list to collect the models:
 model_Et2_logSn2_logSp2 = []
 
@@ -349,7 +339,7 @@ for taskname in ['Et_eV_2', 'logSn_2', 'logSp_2']:
     X_train, X_test, y_train, y_test = train_test_split(X_log_scaled_dataset2, y, test_size=0.1)
 
     # define, train and save the model.
-    model = RandomForestRegressor()
+    model = RandomForestRegressor(n_estimators=150)
     print('training ' + str(model) + ' for ' + str(taskname))
     model.fit(X_train, y_train)
     model_Et2_logSn2_logSp2.append(model)
@@ -377,7 +367,6 @@ for taskname in ['Et_eV_2', 'logSn_2', 'logSp_2']:
 
 model_step2 = model_Et2_logSn2_logSp2 # this is a list a model.
 scaler_step2 = scaler # this is just one scaler.
-
 # %%-
 
 # %%-- use model 2 to make prediction on dataset0 (second datapoint)
@@ -390,20 +379,25 @@ plan:
 5. plot the real vs predicted to see if it works.
 '''
 # load the dataset.
-dataset0 = pd.read_csv(r"G:\study\thesis_data_storage\set11\set11_10.csv")
-# deinfe the datapoint
+dataset0 = pd.DataFrame(pd.read_csv(r"G:\study\thesis_data_storage\set11\set11_10.csv"))
 datapoint = dataset0.iloc[1,:]
-
+print(datapoint)
+# datapoint
 # extract the lifetime of this datapoint:
 select_X_list = []
 for string in dataset0.columns.tolist():
     if string[0].isdigit():
         select_X_list.append(string)
 X_datapoint = datapoint[select_X_list]
-
+# print(X_datapoint)
 # go through log10 and the scaler from model2.
-X_datapoint = np.log10(X_datapoint)
-scaler_step2.transform(X_datapoint)
+X_datapoint = np.log10(X_datapoint.astype(float))
+print(X_datapoint)
+X_datapoint = np.array(X_datapoint).reshape(-1, 1)
+X_datapoint = np.transpose(X_datapoint)
+print(X_datapoint)
+X_datapoint = pd.DataFrame(X_datapoint, columns=select_X_list)
+X_datapoint = scaler_step2.transform(X_datapoint)
 
 # iterate through each task:
 k = -1
@@ -418,7 +412,6 @@ for task in ['Et_eV_2', 'logSn_1', 'logSp_1']:
     # for comparison
     print(y_predict)
     print(dataset0[task])
-
 # %%-
 
 
