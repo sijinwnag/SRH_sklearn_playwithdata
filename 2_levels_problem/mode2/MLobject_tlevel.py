@@ -256,7 +256,7 @@ class MyMLdata_2level:
             model_num = int(max_position[0][1])
             print('The best performance is decided by lowest Mean Absolute Error')
         # plot the graph for real vs predicted
-        plt.figure()
+        plt.figure(facecolor='white')
         # print(np.shape(r2_frame))
         # print(np.shape(y_prediction_frame))
         # print(np.shape(y_test_frame))
@@ -268,7 +268,8 @@ class MyMLdata_2level:
         plt.xlabel('real value')
         plt.ylabel('predicted value')
         plt.title('real vs predicted at trial ' + str(repeat_num + 1) + ' using method ' + str(self.reg_param['model_names'][model_num]) + ' for task ' + str(self.singletask))
-        plt.legend()
+        plt.legend(loc=3)
+        plt.savefig(str(self.singletask) + '.png')
         plt.show()
 
         if output_y_pred == False:
