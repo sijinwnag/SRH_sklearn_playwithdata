@@ -268,7 +268,7 @@ class MyMLdata_2level:
         plt.xlabel('real value')
         plt.ylabel('predicted value')
         plt.title('real vs predicted at trial ' + str(repeat_num + 1) + ' using method ' + str(self.reg_param['model_names'][model_num]) + ' for task ' + str(self.singletask))
-        plt.legend(loc=3)
+        plt.legend(loc=3, framealpha=0.1)
         plt.savefig(str(self.singletask) + '.png')
         plt.show()
 
