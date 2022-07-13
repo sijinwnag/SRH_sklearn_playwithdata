@@ -37,13 +37,14 @@ sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn
 sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Savedir_example')
 from MLobject_tlevel import *
 from dynamic_generation_regression import *
-df1 = MyMLdata_2level(r"G:\study\thesis_data_storage\set11\set11_800k_non_Auger.csv", 'bandgap1',1)
+df1 = MyMLdata_2level(r"G:\study\thesis_data_storage\classification_one_two\1e15_8k.csv", 'bandgap1',20)
 # df1.data.head()
 # %%-
 
 # %%-- perform classification
-df1.singletask='bandgap_1'
+df1.singletask='Label'
 # try svc by itself
 # X, y = df1.pre_processor()
 f1scores, y_prediction_frame, y_test_frame = df1.classification_repeat()
+df1.email_reminder()
 # %%-
