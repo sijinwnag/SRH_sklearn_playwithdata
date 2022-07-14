@@ -1303,6 +1303,7 @@ class MyMLdata_2level:
             if string[0].isdigit():
                 select_X_list.append(string)
         X = dfk[select_X_list] # take the lifetime as X, delete any column that does not start with a number.
+        # print(X.where(X==0))
         X = np.log10(X) # take the log of lifetime data.
         # in case we want to do some combination, pre-process the data based on the single task.
         if singletask == 'logk_1+logk_2':

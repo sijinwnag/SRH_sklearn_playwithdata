@@ -51,7 +51,7 @@ sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn
 from MLobject_tlevel import *
 from dynamic_generation_regression import *
 df1 = MyMLdata_2level(r"G:\study\thesis_data_storage\unordered\set11_800k.csv", 'bandgap1', 5)
-# df1.data.head()
+df1.data.head()
 # %%-
 
 # %%-- different data engineering before training ML model.
