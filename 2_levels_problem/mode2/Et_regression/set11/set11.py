@@ -50,7 +50,7 @@ sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn
 sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Savedir_example')
 from MLobject_tlevel import *
 from dynamic_generation_regression import *
-df1 = MyMLdata_2level(r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\Etnonordered\set11_8k.csv", 'bandgap1',5)
+df1 = MyMLdata_2level(r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\Etnonordered\n\set11_p_8k.csv", 'bandgap1',1)
 # df1.data.head()
 # %%-
 
@@ -60,40 +60,6 @@ df1.pre_processor_dividX()
 # %%-
 
 # %%-- Single tasks.
-# %%-- Perform regression for Et single task.
-df1.singletask = 'Et_eV_1'
-df1.regression_matrix = 'Mean Absolute Error'
-r2scores = df1.regression_repeat()
-df1.singletask = 'Et_eV_2'
-r2scores = df1.regression_repeat() # R2 about 0.2 to 0.4
-df1.singletask = 'Et_eV_1+Et_eV_2'
-r2scores = df1.regression_repeat()
-df1.singletask = 'Et_eV_1-Et_eV_2'
-r2scores = df1.regression_repeat()
-# %%-
-
-# %%-- Perform regression for k single tasks.
-df1.singletask = 'logk_1'
-r2scores = df1.regression_repeat()
-df1.singletask = 'logk_2'
-r2scores = df1.regression_repeat()
-df1.singletask = 'logk_1+logk_2'
-r2scores = df1.regression_repeat()
-df1.singletask = 'logk_1-logk_2'
-r2scores = df1.regression_repeat()
-# %%-
-
-# %%-- Perform regression for sigma single tasks.
-df1.singletask = 'logSn_1'
-r2scores = df1.regression_repeat()
-df1.singletask = 'logSp_1'
-r2scores = df1.regression_repeat()
-df1.singletask = 'logSn_2'
-r2scores = df1.regression_repeat()
-df1.singletask = 'logSp_2'
-r2scores = df1.regression_repeat()
-df1.email_reminder()
-# %%-
 
 # %%-- Two level behaviour tester
 df1.singletask = 'Et_eV_2'
