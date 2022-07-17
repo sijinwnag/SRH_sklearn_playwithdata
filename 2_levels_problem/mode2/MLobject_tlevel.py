@@ -86,12 +86,12 @@ class MyMLdata_2level:
         'param_list': [{'n_estimators': [200, 100, 1000, 500, 2000]}]# a list of key parameters correspond to the models in the model_lists if we are going to do grid searching
         }
         # # all classification models:
-        # classification_default_param = {
-        # 'model_names': ['KNN', 'SVC', 'Decision tree', 'Random Forest',  'Gradient Boosting', 'Adaptive boosting', 'Naive Bayes', 'Neural Network'], # a list of name for each model.
-        # 'model_lists': [KNeighborsClassifier(n_neighbors = 5, weights='distance',n_jobs=-1), SVC(), DecisionTreeClassifier(), RandomForestClassifier(n_estimators=100, verbose =0,n_jobs=-1), GradientBoostingClassifier(verbose=0,loss='deviance'), AdaBoostClassifier(base_estimator = DecisionTreeClassifier(), n_estimators=10), GaussianNB(), MLPClassifier((100,100),alpha=0.001, activation = 'relu',verbose=0,learning_rate='adaptive')],# a list of model improted from sklearn
-        # 'gridsearchlist': [False, False, False, False, False, False, False, False],
-        # 'param_list': [{'n_neighbors':range(1, 30)}, {'C': [0.1, 1, 10], 'kernel': ('linear', 'poly', 'rbf')},  {'max_depth': [10, 100, 1e3]}, {'n_estimators':[10, 100]}, {'n_estimators':[10, 100]},{'n_estimators':[10, 100]}, {'var_smoothing':[1e-9, 1e-3]},{'hidden_layer_sizes':((100, 300, 500, 300, 100), (100, 300, 500, 500, 300, 100), (200, 600, 900, 600, 200))}]# a list of key parameters correspond to the models in the model_lists
-        # }
+        classification_default_param = {
+        'model_names': ['KNN', 'SVC', 'Decision tree', 'Random Forest',  'Gradient Boosting', 'Adaptive boosting', 'Naive Bayes', 'Neural Network'], # a list of name for each model.
+        'model_lists': [KNeighborsClassifier(n_neighbors = 5, weights='distance',n_jobs=-1), SVC(), DecisionTreeClassifier(), RandomForestClassifier(n_estimators=100, verbose =0,n_jobs=-1), GradientBoostingClassifier(verbose=0,loss='deviance'), AdaBoostClassifier(base_estimator = DecisionTreeClassifier(), n_estimators=10), GaussianNB(), MLPClassifier((100,100),alpha=0.001, activation = 'relu',verbose=0,learning_rate='adaptive')],# a list of model improted from sklearn
+        'gridsearchlist': [False, False, False, False, False, False, False, False],
+        'param_list': [{'n_neighbors':range(1, 30)}, {'C': [0.1, 1, 10], 'kernel': ('linear', 'poly', 'rbf')},  {'max_depth': [10, 100, 1e3]}, {'n_estimators':[10, 100]}, {'n_estimators':[10, 100]},{'n_estimators':[10, 100]}, {'var_smoothing':[1e-9, 1e-3]},{'hidden_layer_sizes':((100, 300, 500, 300, 100), (100, 300, 500, 500, 300, 100), (200, 600, 900, 600, 200))}]# a list of key parameters correspond to the models in the model_lists
+        }
         # # without SVC:
         # classification_default_param = {
         # 'model_names': ['KNN', 'Decision tree', 'Random Forest',  'Gradient Boosting', 'Adaptive boosting', 'Naive Bayes', 'Neural Network'], # a list of name for each model.
@@ -100,12 +100,12 @@ class MyMLdata_2level:
         # 'param_list': [{'n_neighbors':range(1, 30)}, {'max_depth': [10, 100, 1e3]}, {'n_estimators':[10, 100]}, {'n_estimators':[10, 100]},{'n_estimators':[10, 100]}, {'var_smoothing':[1e-9, 1e-3]},{'hidden_layer_sizes':((100, 300, 500, 300, 100), (100, 300, 500, 500, 300, 100), (200, 600, 900, 600, 200))}]# a list of key parameters correspond to the models in the model_lists
         # }
         # NN compared to Naive bias only only:
-        classification_default_param = {
-        'model_names': ['Naive Bayes', 'Neural Network'], # a list of name for each model.
-        'model_lists': [GaussianNB(), MLPClassifier((100,100),alpha=0.001, activation = 'relu',verbose=0,learning_rate='adaptive')],# a list of model improted from sklearn
-        'gridsearchlist': [False, False],
-        'param_list': [{'var_smoothing':[1e-9, 1e-3]}, {'hidden_layer_sizes':((100, 300, 500, 300, 100), (100, 300, 500, 500, 300, 100), (200, 600, 900, 600, 200))}]# a list of key parameters correspond to the models in the model_lists
-        }
+        # classification_default_param = {
+        # 'model_names': ['Naive Bayes', 'Neural Network'], # a list of name for each model.
+        # 'model_lists': [GaussianNB(), MLPClassifier((100,100),alpha=0.001, activation = 'relu',verbose=0,learning_rate='adaptive')],# a list of model improted from sklearn
+        # 'gridsearchlist': [False, False],
+        # 'param_list': [{'var_smoothing':[1e-9, 1e-3]}, {'hidden_layer_sizes':((100, 300, 500, 300, 100), (100, 300, 500, 500, 300, 100), (200, 600, 900, 600, 200))}]# a list of key parameters correspond to the models in the model_lists
+        # }
 
         self.data = pd.read_csv(path)
         self.singletask = task
@@ -487,9 +487,10 @@ class MyMLdata_2level:
         for k in range(len(f1_av)):
             labels.append(str(f1_frame.columns[k] +' ('+ str(round(f1_av[k], 3)) + r'$\pm$' + str(round(f1_std[k], 3)) + ')'))
         # box plot the data.
-        plt.figure()
+        plt.figure(facecolor='white')
         plt.boxplot(f1_frame, vert=False, labels=labels)
         plt.title('$F_1$' + 'score for classification ' + str(self.singletask))
+        plt.savefig(str(self.singletask) + '.png')
         plt.show()
 
         # print hte confusion matrix for the best trial.
@@ -1291,7 +1292,8 @@ class MyMLdata_2level:
         """
         singletask = self.singletask # for now we make single taks same as task, in the future, we make task capable of doing multiple task.
         # define the columns to be deleted for ML purposes
-        delete_col = ['Name', 'Sn_cm2_1', 'Sp_cm2_1', 'k_1', 'logSn_1', 'logSp_1', 'Sn_cm2_2', 'Sp_cm2_2', 'k_2', 'logSn_2', 'logSp_2', 'Mode', 'Label']
+        # delete_col = ['Name', 'Sn_cm2_1', 'Sp_cm2_1', 'k_1', 'logSn_1', 'logSp_1', 'Sn_cm2_2', 'Sp_cm2_2', 'k_2', 'logSn_2', 'logSp_2', 'Mode', 'Label']
+        delete_col = ['Name', 'Sn_cm2_1', 'Sp_cm2_1', 'k_1', 'logSn_1', 'logSp_1', 'Sn_cm2_2', 'Sp_cm2_2', 'k_2', 'logSn_2', 'logSp_2']
         # drop these columns
         dfk = (pd.DataFrame(self.data)).drop(delete_col, axis=1)
         # define X and y based on the task we are doing.
@@ -1302,6 +1304,7 @@ class MyMLdata_2level:
             if string[0].isdigit():
                 select_X_list.append(string)
         X = dfk[select_X_list] # take the lifetime as X, delete any column that does not start with a number.
+        # print(X.where(X==0))
         X = np.log10(X) # take the log of lifetime data.
         # in case we want to do some combination, pre-process the data based on the single task.
         if singletask == 'logk_1+logk_2':
