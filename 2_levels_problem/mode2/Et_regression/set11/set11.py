@@ -60,40 +60,6 @@ df1.pre_processor_dividX()
 # %%-
 
 # %%-- Single tasks.
-# %%-- Perform regression for Et single task.
-df1.singletask = 'Et_eV_1'
-df1.regression_matrix = 'Mean Absolute Error'
-r2scores = df1.regression_repeat()
-df1.singletask = 'Et_eV_2'
-r2scores = df1.regression_repeat() # R2 about 0.2 to 0.4
-df1.singletask = 'Et_eV_1+Et_eV_2'
-r2scores = df1.regression_repeat()
-df1.singletask = 'Et_eV_1-Et_eV_2'
-r2scores = df1.regression_repeat()
-# %%-
-
-# %%-- Perform regression for k single tasks.
-df1.singletask = 'logk_1'
-r2scores = df1.regression_repeat()
-df1.singletask = 'logk_2'
-r2scores = df1.regression_repeat()
-df1.singletask = 'logk_1+logk_2'
-r2scores = df1.regression_repeat()
-df1.singletask = 'logk_1-logk_2'
-r2scores = df1.regression_repeat()
-# %%-
-
-# %%-- Perform regression for sigma single tasks.
-df1.singletask = 'logSn_1'
-r2scores = df1.regression_repeat()
-df1.singletask = 'logSp_1'
-r2scores = df1.regression_repeat()
-df1.singletask = 'logSn_2'
-r2scores = df1.regression_repeat()
-df1.singletask = 'logSp_2'
-r2scores = df1.regression_repeat()
-df1.email_reminder()
-# %%-
 
 # %%-- Two level behaviour tester
 df1.singletask = 'Et_eV_2'
