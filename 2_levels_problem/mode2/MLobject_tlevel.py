@@ -1350,7 +1350,7 @@ class MyMLdata_2level:
         # elif singletask == 'logSp_1':
         #     y = pd.DataFrame(self.data)['logSp_1']
         elif singletask == 'multi_class_Et':
-            y = pd.DataFrame(self.data)['bandgap_1'] + pd.DataFrame(self.data)['bandgap_2']
+            y = pd.DataFrame(self.data)['bandgap_1'] + pd.DataFrame(self.data)['bandgap_2'] + 2*(pd.DataFrame(self.data)['bandgap_1']>pd.DataFrame(self.data)['bandgap_2'])
         elif singletask == 'whether 10':
             defectclass = pd.DataFrame(self.data)['bandgap_1'] + pd.DataFrame(self.data)['bandgap_2']
             y = defectclass == 1
@@ -1786,7 +1786,7 @@ class MyMLdata_2level:
         self.data = self.data[defectclass != filterclass]
 
 
-    def dataset_integrator(self, path1, path2, path3):
+    def dataset_integrator(self, path1, path2, path3, path4):
         '''
         input: the paths of the dataset to be integrated
 
@@ -1799,9 +1799,10 @@ class MyMLdata_2level:
         data1 = pd.read_csv(path1)
         data2 = pd.read_csv(path2)
         data3 = pd.read_csv(path3)
+        data4 = pd.read_csv(path4)
 
         # integrate them together.
-        integrated_data = pd.concat([data1, data2, data3])
+        integrated_data = pd.concat([data1, data2, data3, data4])
 
         # shuffle the integrated data.
         shuffled_data = integrated_data.sample(frac=1)
