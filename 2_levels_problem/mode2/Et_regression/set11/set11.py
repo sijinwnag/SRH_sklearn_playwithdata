@@ -50,7 +50,7 @@ sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn
 sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Savedir_example')
 from MLobject_tlevel import *
 from dynamic_generation_regression import *
-df1 = MyMLdata_2level(r"G:\study\thesis_data_storage\unordered\set11\p\high_injection\set11_p_800k_15_17.csv", 'bandgap1',1)
+df1 = MyMLdata_2level(r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\Et1largerthanEt2\set11\set11_20.csv", 'bandgap1',1)
 # df1.data.head()
 # %%-
 
@@ -61,25 +61,15 @@ df1.pre_processor_dividX()
 
 # %%-- Single tasks.
 
-# %%-- Two level behaviour tester
-df1.singletask = 'Et_eV_2'
-r2_frame, y_prediction_frame, y_test_frame, best_model, scaler_return = df1.regression_repeat(output_y_pred=True)
-df1.singletask = 'logSn_2'
-r2scores = df1.regression_repeat()
-df1.singletask = 'logSp_2'
-r2scores = df1.regression_repeat()
+for task in ['Et_eV_2', 'logSn_2', 'logSp_2', 'Et_eV_1', 'logSn_1', 'logSp_1']:
+    df1.singletask = task
+    r2_frame, y_prediction_frame, y_test_frame, best_model, scaler_return = df1.regression_repeat(output_y_pred=True)
+    exportdata = pd.DataFrame([y_test_frame, y_prediction_frame])
+    # export the validation data: name composed of: the singletask + the filename of the dataset.
+    # df1.path
+    filename = str(df1.singletask) + str(df1.path).split('\\')[-1]
+    exportdata.to_csv(str(filename))
 df1.email_reminder()
-# %%-
-
-# %%-- First level behaviour tester
-df1.singletask = 'Et_eV_1'
-r2scores = df1.regression_repeat()
-df1.singletask = 'logSn_1'
-r2scores = df1.regression_repeat()
-df1.singletask = 'logSp_1'
-r2scores = df1.regression_repeat()
-df1.email_reminder()
-# %%-
 
 # %%-
 
