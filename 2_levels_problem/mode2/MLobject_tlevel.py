@@ -100,11 +100,18 @@ class MyMLdata_2level:
         # 'param_list': [{'n_neighbors':range(1, 30)}, {'max_depth': [10, 100, 1e3]}, {'n_estimators':[10, 100]}, {'n_estimators':[10, 100]},{'n_estimators':[10, 100]}, {'var_smoothing':[1e-9, 1e-3]},{'hidden_layer_sizes':((100, 300, 500, 300, 100), (100, 300, 500, 500, 300, 100), (200, 600, 900, 600, 200))}]# a list of key parameters correspond to the models in the model_lists
         # }
         # NN compared to Naive bias only only:
+        # classification_default_param = {
+        # 'model_names': ['Naive Bayes', 'Neural Network'], # a list of name for each model.
+        # 'model_lists': [GaussianNB(), MLPClassifier((100,100),alpha=0.001, activation = 'relu',verbose=0,learning_rate='adaptive')],# a list of model improted from sklearn
+        # 'gridsearchlist': [False, False],
+        # 'param_list': [{'var_smoothing':[1e-9, 1e-3]}, {'hidden_layer_sizes':((100, 300, 500, 300, 100), (100, 300, 500, 500, 300, 100), (200, 600, 900, 600, 200))}]# a list of key parameters correspond to the models in the model_lists
+        # }
+        # wihtout CSV, gradient boosting, adabosting
         classification_default_param = {
-        'model_names': ['Naive Bayes', 'Neural Network'], # a list of name for each model.
-        'model_lists': [GaussianNB(), MLPClassifier((100,100),alpha=0.001, activation = 'relu',verbose=0,learning_rate='adaptive')],# a list of model improted from sklearn
-        'gridsearchlist': [False, False],
-        'param_list': [{'var_smoothing':[1e-9, 1e-3]}, {'hidden_layer_sizes':((100, 300, 500, 300, 100), (100, 300, 500, 500, 300, 100), (200, 600, 900, 600, 200))}]# a list of key parameters correspond to the models in the model_lists
+        'model_names': ['KNN', 'Decision tree', 'Random Forest',  'Naive Bayes', 'Neural Network'], # a list of name for each model.
+        'model_lists': [KNeighborsClassifier(n_neighbors = 5, weights='distance',n_jobs=-1), DecisionTreeClassifier(), RandomForestClassifier(n_estimators=100, verbose =0,n_jobs=-1), GaussianNB(), MLPClassifier((100,100),alpha=0.001, activation = 'relu',verbose=0,learning_rate='adaptive')],# a list of model improted from sklearn
+        'gridsearchlist': [False, False, False, False, False, False, False],
+        'param_list': [{'n_neighbors':range(1, 30)}, {'max_depth': [10, 100, 1e3]}, {'n_estimators':[10, 100]}, {'var_smoothing':[1e-9, 1e-3]},{'hidden_layer_sizes':((100, 300, 500, 300, 100), (100, 300, 500, 500, 300, 100), (200, 600, 900, 600, 200))}]# a list of key parameters correspond to the models in the model_lists
         }
 
         self.path = path
