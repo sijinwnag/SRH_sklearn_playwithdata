@@ -50,7 +50,7 @@ sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn
 sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Savedir_example')
 from MLobject_tlevel import *
 from dynamic_generation_regression import *
-df1 = MyMLdata_2level(r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\Et1largerthanEt2\set11\set11_20.csv", 'bandgap1',1)
+df1 = MyMLdata_2level(r"G:\study\thesis_data_storage\unordered\set10\p\800k\set10_800k_p.csv", 'bandgap1',1)
 # df1.data.head()
 # %%-
 
@@ -60,8 +60,8 @@ df1.pre_processor_dividX()
 # %%-
 
 # %%-- Single tasks.
-
-for task in ['Et_eV_2', 'logSn_2', 'logSp_2', 'Et_eV_1', 'logSn_1', 'logSp_1']:
+# ['Et_eV_2', 'logSn_2', 'logSp_2', 'Et_eV_1', 'logSn_1', 'logSp_1']
+for task in ['logSp_2', 'Et_eV_1', 'logSn_1', 'logSp_1']:
     df1.singletask = task
     r2_frame, y_prediction_frame, y_test_frame, best_model, scaler_return = df1.regression_repeat(output_y_pred=True)
     exportdata = pd.DataFrame([y_test_frame, y_prediction_frame])
@@ -70,7 +70,6 @@ for task in ['Et_eV_2', 'logSn_2', 'logSp_2', 'Et_eV_1', 'logSn_1', 'logSp_1']:
     filename = str(df1.singletask) + str(df1.path).split('\\')[-1]
     exportdata.to_csv(str(filename))
 df1.email_reminder()
-
 # %%-
 
 # %%-- Data leakage.
