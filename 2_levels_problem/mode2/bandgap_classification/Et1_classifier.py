@@ -15,7 +15,7 @@ sys.path.append(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\
 sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2')
 from MLobject_tlevel import *
 # define the object
-df1 = MyMLdata_2level(r'C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\Etnonordered\p\for_classification\set10.csv', 'bandgap_1',5)
+df1 = MyMLdata_2level(r'G:\study\thesis_data_storage\unordered\set11\p\set11_8k.csv', 'bandgap_1',5)
 # %%-
 
 # %%-- preprocessors.
@@ -28,6 +28,7 @@ path2 = r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\Etnonord
 path3 = r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\Etnonordered\p\for_classification\set01_80k.csv"
 path4 = r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\Etnonordered\p\for_classification\set10.csv"
 df1.dataset_integrator(path1, path2, path3, path4)
+df1.email_reminder()
 # %%-
 
 # %%-- multiply by (dn+p0+n0)
