@@ -1216,7 +1216,7 @@ class MyMLdata_2level:
                 X[defect_param] = fulldata[defect_param]
                 known_param.append(defect_param)
 
-        # print(X.columns.tolist())
+        print(X.columns.tolist())
 
         # define the y to be the input parmaeter:
         y = fulldata[parameter]
@@ -1234,6 +1234,11 @@ class MyMLdata_2level:
         model.fit(X_train_scaled, y_train)
         # output the importance.
         importances = model.feature_importances_
+        # add the headings to the importance
+        importances = pd.DataFrame(np.transpose(importances))
+        importances = np.transpose(importances)
+        importances.columns = X.columns.tolist()
+        # print(importances)
 
         # still make hte prediction and plot the real vs predicted: we do expect this prediction to be the higher boundary for chain regressoe behaviour.
         y_pred = model.predict(X_test_scaled)
@@ -1259,10 +1264,13 @@ class MyMLdata_2level:
 
         # the importance of the lifetime data:
         # extract the lifetime data importances.
-        lifetime_importance = importances[:-5]
+        lifetime_importance = importances[select_X_list]
+        # print(lifetime_importance)
+        # print(len(importances))
+        # print(len(lifetime_importance))
         # plot the importances of lifetime data:
         plt.figure(facecolor='white')
-        plt.plot(lifetime_importance)
+        plt.plot(np.array(lifetime_importance.iloc[0, :]))
         plt.show()
 
         # lets plot the dn vs importances.
@@ -1274,21 +1282,24 @@ class MyMLdata_2level:
         # print(curvelength)
         # plot each lifetime curve individually:
         plt.figure(facecolor='white')
-        for n in range(int(len(lifetime_importance)/curvelength)):
+        lifetime_importance = np.array(lifetime_importance)
+        # print(len(np.transpose(lifetime_importance))/curvelength)
+        for n in range(int(len(np.transpose(lifetime_importance))/curvelength)):
             # for each lifetime curve.
             # extract the importance:
-            importance = lifetime_importance[n:n + curvelength]
-            # print(n)
-            # print(n + curvelength)
-            plt.plot(np.logspace(13, 17, curvelength), importance, label=T_unique[n])
+            importance = np.array(lifetime_importance)[n*curvelength:n*curvelength + curvelength]
+            # print(importance)
+            # print(n*curvelength)
+            # print(n*curvelength + curvelength)
+            plt.plot(importance, label=T_unique[n])
             plt.xscale=('log')
+
+            # print the most important data of this sectoin:
+
+
+
         plt.legend()
         plt.show()
-
-        # the importance of the other defect parameters:
-        # defect_param_importance = importance[-5:]
-        # plt.figure()
-        #
 
 # %%-
 
