@@ -1216,7 +1216,7 @@ class MyMLdata_2level:
                 X[defect_param] = fulldata[defect_param]
                 known_param.append(defect_param)
 
-        print(X.columns.tolist())
+        # print(X.columns.tolist())
 
         # define the y to be the input parmaeter:
         y = fulldata[parameter]
@@ -1239,6 +1239,7 @@ class MyMLdata_2level:
         importances = np.transpose(importances)
         importances.columns = X.columns.tolist()
         # print(importances)
+        # print(importances.loc[importances>0.005])
 
         # still make hte prediction and plot the real vs predicted: we do expect this prediction to be the higher boundary for chain regressoe behaviour.
         y_pred = model.predict(X_test_scaled)
@@ -1287,18 +1288,21 @@ class MyMLdata_2level:
         for n in range(int(len(np.transpose(lifetime_importance))/curvelength)):
             # for each lifetime curve.
             # extract the importance:
-            importance = np.array(lifetime_importance)[n*curvelength:n*curvelength + curvelength]
+            importance = np.transpose(lifetime_importance)[n*curvelength:n*curvelength + curvelength]
             # print(importance)
             # print(n*curvelength)
             # print(n*curvelength + curvelength)
             plt.plot(importance, label=T_unique[n])
             plt.xscale=('log')
-
-            # print the most important data of this sectoin:
-
-
-
         plt.legend()
+        plt.show()
+
+        # plot the data for defect features:
+        # print(importances.columns.tolist())
+        defect_data = np.transpose(importances)[-5:]
+        print(defect_data)
+        plt.figure()
+        plt.bar(['logSn_2', 'logSp_2', 'Et_eV_1', 'logSn_1', 'logSp_1'], defect_data)
         plt.show()
 
 # %%-
