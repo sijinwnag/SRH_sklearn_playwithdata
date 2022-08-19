@@ -1299,10 +1299,11 @@ class MyMLdata_2level:
 
         # plot the data for defect features:
         # print(importances.columns.tolist())
-        defect_data = np.transpose(importances)[-5:]
+        defect_data = np.transpose(np.transpose(np.array(importances))[-5:])[0]
         print(defect_data)
         plt.figure()
         plt.bar(['logSn_2', 'logSp_2', 'Et_eV_1', 'logSn_1', 'logSp_1'], defect_data)
+        plt.ylabel('Importance')
         plt.show()
 
 # %%-
