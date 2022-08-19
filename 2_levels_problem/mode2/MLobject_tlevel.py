@@ -1216,7 +1216,7 @@ class MyMLdata_2level:
                 X[defect_param] = fulldata[defect_param]
                 known_param.append(defect_param)
 
-        print(X.columns.tolist())
+        # print(X.columns.tolist())
 
         # define the y to be the input parmaeter:
         y = fulldata[parameter]
@@ -1254,18 +1254,36 @@ class MyMLdata_2level:
         # plt.savefig(str(self.singletask) + '.png')
         plt.show()
 
-        # visualize the feature importance:
+        # visualize the feature importance: for each Temperature:
+
 
         # the importance of the lifetime data:
         # extract the lifetime data importances.
         lifetime_importance = importances[:-5]
         # plot the importances of lifetime data:
-        plt.figure()
+        plt.figure(facecolor='white')
         plt.plot(lifetime_importance)
         plt.show()
 
         # lets plot the dn vs importances.
-        
+        variable_type, temp_list, doping_level, excess_dn = self.reader_heading()
+        # find the number of data point that has temperature 300K, so this is the length of each lifetime curve.
+        curvelength = sum(np.array(temp_list) == '300K')
+        T_unique = np.unique(temp_list)[:-1]
+        print(T_unique)
+        # print(curvelength)
+        # plot each lifetime curve individually:
+        plt.figure(facecolor='white')
+        for n in range(int(len(lifetime_importance)/curvelength)):
+            # for each lifetime curve.
+            # extract the importance:
+            importance = lifetime_importance[n:n + curvelength]
+            # print(n)
+            # print(n + curvelength)
+            plt.plot(np.logspace(13, 17, curvelength), importance, label=T_unique[n])
+            plt.xscale=('log')
+        plt.legend()
+        plt.show()
 
         # the importance of the other defect parameters:
         # defect_param_importance = importance[-5:]
