@@ -1208,11 +1208,15 @@ class MyMLdata_2level:
         X = np.log10(X) # take the log of lifetime data.
 
         # extract the other parameters that are not the parameters:
+        known_param = []
         for defect_param in ['Et_eV_2', 'logSn_2', 'logSp_2', 'Et_eV_1', 'logSn_1', 'logSp_1']:
         # if it is not the known parameter.
-        if defect_param != parameter:
-            # add it into hte X as well.
-            X[defect_param] = fulldata[defect_param]
+            if defect_param != parameter:
+                # add it into hte X as well.
+                X[defect_param] = fulldata[defect_param]
+                known_param.append(defect_param)
+
+        print(X.columns.tolist())
 
         # define the y to be the input parmaeter:
         y = fulldata[parameter]
@@ -1222,7 +1226,51 @@ class MyMLdata_2level:
         # scale the data:
         scaler = MinMaxScaler()
         X_train_scaled = scaler.fit_transform(X_train)
+        X_test_scaled = scaler.transform(X_test)
 
+
+        # train the random forest model.
+        model = RandomForestRegressor(n_estimators=100, verbose =0, n_jobs=-1)
+        model.fit(X_train_scaled, y_train)
+        # output the importance.
+        importances = model.feature_importances_
+
+        # still make hte prediction and plot the real vs predicted: we do expect this prediction to be the higher boundary for chain regressoe behaviour.
+        y_pred = model.predict(X_test_scaled)
+        # compute the evaluation matrixes.
+        r2 = r2_score(y_test, y_pred)
+        mae = mean_absolute_error(y_test, y_pred)
+
+        # plot the real vs predicted.
+        plt.figure(facecolor='white')
+        # calculate the transparency:
+        alpha=self.transparency_calculator(len(y_test))
+        print('transparency of scattering plot is ' + str(alpha))
+        plt.scatter(y_test, y_pred, label=('$R^2$' + '=' + str(round(r2, 3))) + ('  Mean Absolue error' + '=' + str(round(mae, 3))), alpha=alpha)
+        plt.xlabel('real value')
+        plt.ylabel('predicted value')
+        plt.title('real vs predicted ' + ' using method random forest known all other features' + ' for task ' + str(parameter))
+        plt.legend(loc=3, framealpha=0.1)
+        # plt.savefig(str(self.singletask) + '.png')
+        plt.show()
+
+        # visualize the feature importance:
+
+        # the importance of the lifetime data:
+        # extract the lifetime data importances.
+        lifetime_importance = importances[:-5]
+        # plot the importances of lifetime data:
+        plt.figure()
+        plt.plot(lifetime_importance)
+        plt.show()
+
+        # lets plot the dn vs importances.
+        
+
+        # the importance of the other defect parameters:
+        # defect_param_importance = importance[-5:]
+        # plt.figure()
+        #
 
 # %%-
 

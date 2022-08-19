@@ -177,6 +177,7 @@ df1.C_visiaulization(variable='C1d/C2d', task_name='plot with Et1-Et2')
 # %%-
 
 # %%-- data importance visualization
+df1.feature_importance_visualisation('Et_eV_2')
 
 # %%-
 
