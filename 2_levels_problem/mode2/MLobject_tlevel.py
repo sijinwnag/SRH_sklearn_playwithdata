@@ -32,6 +32,7 @@ from datetime import datetime
 import smtplib
 from email.message import EmailMessage
 import os
+from sklearn.inspection import permutation_importance
 # %%-
 
 
@@ -85,6 +86,13 @@ class MyMLdata_2level:
         'gridsearchlist': [False], # each element in this list corspond to a particular model, if True, then we will do grid search while training the model, if False, we will not do Gridsearch for this model.
         'param_list': [{'n_estimators': [200, 100, 1000, 500, 2000]}]# a list of key parameters correspond to the models in the model_lists if we are going to do grid searching
         }
+        # random forest and linear regression only:
+        # regression_default_param = {
+        # 'model_names': ['Random Forest', 'Ridge Linear Regression'], # a list of name for each model.
+        # 'model_lists': [RandomForestRegressor(n_estimators=100, verbose =0, n_jobs=-1), Ridge()],# a list of model improted from sklearn
+        # 'gridsearchlist': [False, False], # each element in this list corspond to a particular model, if True, then we will do grid search while training the model, if False, we will not do Gridsearch for this model.
+        # 'param_list': [{'n_estimators': [200, 100, 1000, 500, 2000]}, {'alpha': [0.01, 0.1, 1, 10]}]
+        # }
         # # all classification models:
         # classification_default_param = {
         # 'model_names': ['KNN', 'SVC', 'Decision tree', 'Random Forest',  'Gradient Boosting', 'Adaptive boosting', 'Naive Bayes', 'Neural Network'], # a list of name for each model.
@@ -1183,8 +1191,39 @@ class MyMLdata_2level:
         return data
 
 
-    # def compare_hist(self, variable='Et'):
-    #     """"""
+    def feature_importance_visualisation(self, parameter):
+        # the plan is to visualize the feature importance of each feature to the given parameter.
+        # load the original dataset: don't delete the other parameters (there will be dataledage in the prediction but it's OK)
+        fulldata = self.data
+
+        # make the prediction using random forest model.
+
+        # extract the lifetime columns and take log base 10:
+        select_X_list = []
+        for string in fulldata.columns.tolist():
+            if string[0].isdigit():
+                select_X_list.append(string)
+        X = fulldata[select_X_list] # take the lifetime as X, delete any column that does not start with a number.
+        # print(X.where(X==0))
+        X = np.log10(X) # take the log of lifetime data.
+
+        # extract the other parameters that are not the parameters:
+        for defect_param in ['Et_eV_2', 'logSn_2', 'logSp_2', 'Et_eV_1', 'logSn_1', 'logSp_1']:
+        # if it is not the known parameter.
+        if defect_param != parameter:
+            # add it into hte X as well.
+            X[defect_param] = fulldata[defect_param]
+
+        # define the y to be the input parmaeter:
+        y = fulldata[parameter]
+
+        # define the scaler:
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1)
+        # scale the data:
+        scaler = MinMaxScaler()
+        X_train_scaled = scaler.fit_transform(X_train)
+
+
 # %%-
 
 

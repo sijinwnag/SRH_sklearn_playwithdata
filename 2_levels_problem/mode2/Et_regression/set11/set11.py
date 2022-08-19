@@ -50,7 +50,7 @@ sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn
 sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Savedir_example')
 from MLobject_tlevel import *
 from dynamic_generation_regression import *
-df1 = MyMLdata_2level(r"G:\study\thesis_data_storage\unordered\set11\p\set11_8k.csv", 'bandgap1',1)
+df1 = MyMLdata_2level(r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\Etnonordered\p\set11_8k.csv", 'bandgap1',1)
 # df1.data.head()
 # %%-
 
@@ -61,7 +61,7 @@ df1.pre_processor_dividX()
 
 # %%-- Single tasks.
 # ['Et_eV_2', 'logSn_2', 'logSp_2', 'Et_eV_1', 'logSn_1', 'logSp_1']
-for task in ['logSp_2', 'Et_eV_1', 'logSn_1', 'logSp_1']:
+for task in ['Et_eV_2']:
     df1.singletask = task
     r2_frame, y_prediction_frame, y_test_frame, best_model, scaler_return = df1.regression_repeat(output_y_pred=True)
     exportdata = pd.DataFrame([y_test_frame, y_prediction_frame])
@@ -87,16 +87,16 @@ df1.email_reminder()
 # %%-- Just the chain.
 df1.regression_matrix = 'Mean Absolute Error'
 df1.regression_matrix = 'R2'
-chain_scores = df1.repeat_chain_regressor(repeat_num=3, regression_order=None, chain_name = 'Et1->Et2')
-chain_scores = df1.repeat_chain_rDegressor(repeat_num=10, regression_order=None, chain_name = 'Et1->Et1+Et2->Et2')
-chain_scores = df1.repeat_chain_regressor(repeat_num=5, regression_order=None, chain_name = 'Et1->Et1+Et2->logk_1->logk_1+logk_2->Et2')
+chain_scores = df1.repeat_chain_regressor(repeat_num=2, regression_order=None, chain_name = 'Et1->Et2')
+chain_scores = df1.repeat_chain_regressor(repeat_num=2, regression_order=None, chain_name = 'Et1->Et1+Et2->Et2')
+chain_scores = df1.repeat_chain_regressor(repeat_num=2, regression_order=None, chain_name = 'Et1->Et1+Et2->logk_1->logk_1+logk_2->Et2')
 # pd.DataFrame(np.array(chain_scores).reshape(35, 2)).to_csv(path_or_buf = r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Et_regression\set11\chainscore_two_steps.csv')
 # %%-
 
 # %%-- Chain and subtraction.
 # the plan is to first predict Et1, then predict Et1+Et2, then predict Et2 by subtracting the prediction of sum by Et1 prediction.
 # r2 = df1.sum_minus_Et1_chain(regression_order=None, plotall=True)
-model_names, y_pred_matrix, y_test, r2list = df1.repeat_subtraction_method(repeat_num=5, regression_order=None, plotall=False, return_pred=True)
+model_names, y_pred_matrix, y_test, r2list = df1.repeat_subtraction_method(repeat_num=1, regression_order=None, plotall=False, return_pred=True)
 # %%-
 
 # %%-
@@ -117,11 +117,13 @@ df1.pre_processor_insert_all_known()
 # %%-
 
 # %%-- Data visualization
+
 # %%-- General historam:
 # histogram for C:
 df1.C_visiaulization(variable='C1n/C2n')
 df1.C_visiaulization()
 # %%-
+
 # %%-- Histogram for different T.
 # plot for one temperauree:
 # df1.C_visiaulization(task_name='histogram at T', T=150)
@@ -134,6 +136,7 @@ for T in range(150, 401, 50):
     df1.C_visiaulization(task_name='histogram at T', variable='C1n/C2n', T=T)
 # why it seems like T does not change anything?
 # %%-
+
 # %%-- Histogram for different doping.
 df1.C_visiaulization(task_name='histogram at doping', doping=1e14)
 # # plot for demoninator term.
@@ -144,6 +147,7 @@ df1.C_visiaulization(task_name='histogram at doping', doping=1e14)
 #     df1.C_visiaulization(task_name='histogram at doping', doping=doping, variable='C1n/C2n')
 # # why it seems like doping does not change anything either.
 # %%-
+
 # %%-- Visialize individual parameters.
 df1.C_visiaulization(variable='C1n')
 df1.C_visiaulization(variable='C2n')
@@ -151,22 +155,31 @@ df1.C_visiaulization(variable='C1d')
 df1.C_visiaulization(variable='C2d')
 df1.C_visiaulization(task_name='C histogram compare')
 # %%-
+
 # %%-- T vs C:
 df1.C_visiaulization(variable='C1n/C2n', task_name='plot with T')
 df1.C_visiaulization(variable='C1d/C2d', task_name='plot with T')
 # %%-
+
 # %%-- Doping vs C:
 df1.C_visiaulization(variable='C1d/C2d', task_name='plot with doping')
 df1.C_visiaulization(variable='C1n/C2n', task_name='plot with doping')
 # %%-
+
 # %%-- dn vs C:
 df1.C_visiaulization(variable='C1d/C2d', task_name='plot with dn')
 df1.C_visiaulization(variable='C1n/C2n', task_name='plot with dn')
 # %%-
+
 # %%-- E_diff vs C:
 df1.C_visiaulization(variable='C1n/C2n', task_name='plot with Et1-Et2')
 df1.C_visiaulization(variable='C1d/C2d', task_name='plot with Et1-Et2')
 # %%-
+
+# %%-- data importance visualization
+
+# %%-
+
 # %%-
 
 # %%-- test the first of dynamic generation method: use ML object.
