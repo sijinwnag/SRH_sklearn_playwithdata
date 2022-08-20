@@ -2249,7 +2249,7 @@ class MyMLdata_2level:
         """
         # for now we make single taks same as task, in the future, we make task capable of doing multiple task.
         # define the columns to be deleted for ML purposes
-        delete_col = ['Name', 'Sn_cm2_1', 'Sp_cm2_1', 'k_1', 'logSn_1', 'logSp_1', 'Sn_cm2_2', 'Sp_cm2_2', 'k_2', 'logSn_2', 'logSp_2', 'Mode', 'Label']
+        delete_col = ['Name', 'Sn_cm2_1', 'Sp_cm2_1', 'k_1', 'Sn_cm2_2', 'Sp_cm2_2', 'k_2', 'Mode', 'Label']
         # drop these columns
         # drop these columns
         dfk = (pd.DataFrame(self.data)).drop(delete_col, axis=1)
@@ -2292,6 +2292,13 @@ class MyMLdata_2level:
             y = dfk[['Et_eV_1']]
             # also include the sum of energy level.
             y['Et_eV_1+Et_eV_2'] = dfk['Et_eV_1'] + dfk['Et_eV_2']
+        elif chain_name == 'Et1->Sp1->Sn1->Sp2->Sn2->Et2':
+            y = dfk[['Et_eV_1']]
+            y['logSp_1'] = dfk['logSp_1']
+            y['logSn_1'] = dfk['logSn_1']
+            y['logSp_2'] = dfk['logSp_2']
+            y['logSn_2'] = dfk['logSn_2']
+            y['Et_eV_2'] = dfk['Et_eV_2']
         else:
             y = dfk[[chain_name[0]]]
             # in case the chain is input as a list.

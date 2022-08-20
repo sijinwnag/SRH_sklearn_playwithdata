@@ -50,7 +50,8 @@ sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn
 sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Savedir_example')
 from MLobject_tlevel import *
 from dynamic_generation_regression import *
-df1 = MyMLdata_2level(r"G:\study\thesis_data_storage\unordered\set11\p\set11_800k.csv", 'bandgap1',1)
+# df1 = MyMLdata_2level(r"G:\study\thesis_data_storage\unordered\set11\p\set11_800k.csv", 'bandgap1',1)
+df1 = MyMLdata_2level(r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\Etnonordered\p\set11_8k.csv", 'bandgap1',1)
 # df1.data.head()
 # %%-
 
@@ -89,7 +90,7 @@ df1.regression_matrix = 'Mean Absolute Error'
 df1.regression_matrix = 'R2'
 chain_scores = df1.repeat_chain_regressor(repeat_num=2, regression_order=None, chain_name = 'Et1->Et2')
 chain_scores = df1.repeat_chain_regressor(repeat_num=2, regression_order=None, chain_name = 'Et1->Et1+Et2->Et2')
-chain_scores = df1.repeat_chain_regressor(repeat_num=2, regression_order=None, chain_name = 'Et1->Et1+Et2->logk_1->logk_1+logk_2->Et2')
+chain_scores = df1.repeat_chain_regressor(repeat_num=1, regression_order=None, chain_name = 'Et1->Sp1->Sn1->Sp2->Sn2->Et2')
 # pd.DataFrame(np.array(chain_scores).reshape(35, 2)).to_csv(path_or_buf = r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Et_regression\set11\chainscore_two_steps.csv')
 # %%-
 
