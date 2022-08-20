@@ -2250,7 +2250,8 @@ class MyMLdata_2level:
         """
         # for now we make single taks same as task, in the future, we make task capable of doing multiple task.
         # define the columns to be deleted for ML purposes
-        delete_col = ['Name', 'Sn_cm2_1', 'Sp_cm2_1', 'k_1', 'Sn_cm2_2', 'Sp_cm2_2', 'k_2', 'Mode', 'Label']
+        # delete_col = ['Name', 'Sn_cm2_1', 'Sp_cm2_1', 'k_1', 'Sn_cm2_2', 'Sp_cm2_2', 'k_2', 'Mode', 'Label']
+        delete_col = ['Name', 'Sn_cm2_1', 'Sp_cm2_1', 'k_1', 'Sn_cm2_2', 'Sp_cm2_2', 'k_2']
         # drop these columns
         # drop these columns
         dfk = (pd.DataFrame(self.data)).drop(delete_col, axis=1)
