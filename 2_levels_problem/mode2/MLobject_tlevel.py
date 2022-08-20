@@ -2204,12 +2204,13 @@ class MyMLdata_2level:
             # plot the behaviour of all models if requried
             if plotall == True:
                 for k in range(np.shape(y_test)[1]):
-                    plt.figure()
+                    plt.figure(facecolor='white')
                     plt.scatter(y_test[:, k], y_pred_ordered[:, k], label='$R^2$=' + str(np.max(r2list[k])))
                     plt.xlabel('real value')
                     plt.ylabel('prediction')
                     plt.title('real vs prediction using model ' + str(model_names[modelcount]) + ' for ' + tasknamelist[k])
                     plt.legend()
+                    plt.savefig(str(model_names[modelcount]) + ' for ' + tasknamelist[k] + '.png')
                     plt.show()
             modelcount = modelcount + 1
 
