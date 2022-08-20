@@ -1231,7 +1231,9 @@ class MyMLdata_2level:
 
         # train the random forest model.
         model = RandomForestRegressor(n_estimators=100, verbose =0, n_jobs=-1)
+        print('Training ' + str(model))
         model.fit(X_train_scaled, y_train)
+        print('Finish training ' + str(model))
         # output the importance.
         importances = model.feature_importances_
         # add the headings to the importance
@@ -1257,7 +1259,7 @@ class MyMLdata_2level:
         plt.ylabel('predicted value')
         plt.title('real vs predicted ' + ' using method random forest known all other features' + ' for task ' + str(parameter))
         plt.legend(loc=3, framealpha=0.1)
-        # plt.savefig(str(self.singletask) + '.png')
+        plt.savefig('real_vs_predicted' + '.png')
         plt.show()
 
         # visualize the feature importance: for each Temperature:
@@ -1272,6 +1274,9 @@ class MyMLdata_2level:
         # plot the importances of lifetime data:
         plt.figure(facecolor='white')
         plt.plot(np.array(lifetime_importance.iloc[0, :]))
+        plt.title('Feature importance of lifetime data')
+        plt.ylabel('Feature importance')
+        plt.savefig('lifetime_importance' + '.png')
         plt.show()
 
         # lets plot the dn vs importances.
@@ -1292,9 +1297,13 @@ class MyMLdata_2level:
             # print(importance)
             # print(n*curvelength)
             # print(n*curvelength + curvelength)
-            plt.plot(importance, label=T_unique[n])
+            plt.plot(np.logspace(13, 17, curvelength), importance, label=T_unique[n])
             plt.xscale=('log')
         plt.legend()
+        plt.title('Feature importance of lifetime data')
+        plt.xlabel('Excess carrier concentration')
+        plt.ylabel('importance.')
+        plt.savefig('lifetime_importance2' + '.png')
         plt.show()
 
         # plot the data for defect features:
@@ -1304,6 +1313,8 @@ class MyMLdata_2level:
         plt.figure()
         plt.bar(['logSn_2', 'logSp_2', 'Et_eV_1', 'logSn_1', 'logSp_1'], defect_data)
         plt.ylabel('Importance')
+        plt.title('Importance of different defect parameters')
+        plt.savefig('defect_importance' + '.png')
         plt.show()
 
 # %%-
