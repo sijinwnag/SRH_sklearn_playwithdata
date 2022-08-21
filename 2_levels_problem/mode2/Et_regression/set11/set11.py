@@ -90,7 +90,7 @@ df1.regression_matrix = 'Mean Absolute Error'
 df1.regression_matrix = 'R2'
 chain_scores = df1.repeat_chain_regressor(repeat_num=2, regression_order=None, chain_name = 'Et1->Et2')
 chain_scores = df1.repeat_chain_regressor(repeat_num=2, regression_order=None, chain_name = 'Et1->Et1+Et2->Et2')
-chain_scores = df1.repeat_chain_regressor(repeat_num=2, regression_order=None, plotall=True, chain_name = 'Et1->Sp1->Sn1->Sp2->Sn2->Et2')
+chain_scores = df1.repeat_chain_regressor(repeat_num=1, regression_order=None, plotall=True, chain_name = 'Et1->Sp1->Sn1->Sp2->Sn2->Et2')
 # pd.DataFrame(np.array(chain_scores).reshape(35, 2)).to_csv(path_or_buf = r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Et_regression\set11\chainscore_two_steps.csv')
 # %%-
 

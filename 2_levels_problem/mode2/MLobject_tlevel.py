@@ -2205,7 +2205,9 @@ class MyMLdata_2level:
             if plotall == True:
                 for k in range(np.shape(y_test)[1]):
                     plt.figure(facecolor='white')
-                    plt.scatter(y_test[:, k], y_pred_ordered[:, k], label='$R^2$=' + str(np.max(r2list[k])))
+                    alpha=self.transparency_calculator(len(np.array(y_test)))
+                    print('transparency of scattering plot is ' + str(alpha))
+                    plt.scatter(y_test[:, k], y_pred_ordered[:, k], label='$R^2$=' + str(np.max(r2list[k])), alpha=alpha)
                     plt.xlabel('real value')
                     plt.ylabel('prediction')
                     plt.title('real vs prediction using model ' + str(model_names[modelcount]) + ' for ' + tasknamelist[k])
