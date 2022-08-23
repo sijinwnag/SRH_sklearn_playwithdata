@@ -437,7 +437,7 @@ class MyMLdata_2level:
         # defien the rest of hte plot
         plt.xlabel('real value')
         plt.ylabel('predicted value')
-        plt.title('real vs predicted ' + ' using method ' + ' for task ' + str(self.singletask) + ' using model ' + str(model_lists[modelindex]))
+        plt.title('real vs predicted ' + ' using method ' + ' for task ' + str(self.singletask) + ' color coded for ' + str(self.colour_column))
         plt.legend(loc=3, framealpha=0.1)
         plt.savefig(str(self.singletask) + str(self.colour_column) + '.png')
         plt.show()
