@@ -11,6 +11,7 @@ import numpy as np
 import seaborn as sn
 from sklearn.model_selection import train_test_split, GridSearchCV
 import matplotlib.pyplot as plt
+import matplotlib.colors
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.neighbors import KNeighborsRegressor, KNeighborsClassifier
 from sklearn.metrics import r2_score, mean_absolute_error, confusion_matrix, f1_score, accuracy_score
@@ -149,9 +150,10 @@ class MyMLdata_2level:
         return alpha
 
 
-    def regression_repeat(self, plot=False, output_y_pred=False):
+    def regression_repeat(self, plot=False, output_y_pred=False, colour_code = True):
         # extract the X and y from previous step: here X is log(lifetime)
         X, y = self.pre_processor()
+            # print(colour_col)
         # n_repeat is the number of reeptition for this task
         n_repeat = self.repetition
         """
@@ -174,8 +176,6 @@ class MyMLdata_2level:
             best_model: the model that has the best average score, since we have multiple trials, it will return the first trial model.
             scaler_return: the scaler associated with the first trial for the best model.
         """
-
-
         # set up counter to count the number of repetition
         counter = 0
         # create an emptly list to collect the r2 and mean absolute error values for each trials
@@ -388,12 +388,63 @@ class MyMLdata_2level:
             return r2_list, mae_list
 
 
-    def colour_coded_training(self):
+    def colour_code_training(self, modelindex=0):
+        # task definition:
         # extract the X and y from previous step: here X is log(lifetime)
         X, y = self.pre_processor()
-        # also extract the colume to colour code with:
+        # print(y)
+        # print(np.shape(y))
+        # extract the colour code as well
         colour_col = self.data[str(self.colour_column)]
-        print(colour_col)
+        # merge y and colour colume:
+        y_col = pd.concat([y, colour_col], axis=1)
+        # print(y_col)
+        # data pre-processing:
+        # train test split:
+        X_train, X_test, y_train, y_test = train_test_split(X, y_col, test_size=0.1)
+        # define the scalor:
+        scaler = MinMaxScaler()
+        X_train_scaled = scaler.fit_transform(X_train)
+        # scale the rest of X data:
+        X_test_scaled = scaler.transform(X_test)
+
+        # define the machine learning model:
+        model_lists = self.reg_param['model_lists']
+        model = model_lists[modelindex]
+        # just use the original model: the first column of y is the y and the second column is hte colour code.
+        model.fit(X_train_scaled, y_train.iloc[:, 0])
+        # predict with the original model using defalt settings
+        y_pred = model.predict(X_test_scaled)
+
+        # calculate hte evaluation matrix.
+        r2 = r2_score(y_test.iloc[:, 0], y_pred)
+        mae = mean_absolute_error(y_test.iloc[:, 0], y_pred)
+
+        # plot the real vs predicted with hte colour code:
+        plt.figure(facecolor='white')
+        # calculate the transparency:
+        alpha=self.transparency_calculator(len(y_pred))
+        print('transparency of scattering plot is ' + str(alpha))
+        # define the colour map:
+        cmap = plt.cm.rainbow
+        norm = matplotlib.colors.Normalize(vmin = np.min(y_test.iloc[:, 1]), vmax = np.max(y_test.iloc[:, 1]))
+        # plot with defined colour:
+        plt.scatter(y_test.iloc[:, 0], y_pred, label=('$R^2$' + '=' + str(round(r2, 3))) + ('  Mean Absolue error' + '=' + str(round(mae, 3))), alpha=alpha, c=cmap(norm(y_test.iloc[:, 1])))
+        # create the colour bar.
+        sm = plt.cm.ScalarMappable(cmap=cmap, norm=norm)
+        sm.set_array([])
+        plt.colorbar(sm)
+        # defien the rest of hte plot
+        plt.xlabel('real value')
+        plt.ylabel('predicted value')
+        plt.title('real vs predicted ' + ' using method ' + ' for task ' + str(self.singletask) + ' using model ' + str(model_lists[modelindex]))
+        plt.legend(loc=3, framealpha=0.1)
+        plt.savefig(str(self.singletask) + '.png')
+        plt.show()
+
+        # close the function.
+        return r2
+
 # %%-
 
 
