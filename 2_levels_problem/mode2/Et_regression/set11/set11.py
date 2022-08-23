@@ -71,6 +71,9 @@ for task in ['Et_eV_2']:
     filename = str(df1.singletask) + str(df1.path).split('\\')[-1]
     exportdata.to_csv(str(filename))
 df1.email_reminder()
+
+df1.singletask = 'Et_eV_2'
+r2_frame, y_prediction_frame, y_test_frame, best_model, scaler_return = df1.regression_repeat(output_y_pred=True)
 # %%-
 
 # %%-- Data leakage.

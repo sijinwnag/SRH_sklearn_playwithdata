@@ -129,6 +129,7 @@ class MyMLdata_2level:
         self.reg_param = regression_default_param
         self.cla_param = classification_default_param
         self.regression_matrix = 'R2'
+        self.colour_column = 'logSn_1'
 # %%-
 
 
@@ -386,6 +387,13 @@ class MyMLdata_2level:
         else:
             return r2_list, mae_list
 
+
+    def colour_coded_training(self):
+        # extract the X and y from previous step: here X is log(lifetime)
+        X, y = self.pre_processor()
+        # also extract the colume to colour code with:
+        colour_col = self.data[str(self.colour_column)]
+        print(colour_col)
 # %%-
 
 
