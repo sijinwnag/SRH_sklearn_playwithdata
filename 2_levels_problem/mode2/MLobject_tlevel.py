@@ -429,7 +429,7 @@ class MyMLdata_2level:
         cmap = plt.cm.rainbow
         norm = matplotlib.colors.Normalize(vmin = np.min(y_test.iloc[:, 1]), vmax = np.max(y_test.iloc[:, 1]))
         # plot with defined colour:
-        plt.scatter(y_test.iloc[:, 0], y_pred, label=('$R^2$' + '=' + str(round(r2, 3))) + ('  Mean Absolue error' + '=' + str(round(mae, 3))), alpha=alpha, c=cmap(norm(y_test.iloc[:, 1])))
+        plt.scatter(y_test.iloc[:, 0], y_pred, label=('$R^2$' + '=' + str(round(r2, 3))) + ('  MAE' + '=' + str(round(mae, 3))), alpha=alpha, c=cmap(norm(y_test.iloc[:, 1])))
         # create the colour bar.
         sm = plt.cm.ScalarMappable(cmap=cmap, norm=norm)
         sm.set_array([])
@@ -439,7 +439,7 @@ class MyMLdata_2level:
         plt.ylabel('predicted value')
         plt.title('real vs predicted ' + ' using method ' + ' for task ' + str(self.singletask) + ' using model ' + str(model_lists[modelindex]))
         plt.legend(loc=3, framealpha=0.1)
-        plt.savefig(str(self.singletask) + '.png')
+        plt.savefig(str(self.singletask) + str(self.colour_column) + '.png')
         plt.show()
 
         # close the function.
