@@ -2049,7 +2049,7 @@ class MyMLdata_2level:
     The reason being is that: we have done the direct multi-output regression already using for loop
     """
 
-    def sum_minus_Et1_chain(self, regression_order, plotall=False, return_pred=False):
+    def sum_minus_Et1_chain(self, regression_order, plotall=False, return_pred=False, cv=6):
         """
         This function perform chain regression for Et1->Et1+Et2.
         Then predict Et2 by Et1+Et2-Et1.
@@ -2088,7 +2088,7 @@ class MyMLdata_2level:
         y_pred_list = []
         for model in model_lists:
             # define the chained multioutput wrapper model
-            wrapper = RegressorChain(model, order = regression_order)
+            wrapper = RegressorChain(model, order = regression_order, cv=cv)
             # fit the model on the whole dataset
             wrapper.fit(X_train_scaled, y_train)
             print('finish training chain regressor for ' + model_names[modelcount])
