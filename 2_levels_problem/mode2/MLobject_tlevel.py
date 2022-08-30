@@ -23,7 +23,6 @@ from sklearn.svm import SVR, SVC
 import sys
 from sklearn.tree import DecisionTreeRegressor, DecisionTreeClassifier
 from sklearn.naive_bayes import GaussianNB
-# uncomment the below line for dell laptop only
 from playsound import playsound
 from sklearn.model_selection import cross_val_score, RepeatedKFold
 from sklearn.multioutput import RegressorChain
@@ -34,6 +33,7 @@ import smtplib
 from email.message import EmailMessage
 import os
 from sklearn.inspection import permutation_importance
+import sympy as sym
 # %%-
 
 
