@@ -50,7 +50,7 @@ sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn
 sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Savedir_example')
 from MLobject_tlevel import *
 from dynamic_generation_regression import *
-df1 = MyMLdata_2level(r"G:\study\thesis_data_storage\unordered\set11\p\set11_p_800k.csv", 'bandgap1',1)
+df1 = MyMLdata_2level(r"C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\simulation_data\Etnonordered\p\set00\2022_08_30\2022-08-30-10-59-55_advanced example - multi_level_L_datasetID_0.csv", 'bandgap1',1)
 # df1 = MyMLdata_2level(r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\Etnonordered\p\set11_8k.csv", 'bandgap1',1)
 # df1.data.head()
 # %%-
@@ -73,9 +73,9 @@ for task in ['Et_eV_2', 'logSn_2', 'logSp_2', 'Et_eV_1', 'logSn_1', 'logSp_1']:
 # %%-
 
 # %%-- colour coding:
-for column in ['logSn_2', 'logSp_2', 'Et_eV_1', 'logSn_1', 'logSp_1']:
+for column in ['logSn_2', 'logSp_2', 'Et_eV_2', 'logSn_1', 'logSp_1']:
     df1.colour_column = column
-    df1.singletask = 'Et_eV_2'
+    df1.singletask = 'Et_eV_1'
     df1.colour_code_training()
 # %%-
 
