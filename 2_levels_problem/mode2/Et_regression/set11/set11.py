@@ -62,7 +62,7 @@ df1.pre_processor_dividX()
 
 # %%-- Single tasks.
 # ['Et_eV_2', 'logSn_2', 'logSp_2', 'Et_eV_1', 'logSn_1', 'logSp_1']
-for task in ['Et_eV_2', 'logSn_2', 'logSp_2', 'Et_eV_1', 'logSn_1', 'logSp_1']:
+for task in ['logSn_2', 'logSp_2', 'Et_eV_1', 'logSn_1', 'logSp_1']:
     df1.singletask = task
     r2_frame, y_prediction_frame, y_test_frame, best_model, scaler_return = df1.regression_repeat(output_y_pred=True)
     exportdata = pd.DataFrame([y_test_frame, y_prediction_frame])
