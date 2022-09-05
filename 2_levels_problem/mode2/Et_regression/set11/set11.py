@@ -50,7 +50,7 @@ sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn
 sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Savedir_example')
 from MLobject_tlevel import *
 from dynamic_generation_regression import *
-df1 = MyMLdata_2level(r"G:\study\thesis_data_storage\unordered\set11\p\set11_800k.csv", 'bandgap1',1)
+df1 = MyMLdata_2level(r"C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\simulation_data\Etnonordered\p\set11_8k.csv", 'bandgap1',1)
 # df1 = MyMLdata_2level(r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\Etnonordered\p\set11_8k.csv", 'bandgap1',1)
 # df1.data.head()
 # %%-
@@ -62,10 +62,13 @@ df1.pre_processor_dividX()
 
 # %%-- Single tasks.
 # ['Et_eV_2', 'logSn_2', 'logSp_2', 'Et_eV_1', 'logSn_1', 'logSp_1']
-for task in ['Et_eV_2', 'logSn_2', 'logSp_2', 'Et_eV_1', 'logSn_1', 'logSp_1']:
+for task in ['Et_eV_2']:
     df1.singletask = task
     r2_frame, y_prediction_frame, y_test_frame, best_model, scaler_return = df1.regression_repeat(output_y_pred=True)
-    exportdata = pd.DataFrame([y_test_frame, y_prediction_frame])
+    # reshape the test and prediction frame back to 2D:
+    y_test_frame = pd.DataFrame(y_test_frame)
+    y_prediction_frame = pd.DataFrame(y_prediction_frame)
+    exportdata = pd.concat([y_test_frame, y_prediction_frame], axis=1)
     # export the validation data: name composed of: the singletask + the filename of the dataset.
     # df1.path
     filename = str(df1.singletask) + str(df1.path).split('\\')[-1]
