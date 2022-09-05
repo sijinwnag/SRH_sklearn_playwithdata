@@ -282,10 +282,10 @@ class MyMLdata_2level:
         alpha=self.transparency_calculator(len(np.array(y_test_frame)[repeat_num]))
         print('transparency of scattering plot is ' + str(alpha))
         plt.scatter(np.array(y_test_frame)[repeat_num], np.array(y_prediction_frame)[repeat_num, :, model_num], label=('$R^2$' + '=' + str(round(np.max(r2_score_k), 3))) + ('  Mean Absolue error' + '=' + str(round(np.min(mae_score_k), 3))), alpha=alpha)
-        plt.xlabel('real value')
-        plt.ylabel('predicted value')
+        plt.xlabel('True')
+        plt.ylabel('Prediction')
         plt.title('real vs predicted at trial ' + str(repeat_num + 1) + ' using method ' + str(self.reg_param['model_names'][model_num]) + ' for task ' + str(self.singletask))
-        # plt.legend(loc=3, framealpha=0.1)
+        plt.legend(loc=3, framealpha=0.1)
         plt.savefig(str(self.singletask) + '.png')
         plt.show()
 
@@ -296,6 +296,9 @@ class MyMLdata_2level:
             # the dimension of the model frame is [different models][trials]
             # pick the model that has the highest average score.
             best_model = trained_model_frame[0][model_num]
+            # just return the best prediction:
+            y_test_frame = np.array(y_test_frame)[repeat_num]
+            y_prediction_frame = np.array(y_prediction_frame)[repeat_num, :, model_num]
             return r2_frame, y_prediction_frame, y_test_frame, best_model, scaler_return
 
 
