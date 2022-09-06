@@ -46,14 +46,80 @@ MAElist = [0.013, 0.064, 0.128, 0.419, 0.151, 0.412]
 # define title:
 title1 = '$E_{t1}$' + '(eV)'
 title2 = '$E_{t1}$' + '(eV)'
-title3 = '$log(sigma_{n1})$'
-title4 = '$log(sigma_{n2})$'
-title5 = '$log(sigma_{p1})$'
-title6 = '$log(sigma_{p2})$'
+title3 = '$log(\sigma_{n1})$'
+title4 = '$log(\sigma_{n2})$'
+title5 = '$log(\sigma_{p1})$'
+title6 = '$log(\sigma_{p2})$'
 titlelist = [title1, title2, title3, title4, title5, title6]
+filenamelist = ['Et1', 'Et2', 'Sn1', 'Sn2', 'Sp1', 'Sp2']
+# %%-
+
+
+# %%-- extract the data.
+Truelist = []
+predictionlist = []
+for path in pathlist:
+    data = pd.read_csv(path)
+    # the second column is true value:
+    true = np.array(data)[:, 1]
+    Truelist.append(true)
+    # the third column is the prediction value:
+    prediction = np.array(data)[:, 2]
+    predictionlist.append(prediction)
+# Truelist and predictionlist are lists of numpy array.
+# %%-
+
+
+# %%-- calculate the transparency:
+def transparency_calculator(datasize):
+    '''
+    This function will calcualte a suitable data transparency given the datasize for a scatter plot.
+
+    input: datasize: an integer.
+    '''
+    # load the standardsize from the object
+    standardsize=800
+    if datasize>standardsize:
+        alpha = standardsize/datasize*0.5
+    else:
+        alpha = 0.5
+    return alpha
+
+alpha = transparency_calculator(80000)
+print('transparency is ' + str(alpha))
 # %%-
 
 
 # %%-- do the subplot:
+fig, axs = plt.subplots(2, 3)
+# define the index and the position of each subplot.
+plot_position1 = [0, 0, 0, 1, 1, 1]
+plot_position2 = [0, 1, 2, 0, 1, 2]
+for k in range(len(Truelist)):
+    # extract the values:
+    truevalue = Truelist[k]
+    prediction = predictionlist[k]
+    axs[plot_position1[k], plot_position2[k]].scatter(truevalue, prediction, alpha=alpha)
+    axs[plot_position1[k], plot_position2[k]].set_title(titlelist[k])
+# %%-
 
+
+# %%-- do the plots one by ones
+alphabet = ['(a)', '(b)', '(c)', '(d)', '(e)', '(f)']
+for k in range(len(Truelist)):
+    # plot the plot.
+    fig= plt.figure(facecolor='white', figsize=(6, 6))
+    ax = fig.add_subplot(111)
+    true = Truelist[k]
+    prediction = predictionlist[k]
+    plt.scatter(true, prediction, label=('$R^2$' + '=' + str(R2list[k])) + ('  MAE' + '=' + str(MAElist[k])), alpha=alpha, color='green')
+    plt.plot(true, true, color='r')
+    plt.xlabel('True', fontsize=20)
+    plt.ylabel('Prediction', fontsize=20)
+    ax.set_aspect("equal")
+    # plt.text(0, 0.5, alphabet[k], fontsize=20)
+    plt.title(titlelist[k], fontsize=20)
+    plt.legend(loc=4, framealpha=0.1, fontsize=20)
+    plt.savefig(fname=str(filenamelist[k]) + '.png')
+    plt.show()
 # %%-

@@ -87,10 +87,3 @@ class True_vs_prediction_plot:
         plt.legend(loc=3, framealpha=0.1)
         # plt.savefig(str(self.singletask) + '.png')
         plt.show()
-
-
-    def subplot(self):
-        '''
-        plot the true ve prediction into 6 different subplots:
-        '''
-        
