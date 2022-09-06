@@ -45,7 +45,7 @@ R2list = [0.972, 0.645, 0.917, 0.732, 0.938, 0.727]
 MAElist = [0.013, 0.064, 0.128, 0.419, 0.151, 0.412]
 # define title:
 title1 = '$E_{t1}$' + '(eV)'
-title2 = '$E_{t1}$' + '(eV)'
+title2 = '$E_{t2}$' + '(eV)'
 title3 = '$log(\sigma_{n1})$'
 title4 = '$log(\sigma_{n2})$'
 title5 = '$log(\sigma_{p1})$'
@@ -118,7 +118,7 @@ for k in range(len(Truelist)):
     plt.ylabel('Prediction', fontsize=20)
     ax.set_aspect("equal")
     # plt.text(0, 0.5, alphabet[k], fontsize=20)
-    plt.title(titlelist[k], fontsize=20)
+    plt.title(titlelist[k], fontsize=25)
     plt.legend(loc=4, framealpha=0.1, fontsize=20)
     plt.savefig(fname=str(filenamelist[k]) + '.png')
     plt.show()

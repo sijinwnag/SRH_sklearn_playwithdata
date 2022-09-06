@@ -83,7 +83,7 @@ class True_vs_prediction_plot:
         plt.xlabel('True')
         plt.ylabel('Prediction')
         ax.set_aspect("equal")
-        plt.title(self.title)
+        plt.title(self.title, frontsize=20)
         plt.legend(loc=3, framealpha=0.1)
         # plt.savefig(str(self.singletask) + '.png')
         plt.show()
