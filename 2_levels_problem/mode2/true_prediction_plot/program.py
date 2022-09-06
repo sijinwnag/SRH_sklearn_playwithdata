@@ -46,10 +46,10 @@ MAElist = [0.013, 0.064, 0.128, 0.419, 0.151, 0.412]
 # define title:
 title1 = '$E_{t1}$' + '(eV)'
 title2 = '$E_{t2}$' + '(eV)'
-title3 = '$log(\sigma_{n1})$'
-title4 = '$log(\sigma_{n2})$'
-title5 = '$log(\sigma_{p1})$'
-title6 = '$log(\sigma_{p2})$'
+title3 = 'log$(\sigma_{n1})$'
+title4 = 'log$(\sigma_{n2})$'
+title5 = 'log$(\sigma_{p1})$'
+title6 = 'log$(\sigma_{p2})$'
 titlelist = [title1, title2, title3, title4, title5, title6]
 filenamelist = ['Et1', 'Et2', 'Sn1', 'Sn2', 'Sp1', 'Sp2']
 # %%-
