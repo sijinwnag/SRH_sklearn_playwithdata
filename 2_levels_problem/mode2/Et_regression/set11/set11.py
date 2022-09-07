@@ -1,12 +1,6 @@
 # %%-- To do:
 """
-1. test the dynamic method using different chains, make sure there is no coding error. (done)
-2. play with the tolerance factor when fixing for dynamic data generations.  (keep it 0)
-3. notice Et2 does not always work, build some visualization method to see which area it is working (Et1, Sn1, Sp1) (do that later)
-4. The first tiral result is very bad:
-    a. see if there is any coding problem. -> make the code output the y prediction to see whether we wrongly order the y_predictions_2 (also make the validation set to be size 1) (seems they are same)
-    b. maybe the reason is the Et2 low training score in second step? but why Sp2 and Sn2 are bad as well? -> the mistake in the first step matters!
-5. Try other chains see if they all work!
+
 """
 # %%-
 
@@ -49,9 +43,9 @@ sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn
 sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\DPML')
 sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Savedir_example')
 from MLobject_tlevel import *
-from dynamic_generation_regression import *
-# df1 = MyMLdata_2level(r"C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\simulation_data\Etnonordered\p\set11_8k.csv", 'bandgap1',1)
-df1 = MyMLdata_2level(r"G:\study\thesis_data_storage\unordered\set11\p\set11_800k.csv", 'bandgap1',1)
+# from dynamic_generation_regression import *
+df1 = MyMLdata_2level(r"C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\simulation_data\Etnonordered\n\set01\2022-09-07-10-23-38_advanced example - multi_level_L_datasetID_0.csv", 'bandgap1',1)
+# df1 = MyMLdata_2level(r"G:\study\thesis_data_storage\unordered\set11\p\set11_800k.csv", 'bandgap1',1)
 # df1.data.head()
 # %%-
 
@@ -164,6 +158,7 @@ df1.C_visiaulization(variable='C2n')
 df1.C_visiaulization(variable='C1d')
 df1.C_visiaulization(variable='C2d')
 df1.C_visiaulization(task_name='C histogram compare')
+df1.C
 # %%-
 
 # %%-- T vs C:
@@ -190,6 +185,30 @@ df1.C_visiaulization(variable='C1d/C2d', task_name='plot with Et1-Et2')
 df1.feature_importance_visualisation('Et_eV_2')
 # %%-
 
+# %%-- histogram for defect charge state population:
+C2n_frame, C2d_frame, C1n_frame, C1d_frame = df1.C1n_C2n_C1d_C2d_calculator(return_C=True, export=False, sanity_check=False, playmusic=False)
+# now we want to compare the results for C1n and C2n:
+C1n_framedata = C1n_frame.iloc[3:, :]
+C1n_av = np.mean(np.array(C1n_framedata), axis=1).reshape(np.shape(C1n_av)[0], 1).astype(float)
+C1n_avlog = np.log10(np.array(C1n_av))
+# extract teh C2n as well.
+C2n_framedata = C2n_frame.iloc[3:, :]
+# C2n_framedata
+C2n_av = np.mean(np.array(C2n_framedata), axis=1).reshape(np.shape(C1n_av)[0], 1).astype(float)
+C2n_avlog = np.log10(np.array(C2n_av))
+C1n_av2 = np.mean(C1n_av)
+C2n_av2 = np.mean(C2n_av)
+print(C1n_av2/C2n_av2)
+# %%--
+# plot the histogram comparison:
+labels=['most positively charge / middle charge', 'most negatively charge / middle charge']
+plt.figure()
+plt.boxplot(np.concatenate([C1n_avlog, C2n_avlog], axis=1), vert=False, labels=labels, showfliers=True)
+# plt.title('Mean absolute error scores for ' + str(self.singletask))
+plt.xlabel('log10 of the value')
+plt.show()
+# %%-
+# %%-
 # %%-
 
 # %%-- test the first of dynamic generation method: use ML object.
