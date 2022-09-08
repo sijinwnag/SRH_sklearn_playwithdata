@@ -1,6 +1,6 @@
 # %%-- To do list:
 '''
-1. write a pre-processor to merge 2 dataset
+1. write a pre-processor to merge 2 dataset: you have to make sure the defects are identical, so modify the datagenration function instead of ML part.
 '''
 # %%-
 
@@ -2043,28 +2043,34 @@ class MyMLdata_2level:
         self.data = shuffled_data
 
 
-    def pn_merger(self, npath, ppath):
-        '''
-        This function takes the path of n and p type df, merge into one.
-        The output is a pd dataframe that has lifetime from both n and p type material.
-        '''
-
-        # load the pd dataframe from both n and p type path;
-        n_data = pd.read_csv(npath)
-        p_data = pd.read_csv(ppath)
-
-        # extract the lifetime data column name: because both n and p type data may have same column name, we add "n" and "p" at the end to distinguish them:
-        select_X_list_n = []
-        for string in n_data.columns.tolist():
-            if string[0].isdigit():
-                select_X_list_p.append(string + 'n')
-        Xn = n_data[select_X_list]
-        # repeat for p type data:
-        select_X_list_p = []
-        for string in p_data.columns.tolist():
-            if string[0].isdigit():
-                select_X_list_n.append(string + 'n')
-        Xn = n_data[select_X_list]
+    # def pn_merger(self, npath, ppath):
+    #     '''
+    #     This function takes the path of n and p type df, merge into one.
+    #     The output is a pd dataframe that has lifetime from both n and p type material.
+    #     '''
+    #
+    #     # load the pd dataframe from both n and p type path;
+    #     n_data = pd.read_csv(npath)
+    #     p_data = pd.read_csv(ppath)
+    #
+    #     # extract the lifetime data column name: because both n and p type data may have same column name, we add "n" and "p" at the end to distinguish them:
+    #     select_X_list_n = []
+    #     select_X_list = []
+    #     for string in n_data.columns.tolist():
+    #         if string[0].isdigit():
+    #             select_X_list_n.append(string + 'n')
+    #             select_X_list.append(string)
+    #     Xn = n_data[select_X_list]
+    #     Xn.columns = select_X_list_n
+    #     # repeat for p type data:
+    #     select_X_list_p = []
+    #     select_X_list = []
+    #     for string in p_data.columns.tolist():
+    #         if string[0].isdigit():
+    #             select_X_list_p.append(string + 'p')
+    #             select_X_list.append(string)
+    #     Xp = n_data[select_X_list]
+    #     Xp.columns = select_X_list_p
 # %%-
 
 
