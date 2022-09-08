@@ -1,6 +1,6 @@
 # %%-- To do list:
 '''
-1. Figure out the columes of the confusion matrix.
+1. write a pre-processor to merge 2 dataset
 '''
 # %%-
 
@@ -2042,6 +2042,29 @@ class MyMLdata_2level:
         # update the object data.
         self.data = shuffled_data
 
+
+    def pn_merger(self, npath, ppath):
+        '''
+        This function takes the path of n and p type df, merge into one.
+        The output is a pd dataframe that has lifetime from both n and p type material.
+        '''
+
+        # load the pd dataframe from both n and p type path;
+        n_data = pd.read_csv(npath)
+        p_data = pd.read_csv(ppath)
+
+        # extract the lifetime data column name: because both n and p type data may have same column name, we add "n" and "p" at the end to distinguish them:
+        select_X_list_n = []
+        for string in n_data.columns.tolist():
+            if string[0].isdigit():
+                select_X_list_p.append(string + 'n')
+        Xn = n_data[select_X_list]
+        # repeat for p type data:
+        select_X_list_p = []
+        for string in p_data.columns.tolist():
+            if string[0].isdigit():
+                select_X_list_n.append(string + 'n')
+        Xn = n_data[select_X_list]
 # %%-
 
 
