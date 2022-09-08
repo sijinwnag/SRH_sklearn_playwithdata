@@ -112,7 +112,7 @@ for k in range(len(Truelist)):
     ax = fig.add_subplot(111)
     true = Truelist[k]
     prediction = predictionlist[k]
-    plt.scatter(true, prediction, label=('$R^2$' + '=' + str(R2list[k])) + ('  MAE' + '=' + str(MAElist[k])), alpha=alpha, color='green')
+    plt.scatter(true, prediction, label=('$R^2$' + '=' + str(R2list[k])) + ('; MAE' + '=' + str(MAElist[k])), alpha=alpha, color='green')
     plt.plot(true, true, color='r')
     plt.xlabel('True', fontsize=20)
     plt.ylabel('Prediction', fontsize=20)
@@ -120,6 +120,11 @@ for k in range(len(Truelist)):
     # plt.text(0, 0.5, alphabet[k], fontsize=20)
     plt.title(titlelist[k], fontsize=25)
     plt.legend(loc=4, framealpha=0.1, fontsize=20)
+    plt.xticks(fontsize=15)
+    plt.yticks(fontsize=15)
+    if k>1:
+        plt.xticks(range(-17, -12))
+        plt.yticks(range(-17, -12))
     plt.savefig(fname=str(filenamelist[k]) + '.png')
     plt.show()
 # %%-
