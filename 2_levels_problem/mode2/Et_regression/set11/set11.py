@@ -44,7 +44,7 @@ sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn
 sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Savedir_example')
 from MLobject_tlevel import *
 # from dynamic_generation_regression import *
-df1 = MyMLdata_2level(r"C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\simulation_data\Etnonordered\n\set01\2022-09-07-10-23-38_advanced example - multi_level_L_datasetID_0.csv", 'bandgap1',1)
+df1 = MyMLdata_2level(r"C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\yoann_code_new\Savedir_example\outputs\2022-09-11-07-22-26_advanced example - multi_level_L_datasetID_0.csv", 'bandgap1',1)
 # df1 = MyMLdata_2level(r"G:\study\thesis_data_storage\unordered\set11\p\set11_800k.csv", 'bandgap1',1)
 # df1.data.head()
 # %%-
