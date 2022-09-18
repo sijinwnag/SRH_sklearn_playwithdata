@@ -109,12 +109,12 @@ class MyMLdata_2level:
         'param_list': [{'n_neighbors':range(1, 30)}, {'max_depth': [10, 100, 1e3]}, {'n_estimators':[10, 100]}, {'n_estimators':[10, 100]},{'n_estimators':[10, 100]}, {'var_smoothing':[1e-9, 1e-3]},{'hidden_layer_sizes':((100, 300, 500, 300, 100), (100, 300, 500, 500, 300, 100), (200, 600, 900, 600, 200))}]# a list of key parameters correspond to the models in the model_lists
         }
         # NN compared to Naive bias only only:
-        # classification_default_param = {
-        # 'model_names': ['Naive Bayes', 'Neural Network'], # a list of name for each model.
-        # 'model_lists': [GaussianNB(), MLPClassifier((100,100),alpha=0.001, activation = 'relu',verbose=0,learning_rate='adaptive')],# a list of model improted from sklearn
-        # 'gridsearchlist': [False, False],
-        # 'param_list': [{'var_smoothing':[1e-9, 1e-3]}, {'hidden_layer_sizes':((100, 300, 500, 300, 100), (100, 300, 500, 500, 300, 100), (200, 600, 900, 600, 200))}]# a list of key parameters correspond to the models in the model_lists
-        # }
+        classification_default_param = {
+        'model_names': ['Naive Bayes', 'Neural Network'], # a list of name for each model.
+        'model_lists': [GaussianNB(), MLPClassifier(activation='relu', alpha=0.001, batch_size='auto', beta_1=0.9, beta_2=0.999, early_stopping=False, epsilon=1e-08, hidden_layer_sizes=(1024, 128), learning_rate='adaptive', learning_rate_init=0.001, max_iter=200, momentum=0.9, n_iter_no_change=10, nesterovs_momentum=True, power_t=0.5, random_state=None, shuffle=True, solver='adam', tol=0.0001, validation_fraction=0.1, verbose=1, warm_start=False)],# a list of model improted from sklearn
+        'gridsearchlist': [False, False],
+        'param_list': [{'var_smoothing':[1e-9, 1e-3]}, {'hidden_layer_sizes':((100, 300, 500, 300, 100), (100, 300, 500, 500, 300, 100), (200, 600, 900, 600, 200))}]# a list of key parameters correspond to the models in the model_lists
+        }
         # wihtout CSV, gradient boosting, adabosting
         # classification_default_param = {
         # 'model_names': ['KNN', 'Decision tree', 'Random Forest',  'Naive Bayes', 'Neural Network'], # a list of name for each model.
@@ -452,7 +452,7 @@ class MyMLdata_2level:
 
 
 # %%--- Classification machine learning tasks.
-    def classification_training(self, X_train_scaled, X_test_scaled, y_train, y_test, display_confusion_matrix=False, return_model=False):
+    def classification_training(self, X_train_scaled, X_test_scaled, y_train, y_test, display_confusion_matrix=True, return_model=False):
         """
         This function is only capable for binary classification yet.
         input:
@@ -505,7 +505,7 @@ class MyMLdata_2level:
             y_pred_list.append(y_pred)
             y_test_list.append(y_test)
             # print the output
-            print('finish training ' + name + ', the accuracy is ' + str(f1))
+            print('finish training ' + name + ', the F1 score is ' + str(f1))
             # display the confusion matrix
             if display_confusion_matrix==True:
                 print(confusion_matrix(y_test, y_pred, normalize='all'))
