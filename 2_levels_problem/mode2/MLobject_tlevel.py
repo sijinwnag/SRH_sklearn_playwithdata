@@ -111,7 +111,7 @@ class MyMLdata_2level:
         # NN compared to Naive bias only only:
         classification_default_param = {
         'model_names': ['Naive Bayes', 'Neural Network'], # a list of name for each model.
-        'model_lists': [GaussianNB(), MLPClassifier((100, 300, 500, 300, 100),alpha=0.001, activation = 'relu',verbose=0,learning_rate='adaptive')],# a list of model improted from sklearn
+        'model_lists': [GaussianNB(), MLPClassifier(activation='relu', alpha=0.001, batch_size='auto', beta_1=0.9, beta_2=0.999, early_stopping=False, epsilon=1e-08, hidden_layer_sizes=(1024, 128), learning_rate='adaptive', learning_rate_init=0.001, max_iter=200, momentum=0.9, n_iter_no_change=10, nesterovs_momentum=True, power_t=0.5, random_state=None, shuffle=True, solver='adam', tol=0.0001, validation_fraction=0.1, verbose=1, warm_start=False)],# a list of model improted from sklearn
         'gridsearchlist': [False, False],
         'param_list': [{'var_smoothing':[1e-9, 1e-3]}, {'hidden_layer_sizes':((100, 300, 500, 300, 100), (100, 300, 500, 500, 300, 100), (200, 600, 900, 600, 200))}]# a list of key parameters correspond to the models in the model_lists
         }
