@@ -37,8 +37,9 @@ sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn
 sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Savedir_example')
 from MLobject_tlevel import *
 # from dynamic_generation_regression import *
-df1 = MyMLdata_2level(r"G:\study\thesis_data_storage\unordered\classification\classify_one_two_levels\800k\2022-09-17-19-35-59_advanced example - multi_level_L_datasetID_0.csv", 'bandgap1',1)
+df1 = MyMLdata_2level(r"C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\simulation_data\Etnonordered\one_vs_two_level_classification\80k\2022-09-14-10-03-50_advanced example - multi_level_L_datasetID_0.csv", 'bandgap1',5)
 # df1.data.head()
+# df1.data['Label']
 # %%-
 
 # %%-- perform classification
