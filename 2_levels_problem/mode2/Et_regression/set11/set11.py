@@ -1,6 +1,6 @@
 # %%-- To do:
 """
-
+generate result for set 11 p type 800k for five repetitions
 """
 # %%-
 
@@ -44,7 +44,7 @@ sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn
 sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Savedir_example')
 from MLobject_tlevel import *
 # from dynamic_generation_regression import *
-df1 = MyMLdata_2level(r"Etnonordered\one_vs_two_level_classification\80k\2022-09-14-10-03-50_advanced example - multi_level_L_datasetID_0.csv", 'bandgap1',1)
+# df1 = MyMLdata_2level(r"G:\study\thesis_data_storage\unordered\set11\p\set11_p_800k.csv", 'bandgap1',1)
 # df1 = MyMLdata_2level(r"G:\study\thesis_data_storage\unordered\set11\p\set11_800k.csv", 'bandgap1',1)
 # df1.data.head()
 # %%-
@@ -57,6 +57,9 @@ df1.pre_processor_dividX()
 # %%-- Single tasks.
 # ['Et_eV_2', 'logSn_2', 'logSp_2', 'Et_eV_1', 'logSn_1', 'logSp_1']
 for task in['Et_eV_2', 'logSn_2', 'logSp_2', 'Et_eV_1', 'logSn_1', 'logSp_1']:
+    print(task)
+    # refresh the dataset
+    df1 = MyMLdata_2level(r"G:\study\thesis_data_storage\unordered\set11\p\set11_p_800k.csv", 'bandgap1',5)
     df1.singletask = task
     r2_frame, y_prediction_frame, y_test_frame, best_model, scaler_return = df1.regression_repeat(output_y_pred=True)
     # reshape the test and prediction frame back to 2D:
