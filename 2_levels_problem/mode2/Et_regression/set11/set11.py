@@ -59,7 +59,7 @@ df1.pre_processor_dividX()
 for task in['Et_eV_2', 'logSn_2', 'logSp_2', 'Et_eV_1', 'logSn_1', 'logSp_1']:
     print(task)
     # refresh the dataset
-    df1 = MyMLdata_2level(r"G:\study\thesis_data_storage\unordered\set11\p\set11_p_800k.csv", 'bandgap1',5)
+    # df1 = MyMLdata_2level(r"G:\study\thesis_data_storage\unordered\set11\p\set11_p_800k.csv", 'bandgap1',5)
     df1.singletask = task
     r2_frame, y_prediction_frame, y_test_frame, best_model, scaler_return = df1.regression_repeat(output_y_pred=True)
     # reshape the test and prediction frame back to 2D:
