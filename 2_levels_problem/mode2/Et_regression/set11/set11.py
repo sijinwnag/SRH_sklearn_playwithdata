@@ -56,7 +56,7 @@ df1.pre_processor_dividX()
 
 # %%-- Single tasks.
 # ['Et_eV_2', 'logSn_2', 'logSp_2', 'Et_eV_1', 'logSn_1', 'logSp_1']
-for task in['Et_eV_2', 'logSn_2', 'logSp_2', 'Et_eV_1', 'logSn_1', 'logSp_1']:
+for task in['Et_eV_1', 'logSn_1', 'logSp_1']:
     print(task)
     # refresh the dataset
     # df1 = MyMLdata_2level(r"G:\study\thesis_data_storage\unordered\set11\p\set11_p_800k.csv", 'bandgap1',5)
