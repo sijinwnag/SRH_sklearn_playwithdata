@@ -60,12 +60,12 @@ class MyMLdata_2level:
         # 'param_list': [{'n_neighbors':range(1, 30)}, {'alpha': [0.01, 0.1, 1, 10]}, {'n_estimators': [200, 100, 1000, 500, 2000], 'verbose':[0], 'n_jobs':[-1]}, {'hidden_layer_sizes':((100, 300, 300, 100), (100, 300, 500, 300, 100), (200, 600, 600, 200), (200, 600, 900, 600, 200), (100, 300, 500, 700, 500, 300, 100)), 'alpha': [0.001], 'learning_rate':['adaptive']}, {'n_estimators':[200, 100]}, {'n_estimators':[50, 100]}, {'C': [0.1, 1, 10], 'epsilon': [1e-2, 0.1, 1]}]# a list of key parameters correspond to the models in the model_lists if we are going to do grid searching
         # }
         # without svc:
-        regression_default_param = {
-        'model_names': ['KNN', 'Ridge Linear Regression', 'Random Forest' , 'Neural Network', 'Gradient Boosting', 'Ada Boosting'], # a list of name for each model.
-        'model_lists': [KNeighborsRegressor(), Ridge(), RandomForestRegressor(n_estimators=100, verbose =0, n_jobs=-1), MLPRegressor(((100, 100)),alpha=0.001, activation = 'relu',verbose=0,learning_rate='adaptive'), GradientBoostingRegressor(verbose=0,loss='ls',max_depth=10), AdaBoostRegressor(base_estimator = DecisionTreeRegressor(), n_estimators=100, loss='linear')],# a list of model improted from sklearn
-        'gridsearchlist': [False, False, False, False, False, False], # each element in this list corspond to a particular model, if True, then we will do grid search while training the model, if False, we will not do Gridsearch for this model.
-        'param_list': [{'n_neighbors':range(1, 30)}, {'alpha': [0.01, 0.1, 1, 10]}, {'n_estimators': [200, 100, 1000, 500, 2000], 'verbose':[0], 'n_jobs':[-1]}, {'hidden_layer_sizes':((100, 300, 300, 100), (100, 300, 500, 300, 100), (200, 600, 600, 200), (200, 600, 900, 600, 200), (100, 300, 500, 700, 500, 300, 100)), 'alpha': [0.001], 'learning_rate':['adaptive']}, {'n_estimators':[200, 100]}]# a list of key parameters correspond to the models in the model_lists if we are going to do grid searching
-        }
+        # regression_default_param = {
+        # 'model_names': ['KNN', 'Ridge Linear Regression', 'Random Forest' , 'Neural Network', 'Gradient Boosting', 'Ada Boosting'], # a list of name for each model.
+        # 'model_lists': [KNeighborsRegressor(), Ridge(), RandomForestRegressor(n_estimators=100, verbose =0, n_jobs=-1), MLPRegressor(((100, 100)),alpha=0.001, activation = 'relu',verbose=0,learning_rate='adaptive'), GradientBoostingRegressor(verbose=0,loss='ls',max_depth=10), AdaBoostRegressor(base_estimator = DecisionTreeRegressor(), n_estimators=100, loss='linear')],# a list of model improted from sklearn
+        # 'gridsearchlist': [False, False, False, False, False, False], # each element in this list corspond to a particular model, if True, then we will do grid search while training the model, if False, we will not do Gridsearch for this model.
+        # 'param_list': [{'n_neighbors':range(1, 30)}, {'alpha': [0.01, 0.1, 1, 10]}, {'n_estimators': [200, 100, 1000, 500, 2000], 'verbose':[0], 'n_jobs':[-1]}, {'hidden_layer_sizes':((100, 300, 300, 100), (100, 300, 500, 300, 100), (200, 600, 600, 200), (200, 600, 900, 600, 200), (100, 300, 500, 700, 500, 300, 100)), 'alpha': [0.001], 'learning_rate':['adaptive']}, {'n_estimators':[200, 100]}]# a list of key parameters correspond to the models in the model_lists if we are going to do grid searching
+        # }
         # only neural network.
         # regression_default_param = {
         # 'model_names': ['Neural Network'], # a list of name for each model.
@@ -88,12 +88,12 @@ class MyMLdata_2level:
         # 'param_list': [{'n_estimators': [200, 100, 1000, 500, 2000]}, {'n_estimators':[200, 100]}, {'n_estimators':[50, 100]}]# a list of key parameters correspond to the models in the model_lists if we are going to do grid searching
         # }
         # random forest only
-        # regression_default_param = {
-        # 'model_names': ['Random Forest'], # a list of name for each model.
-        # 'model_lists': [RandomForestRegressor(n_estimators=100, verbose=1, n_jobs=-1)],# a list of model improted from sklearn
-        # 'gridsearchlist': [False], # each element in this list corspond to a particular model, if True, then we will do grid search while training the model, if False, we will not do Gridsearch for this model.
-        # 'param_list': [{'n_estimators': [200, 100, 1000, 500, 2000]}]# a list of key parameters correspond to the models in the model_lists if we are going to do grid searching
-        # }
+        regression_default_param = {
+        'model_names': ['Random Forest'], # a list of name for each model.
+        'model_lists': [RandomForestRegressor(n_estimators=100, verbose=1, n_jobs=-1)],# a list of model improted from sklearn
+        'gridsearchlist': [False], # each element in this list corspond to a particular model, if True, then we will do grid search while training the model, if False, we will not do Gridsearch for this model.
+        'param_list': [{'n_estimators': [200, 100, 1000, 500, 2000]}]# a list of key parameters correspond to the models in the model_lists if we are going to do grid searching
+        }
         # random forest and linear regression only:
         # regression_default_param = {
         # 'model_names': ['Random Forest', 'Ridge Linear Regression'], # a list of name for each model.

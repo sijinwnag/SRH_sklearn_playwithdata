@@ -45,7 +45,7 @@ sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn
 from MLobject_tlevel import *
 # from dynamic_generation_regression import *
 # df1 = MyMLdata_2level(r"C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\simulation_data\Etnonordered\p\set11\set11_8k.csv", 'bandgap1',5)
-df1 = MyMLdata_2level(r"C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\simulation_data\Etnonordered\p\set11\set11_8k.csv", 'bandgap1',5)
+df1 = MyMLdata_2level(r"G:\study\thesis_data_storage\unordered\set10\p\800k\set10_800k_p.csv", 'bandgap1',1)
 df1.data.head()
 # %%-
 
@@ -56,7 +56,7 @@ df1.pre_processor_dividX()
 
 # %%-- Single tasks.
 # ['Et_eV_2', 'logSn_2', 'logSp_2', 'Et_eV_1', 'logSn_1', 'logSp_1']
-for task in ['Et_eV_2']:
+for task in ['Et_eV_2', 'logSn_2', 'logSp_2', 'Et_eV_1', 'logSn_1', 'logSp_1']:
     print(task)
     # refresh the dataset
     # df1 = MyMLdata_2level(r"G:\study\thesis_data_storage\unordered\set11\p\set11_p_800k.csv", 'bandgap1',5)
