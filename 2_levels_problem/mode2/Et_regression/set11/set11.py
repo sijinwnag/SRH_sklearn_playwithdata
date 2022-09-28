@@ -72,7 +72,6 @@ for task in ['Et_eV_2']:
     exportdata.to_csv(str(filename))
 # %%-
 
-
 # %%-- colour coding:
 for column in ['logSn_2', 'logSp_2', 'Et_eV_2', 'logSn_1', 'logSp_1']:
     df1.colour_column = column
