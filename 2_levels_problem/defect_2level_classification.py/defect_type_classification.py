@@ -37,7 +37,7 @@ sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn
 sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Savedir_example')
 from MLobject_tlevel import *
 # from dynamic_generation_regression import *
-# df1 = MyMLdata_2level(r"C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\simulation_data\Etnonordered\one_vs_two_level_classification\80k\2022-09-14-10-03-50_advanced example - multi_level_L_datasetID_0.csv", 'bandgap1',1)
+df1 = MyMLdata_2level(r"C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\simulation_data\Etnonordered\one_vs_two_level_classification\80k\2022_09_29\2022-09-29-09-45-08_advanced example - multi_level_L_datasetID_0.csv", 'bandgap1',5)
 # df1.data.head()
 # df1.data['Label']
 # %%-
@@ -83,7 +83,7 @@ f1_med
 f1_std = np.std(f1_array_nn, axis=1)
 # create the datasize axis:
 datasize = np.logspace(-3, 0, 20)*160e3*0.9
-# %%--
+# %%-
 
 
 # %%--plot the av with std vs datasize.
