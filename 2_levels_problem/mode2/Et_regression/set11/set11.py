@@ -45,8 +45,9 @@ sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn
 from MLobject_tlevel import *
 # from dynamic_generation_regression import *
 # df1 = MyMLdata_2level(r"C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\simulation_data\Etnonordered\p\set11\set11_8k.csv", 'bandgap1',5)
-df1 = MyMLdata_2level(r"C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\simulation_data\Etnonordered\one_vs_two_level_classification\80k\2022-09-14-10-03-50_advanced example - multi_level_L_datasetID_0.csv", 'bandgap1',1)
+df1 = MyMLdata_2level(r"C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\simulation_data\Etnonordered\n\set10\2022-09-07-10-17-17_advanced example - multi_level_L_datasetID_0.csv", 'bandgap1',1)
 df1.data.head()
+df1.data = df1.data.iloc[:800,:]
 # %%-
 
 # %%-- different data engineering before training ML model.
@@ -120,7 +121,57 @@ df1.pre_processor_insert_all_known()
 # This equation only calcualte C while ignoring excess carrier concentration, and only works for one doping and one temperature.
 # df1.C1_C2_C3_C4_calculator()
 # this eqution works for lifetime data that vary both T and doping.
-# df1.C1n_C2n_C1d_C2d_calculator(return_C=False, export=True, sanity_check=True, playmusic=True)
+C2n_list, C2d_list, C1n_list, C1d_list = df1.C1n_C2n_C1d_C2d_calculator(return_C=True, export=False, sanity_check=False, playmusic=False)
+
+# %%--this session will plot the histogram of them.
+C1n_array = np.array(C1n_list)[4:, :]
+C2n_array = np.array(C2n_list)[4:, :]
+# flattern hte array.
+C1n_array = np.reshape(C1n_array, (-1, ))
+print(np.mean(C1n_array))
+print(np.max(C1n_array))
+C2n_array = np.reshape(C2n_array, (-1, ))
+print(np.mean(C2n_array))
+print(np.max(C2n_array))
+# remove the outliers
+# C1n_array = C1n_array[abs(C1n_array - np.mean(C1n_array)) < 1 * np.std(C1n_array)]
+# C2n_array = C2n_array[abs(C2n_array - np.mean(C2n_array)) < 1 * np.std(C2n_array)]
+# take the log.
+C1n_array.astype(float)
+
+# plot the histogram
+bins = 100
+plt.figure(facecolor='white')
+# plot hte log.
+plt.hist(np.log10(C1n_array.astype('float')) - 1, bins=bins, label='$C_{1n}$', alpha=0.75)
+plt.hist(np.log10(C2n_array.astype('float')) + 1, bins=bins, label='$C_{2n}$', alpha=0.75)
+# plot hte origin.
+# plt.hist(C1n_array.astype('float'), bins=bins, label='$C_{1n}$')
+# plt.hist(C2n_array.astype('float'), bins=bins, label='$C_{2n}$')
+plt.legend()
+plt.title('Histogram of $C_n$')
+plt.xlabel('log10 of $C_n$')
+plt.savefig('Cn_compare.png')
+plt.show()
+
+# plot the boxplot.
+# plt.figure()
+# # plot hte log.
+# plt.boxplot([np.log10(C1n_array.astype('float')),np.log10(C2n_array.astype('float'))])
+# # plot hte origin.
+# # plt.hist(C1n_array.astype('float'), bins=bins, label='$C_{1n}$')
+# # plt.hist(C2n_array.astype('float'), bins=bins, label='$C_{2n}$')
+# # plt.legend(['$C_{1n}$', '$C_{2n}$'])
+# plt.title('Distribution of Cn')
+# plt.ylabel('log10 of Cn')
+# # plt.ylim([-1, 1])
+# plt.show()
+
+plt.figure()
+plt.bar(['$C_{1n}$', '$C_{2n}$'],height=[np.log10(np.mean(C1n_array)), np.log10(np.mean(C2n_array))])
+plt.show()
+
+# %%-
 # %%-
 
 # %%-- Data visualization
@@ -161,7 +212,6 @@ df1.C_visiaulization(variable='C2n')
 df1.C_visiaulization(variable='C1d')
 df1.C_visiaulization(variable='C2d')
 df1.C_visiaulization(task_name='C histogram compare')
-df1.C
 # %%-
 
 # %%-- T vs C:
