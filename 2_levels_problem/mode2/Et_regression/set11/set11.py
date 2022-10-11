@@ -74,11 +74,12 @@ for task in ['Et_eV_2', 'logSn_2', 'logSp_2', 'Et_eV_1', 'logSn_1', 'logSp_1']:
 
 # %%-- Compare with Yan method.
 # load the BO example.
-BO_data = pd.read_csv(r'C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\simulation_data\BO_validation.csv')
+BO_data = pd.read_csv(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Et_regression\BO_validation.csv')
 BO_lifetime = BO_data.iloc[:,17:-2]
 # take hte log 10 of lifetime.
 BO_lifetime_log = np.log10(np.array(BO_lifetime))
-for task in ['Et_eV_2', 'logSn_2', 'logSp_2', 'Et_eV_1', 'logSn_1', 'logSp_1']:
+sys.stdout = open(r"Bo_validation.txt", "w")
+for task in ['Et_eV_1', 'Et_eV_2']:
     # define the ML task.
     df1.singletask = task
     # traing the model.
@@ -89,7 +90,7 @@ for task in ['Et_eV_2', 'logSn_2', 'logSp_2', 'Et_eV_1', 'logSn_1', 'logSp_1']:
     y = best_model.predict(X)
     print('Predicted ' + task + ' is: ')
     print(y)
-
+sys.stdout.close()
 # %%-
 
 # %%-- colour coding:
