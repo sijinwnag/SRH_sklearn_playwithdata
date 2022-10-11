@@ -45,9 +45,8 @@ sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn
 from MLobject_tlevel import *
 # from dynamic_generation_regression import *
 # df1 = MyMLdata_2level(r"C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\simulation_data\Etnonordered\p\set11\set11_8k.csv", 'bandgap1',5)
-df1 = MyMLdata_2level(r"C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\simulation_data\Etnonordered\n\set10\2022-09-07-10-17-17_advanced example - multi_level_L_datasetID_0.csv", 'bandgap1',1)
+df1 = MyMLdata_2level(r"C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\simulation_data\Etnonordered\p\set10\2022_08_29_8k\2022-08-29-11-51-36_advanced example - multi_level_L_datasetID_0.csv", 'bandgap1',1)
 df1.data.head()
-df1.data = df1.data.iloc[:800,:]
 # %%-
 
 # %%-- different data engineering before training ML model.
@@ -71,6 +70,26 @@ for task in ['Et_eV_2', 'logSn_2', 'logSp_2', 'Et_eV_1', 'logSn_1', 'logSp_1']:
     # df1.path
     filename = str(df1.singletask) + str(df1.path).split('\\')[-1]
     exportdata.to_csv(str(filename))
+# %%-
+
+# %%-- Compare with Yan method.
+# load the BO example.
+BO_data = pd.read_csv(r'C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\simulation_data\BO_validation.csv')
+BO_lifetime = BO_data.iloc[:,17:-2]
+# take hte log 10 of lifetime.
+BO_lifetime_log = np.log10(np.array(BO_lifetime))
+for task in ['Et_eV_2', 'logSn_2', 'logSp_2', 'Et_eV_1', 'logSn_1', 'logSp_1']:
+    # define the ML task.
+    df1.singletask = task
+    # traing the model.
+    r2_frame, y_prediction_frame, y_test_frame, best_model, scaler_return = df1.regression_repeat(output_y_pred=True)
+    # goes through the scaler.
+    X = scaler_return.transform(BO_lifetime_log)
+    # ask model to predict.
+    y = best_model.predict(X)
+    print('Predicted ' + task + ' is: ')
+    print(y)
+
 # %%-
 
 # %%-- colour coding:

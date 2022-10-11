@@ -32,26 +32,193 @@ import sympy as sym
 
 # %%-- define the object and plot it.
 # define the path list.
-path1 = r'C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\withoutEt1larger\set11\p\set11_800k\trial2\Et_eV_1set11_800k.csv'
-path2 = r'C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\withoutEt1larger\set11\p\set11_800k\trial2\Et_eV_2set11_800k.csv'
-path3 = r'C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\withoutEt1larger\set11\p\set11_800k\trial2\logSn_1set11_800k.csv'
-path4 = r'C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\withoutEt1larger\set11\p\set11_800k\trial2\logSn_2set11_800k.csv'
-path5 = r'C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\withoutEt1larger\set11\p\set11_800k\trial2\logSp_1set11_800k.csv'
-path6 = r'C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\withoutEt1larger\set11\p\set11_800k\trial2\logSp_2set11_800k.csv'
-pathlist = [path1, path2, path3, path4, path5, path6]
+# %%--set 11 p type:
+# path1 = r'C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\withoutEt1larger\set11\p\set11_800k\trial2\Et_eV_1set11_800k.csv'
+# path2 = r'C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\withoutEt1larger\set11\p\set11_800k\trial2\Et_eV_2set11_800k.csv'
+# path3 = r'C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\withoutEt1larger\set11\p\set11_800k\trial2\logSn_1set11_800k.csv'
+# path4 = r'C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\withoutEt1larger\set11\p\set11_800k\trial2\logSn_2set11_800k.csv'
+# path5 = r'C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\withoutEt1larger\set11\p\set11_800k\trial2\logSp_1set11_800k.csv'
+# path6 = r'C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\withoutEt1larger\set11\p\set11_800k\trial2\logSp_2set11_800k.csv'
+# pathlist = [path1, path2, path3, path4, path5, path6]
+# # define the R2.
+# R2list = [0.972, 0.643, 0.919, 0.726, 0.939, 0.726]
+# # define MAE:
+# MAElist = [0.013, 0.064, 0.126, 0.422, 0.15, 0.412]
+# title1 = '$E_{t1}$' + '(eV)'
+# title2 = '$E_{t2}$' + '(eV)'
+# title3 = 'log$(\sigma_{n1})$'
+# title4 = 'log$(\sigma_{n2})$'
+# title5 = 'log$(\sigma_{p1})$'
+# title6 = 'log$(\sigma_{p2})$'
+# titlelist = [title1, title2, title3, title4, title5, title6]
+# filenamelist = ['Et1', 'Et2', 'Sn1', 'Sn2', 'Sp1', 'Sp2']
+# %%-
+# %%--set 11 n type:
+# path1 = r'C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\withoutEt1larger\set11\n\set11_800k\set_11_n\Et_eV_1set11_800k_n.csv'
+# path2 = r'C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\withoutEt1larger\set11\n\set11_800k\set_11_n\Et_eV_2set11_800k_n.csv'
+# path3 = r'C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\withoutEt1larger\set11\n\set11_800k\set_11_n\logSn_1set11_800k_n.csv'
+# path4 = r'C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\withoutEt1larger\set11\n\set11_800k\set_11_n\logSn_2set11_800k_n.csv'
+# path5 = r'C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\withoutEt1larger\set11\n\set11_800k\set_11_n\logSp_1set11_800k_n.csv'
+# path6 = r'C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\withoutEt1larger\set11\n\set11_800k\set_11_n\logSp_2set11_800k_n.csv'
+# pathlist = [path1, path2, path3, path4, path5, path6]
+# # define the R2.
+# R2list = [0.933, 0.841, 0.724, 0.737, 0.845, 0.897]
+# # define MAE:
+# MAElist = [0.024, 0.037, 0.399, 0.398, 0.264, 0.178]
+# title1 = '$E_{t1}$' + '(eV)'
+# title2 = '$E_{t2}$' + '(eV)'
+# title3 = 'log$(\sigma_{n1})$'
+# title4 = 'log$(\sigma_{n2})$'
+# title5 = 'log$(\sigma_{p1})$'
+# title6 = 'log$(\sigma_{p2})$'
+# titlelist = [title1, title2, title3, title4, title5, title6]
+# filenamelist = ['Et1', 'Et2', 'Sn1', 'Sn2', 'Sp1', 'Sp2']
+# %%-
+# %%--set 10 p type:
+# path1 = r'C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\withoutEt1larger\set10\p\Et_eV_1set10_800k_p.csv'
+# path2 = r'C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\withoutEt1larger\set10\p\Et_eV_2set10_800k_p.csv'
+# path3 = r'C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\withoutEt1larger\set10\p\logSn_1set10_800k_p.csv'
+# path4 = r'C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\withoutEt1larger\set10\p\logSn_2set10_800k_p.csv'
+# path5 = r'C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\withoutEt1larger\set10\p\logSp_1set10_800k_p.csv'
+# path6 = r'C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\withoutEt1larger\set10\p\logSp_2set10_800k_p.csv'
+# pathlist = [path1, path2, path3, path4, path5, path6]
+# # define the R2.
+# R2list = [0.761, 0.926, 0.662, 0.91, 0.833, 0.92]
+# # define MAE:
+# MAElist = [0.054, 0.026, 0.467, 0.19, 0.311, 0.128]
+# title1 = '$E_{t1}$' + '(eV)'
+# title2 = '$E_{t2}$' + '(eV)'
+# title3 = 'log$(\sigma_{n1})$'
+# title4 = 'log$(\sigma_{n2})$'
+# title5 = 'log$(\sigma_{p1})$'
+# title6 = 'log$(\sigma_{p2})$'
+# titlelist = [title1, title2, title3, title4, title5, title6]
+# filenamelist = ['Et1', 'Et2', 'Sn1', 'Sn2', 'Sp1', 'Sp2']
+# %%-
+# %%--set 10 n type:
+# path1 = r'C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\withoutEt1larger\set10\n\800k\Re__\Et_eV_1set10_800k_n.csv'
+# path2 = r'C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\withoutEt1larger\set10\n\800k\Re__\Et_eV_2set10_800k_n.csv'
+# path3 = r'C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\withoutEt1larger\set10\n\800k\Re__\logSn_1set10_800k_n.csv'
+# path4 = r'C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\withoutEt1larger\set10\n\800k\Re__\logSn_2set10_800k_n.csv'
+# path5 = r'C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\withoutEt1larger\set10\n\800k\Re__\logSp_1set10_800k_n.csv'
+# path6 = r'C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\withoutEt1larger\set10\n\800k\Re__\logSp_2set10_800k_n.csv'
+# pathlist = [path1, path2, path3, path4, path5, path6]
+# # define the R2.
+# R2list = [0.761, 0.926, 0.663, 0.908, 0.835, 0.924]
+# # define MAE:
+# MAElist = [0.053, 0.026, 0.467, 0.192, 0.309, 0.125]
+# title1 = '$E_{t1}$' + '(eV)'
+# title2 = '$E_{t2}$' + '(eV)'
+# title3 = 'log$(\sigma_{n1})$'
+# title4 = 'log$(\sigma_{n2})$'
+# title5 = 'log$(\sigma_{p1})$'
+# title6 = 'log$(\sigma_{p2})$'
+# titlelist = [title1, title2, title3, title4, title5, title6]
+# filenamelist = ['Et1', 'Et2', 'Sn1', 'Sn2', 'Sp1', 'Sp2']
+# %%-
+# %%--set 01 p type:
+path1 = r'C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\withoutEt1larger\set01\p\800k\set01_p\set01_p\Et_eV_1set01_800k_p.csv'
+path2 = r'C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\withoutEt1larger\set01\p\800k\set01_p\set01_p\Et_eV_2set01_800k_p.csv'
+path3 = r'C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\withoutEt1larger\set01\p\800k\set01_p\set01_p\logk_1set01_800k_p.csv'
+path4 = r'C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\withoutEt1larger\set01\p\800k\set01_p\set01_p\logk_2set01_800k_p.csv'
+path5 = r'C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\withoutEt1larger\set01\p\800k\set01_p\set01_p\logSn_1set01_800k_p.csv'
+path6 = r'C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\withoutEt1larger\set01\p\800k\set01_p\set01_p\logSn_2set01_800k_p.csv'
+path7 = r'C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\withoutEt1larger\set01\p\800k\set01_p\set01_p\logSp_1set01_800k_p.csv'
+path8 = r'C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\withoutEt1larger\set01\p\800k\set01_p\set01_p\logSp_2set01_800k_p.csv'
+pathlist = [path1, path2, path3, path4, path5, path6, path7, path8]
 # define the R2.
-R2list = [0.972, 0.645, 0.917, 0.732, 0.938, 0.727]
+R2list = [0.815, 0.694, 0.837, 0.753, 0.916, 0.684, 0.731, 0.782]
 # define MAE:
-MAElist = [0.013, 0.064, 0.128, 0.419, 0.151, 0.412]
+MAElist = [0.038, 0.06, 0.415, 0.574, 0.158, 0.441, 0.391, 0.358]
 # define title:
 title1 = '$E_{t1}$' + '(eV)'
 title2 = '$E_{t2}$' + '(eV)'
-title3 = 'log$(\sigma_{n1})$'
-title4 = 'log$(\sigma_{n2})$'
-title5 = 'log$(\sigma_{p1})$'
-title6 = 'log$(\sigma_{p2})$'
-titlelist = [title1, title2, title3, title4, title5, title6]
-filenamelist = ['Et1', 'Et2', 'Sn1', 'Sn2', 'Sp1', 'Sp2']
+title3 = 'log$(k_1)$'
+title4 = 'log$(k_2)$'
+title5 = 'log$(\sigma_{n1})$'
+title6 = 'log$(\sigma_{n2})$'
+title7 = 'log$(\sigma_{p1})$'
+title8 = 'log$(\sigma_{p2})$'
+titlelist = [title1, title2, title3, title4, title5, title6, title7, title8]
+filenamelist = ['Et1', 'Et2','k1', 'k2', 'Sn1', 'Sn2', 'Sp1', 'Sp2']
+# %%-
+# %%--set 01 n type:
+# path1 = r'C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\withoutEt1larger\set00\p\800k\set00_p\Et_eV_1set00_800k.csv'
+# path2 = r'C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\withoutEt1larger\set00\p\800k\set00_p\Et_eV_2set00_800k.csv'
+# path3 = r'C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\withoutEt1larger\set00\p\800k\set00_p\logk_1set00_800k.csv'
+# path4 = r'C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\withoutEt1larger\set00\p\800k\set00_p\logk_2set00_800k.csv'
+# path5 = r'C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\withoutEt1larger\set00\p\800k\set00_p\logSn_1set00_800k.csv'
+# path6 = r'C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\withoutEt1larger\set00\p\800k\set00_p\logSn_2set00_800k.csv'
+# path7 = r'C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\withoutEt1larger\set00\p\800k\set00_p\logSp_1set00_800k.csv'
+# path8 = r'C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\withoutEt1larger\set00\p\800k\set00_p\logSp_2set00_800k.csv'
+# pathlist = [path1, path2, path3, path4, path5, path6, path7, path8]
+# # define the R2.
+# R2list = [0.831, 0.933, 0.802, 0.8, 0.883, 0.916, 0.848, 0.739, 0.767]
+# # define MAE:
+# MAElist = [0.039, 0.025, 0.471, 0.512, 0.198, 0.158, 0.262, 0.399, 0.358]
+# # define title:
+# title1 = '$E_{t1}$' + '(eV)'
+# title2 = '$E_{t2}$' + '(eV)'
+# title3 = 'log$(k_1)$'
+# title4 = 'log$(k_2)$'
+# title5 = 'log$(\sigma_{n1})$'
+# title6 = 'log$(\sigma_{n2})$'
+# title7 = 'log$(\sigma_{p1})$'
+# title8 = 'log$(\sigma_{p2})$'
+# titlelist = [title1, title2, title3, title4, title5, title6, title7, title8]
+# filenamelist = ['Et1', 'Et2','k1', 'k2', 'Sn1', 'Sn2', 'Sp1', 'Sp2']
+# %%-
+# %%--set 00 p type:
+# path1 = r'C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\withoutEt1larger\set00\p\800k\set00_p\Et_eV_1set00_800k.csv'
+# path2 = r'C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\withoutEt1larger\set00\p\800k\set00_p\Et_eV_2set00_800k.csv'
+# path3 = r'C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\withoutEt1larger\set00\p\800k\set00_p\logk_1set00_800k.csv'
+# path4 = r'C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\withoutEt1larger\set00\p\800k\set00_p\logk_2set00_800k.csv'
+# path5 = r'C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\withoutEt1larger\set00\p\800k\set00_p\logSn_1set00_800k.csv'
+# path6 = r'C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\withoutEt1larger\set00\p\800k\set00_p\logSn_2set00_800k.csv'
+# path7 = r'C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\withoutEt1larger\set00\p\800k\set00_p\logSp_1set00_800k.csv'
+# path8 = r'C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\withoutEt1larger\set00\p\800k\set00_p\logSp_2set00_800k.csv'
+# pathlist = [path1, path2, path3, path4, path5, path6, path7, path8]
+# # define the R2.
+# R2list = [0.831, 0.933, 0.802, 0.8, 0.883, 0.916, 0.848, 0.739, 0.767]
+# # define MAE:
+# MAElist = [0.039, 0.025, 0.471, 0.512, 0.198, 0.158, 0.262, 0.399, 0.358]
+# # define title:
+# title1 = '$E_{t1}$' + '(eV)'
+# title2 = '$E_{t2}$' + '(eV)'
+# title3 = 'log$(k_1)$'
+# title4 = 'log$(k_2)$'
+# title5 = 'log$(\sigma_{n1})$'
+# title6 = 'log$(\sigma_{n2})$'
+# title7 = 'log$(\sigma_{p1})$'
+# title8 = 'log$(\sigma_{p2})$'
+# titlelist = [title1, title2, title3, title4, title5, title6, title7, title8]
+# filenamelist = ['Et1', 'Et2','k1', 'k2', 'Sn1', 'Sn2', 'Sp1', 'Sp2']
+# %%-
+# %%--set 00 n type:
+path1 = r'C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\withoutEt1larger\set00\n\800k\Re__\Et_eV_1set00_n_800k.csv'
+path2 = r'C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\withoutEt1larger\set00\n\800k\Re__\Et_eV_2set00_n_800k.csv'
+path3 = r'C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\withoutEt1larger\set00\n\800k\Re__\logk_1set00_n_800k.csv'
+path4 = r'C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\withoutEt1larger\set00\n\800k\Re__\logk_2set00_n_800k.csv'
+path5 = r'C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\withoutEt1larger\set00\n\800k\Re__\logSn_1set00_n_800k.csv'
+path6 = r'C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\withoutEt1larger\set00\n\800k\Re__\logSn_2set00_n_800k.csv'
+path7 = r'C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\withoutEt1larger\set00\n\800k\Re__\logSp_1set00_n_800k.csv'
+path8 = r'C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\withoutEt1larger\set00\n\800k\Re__\logSp_2set00_n_800k.csv'
+pathlist = [path1, path2, path3, path4, path5, path6, path7, path8]
+# define the R2.
+R2list = [0.609, 0.97, 0.7, 0.932, 0.68, 0.936, 0.727, 0.932]
+MAElist = [0.069, 0.014, 0.649, 0.256, 0.459, 0.154, 0.426, 0.108]
+# define title:
+title1 = '$E_{t1}$' + '(eV)'
+title2 = '$E_{t2}$' + '(eV)'
+title3 = 'log$(k_1)$'
+title4 = 'log$(k_2)$'
+title5 = 'log$(\sigma_{n1})$'
+title6 = 'log$(\sigma_{n2})$'
+title7 = 'log$(\sigma_{p1})$'
+title8 = 'log$(\sigma_{p2})$'
+titlelist = [title1, title2, title3, title4, title5, title6, title7, title8]
+filenamelist = ['Et1', 'Et2','k1', 'k2', 'Sn1', 'Sn2', 'Sp1', 'Sp2']
+# %%-
 # %%-
 
 
@@ -122,7 +289,7 @@ for k in range(len(Truelist)):
     plt.legend(loc=4, framealpha=0.1, fontsize=20)
     plt.xticks(fontsize=15)
     plt.yticks(fontsize=15)
-    if k>1:
+    if k>3:
         plt.xticks(range(-17, -12))
         plt.yticks(range(-17, -12))
     plt.savefig(fname=str(filenamelist[k]) + '.png')
