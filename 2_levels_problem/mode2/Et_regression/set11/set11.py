@@ -48,7 +48,7 @@ sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn
 sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Savedir_example')
 from MLobject_tlevel import *
 # from dynamic_generation_regression import *
-df1 = MyMLdata_2level(r"G:\study\thesis_data_storage\unordered\set11\p\set11_800k.csv", 'bandgap1',1)
+df1 = MyMLdata_2level(r"C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\simulation_data\Etnonordered\n\set00\2022-09-07-10-28-45_advanced example - multi_level_L_datasetID_0.csv", 'bandgap1',1)
 
 df1.data.head()
 # %%-
@@ -167,14 +167,14 @@ C1n_array.astype(float)
 bins = 100
 plt.figure(facecolor='white')
 # plot hte log.
-plt.hist(np.log10(C1n_array.astype('float')) - 1, bins=bins, label='$C_{1n}$', alpha=0.75)
-plt.hist(np.log10(C2n_array.astype('float')) + 1, bins=bins, label='$C_{2n}$', alpha=0.75)
+plt.hist(np.log10(C1n_array.astype('float')) , bins=bins, label='$C_{1d}$', alpha=0.75, density=True)
+plt.hist(np.log10(C2n_array.astype('float')) , bins=bins, label='$C_{2d}$', alpha=0.75, density=True)
 # plot hte origin.
 # plt.hist(C1n_array.astype('float'), bins=bins, label='$C_{1n}$')
 # plt.hist(C2n_array.astype('float'), bins=bins, label='$C_{2n}$')
 plt.legend()
-plt.title('Histogram of $C_n$')
-plt.xlabel('log10 of $C_n$')
+plt.title('Histogram of $C_d$')
+plt.xlabel('log10 of $C_d$')
 plt.savefig('Cn_compare.png')
 plt.show()
 
@@ -191,9 +191,9 @@ plt.show()
 # # plt.ylim([-1, 1])
 # plt.show()
 
-plt.figure()
-plt.bar(['$C_{1n}$', '$C_{2n}$'],height=[np.log10(np.mean(C1n_array)), np.log10(np.mean(C2n_array))])
-plt.show()
+# plt.figure()
+# plt.bar(['$C_{1n}$', '$C_{2n}$'],height=[np.log10(np.mean(C1n_array)), np.log10(np.mean(C2n_array))])
+# plt.show()
 
 # %%-
 # %%-
