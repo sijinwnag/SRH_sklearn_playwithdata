@@ -48,7 +48,7 @@ sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn
 sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Savedir_example')
 from MLobject_tlevel import *
 # from dynamic_generation_regression import *
-df1 = MyMLdata_2level(r"G:\study\thesis_data_storage\unordered\set11\p\set11_800k.csv", 'bandgap1',1)
+df1 = MyMLdata_2level(r"G:\study\thesis_data_storage\unordered\set10\p\800k\set10_800k_p.csv", 'bandgap1',1)
 
 df1.data.head()
 # %%-
@@ -76,9 +76,9 @@ for task in ['logk_1', 'logk_2']:
     exportdata.to_csv(str(filename))
 # %%-
 
-# %%-- Compare with Yan method.
+# %%-- Compare with Yan method using object.
 # load the BO example.
-BO_data = pd.read_csv(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Et_regression\BO_validation.csv')
+BO_data = pd.read_csv(r'G:\study\thesis_data_storage\unordered\BO_validation.csv')
 BO_lifetime = BO_data.iloc[:,17:-2]
 # take hte log 10 of lifetime.
 BO_lifetime_log = np.log10(np.array(BO_lifetime))

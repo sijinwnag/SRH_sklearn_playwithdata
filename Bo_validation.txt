@@ -1,0 +1,14 @@
+finish training Random Forest, the R2 score is 0.7594364698063705
+The mean absolute error is 0.05378404684077127
+finish iteration 1
+The best performance is decided by highest R2
+transparency of scattering plot is 0.005
+Predicted Et_eV_1 is: 
+[0.30366383]
+finish training Random Forest, the R2 score is 0.9238195720747424
+The mean absolute error is 0.025828562633889156
+finish iteration 1
+The best performance is decided by highest R2
+transparency of scattering plot is 0.005
+Predicted Et_eV_2 is: 
+[-0.1467728]
