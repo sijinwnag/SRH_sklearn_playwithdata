@@ -97,6 +97,7 @@ for task in ['Et_eV_1', 'Et_eV_2']:
 sys.stdout.close()
 # %%-
 
+
 # %%-- colour coding:
 for column in ['logSn_2', 'logSp_2', 'Et_eV_2', 'logSn_1', 'logSp_1']:
     df1.colour_column = column
@@ -167,14 +168,14 @@ C1n_array.astype(float)
 bins = 100
 plt.figure(facecolor='white')
 # plot hte log.
-plt.hist(np.log10(C1n_array.astype('float')) - 1, bins=bins, label='$C_{1n}$', alpha=0.75)
-plt.hist(np.log10(C2n_array.astype('float')) + 1, bins=bins, label='$C_{2n}$', alpha=0.75)
+plt.hist(np.log10(C1n_array.astype('float')) , bins=bins, label='$C_{1d}$', alpha=0.75, density=True)
+plt.hist(np.log10(C2n_array.astype('float')) , bins=bins, label='$C_{2d}$', alpha=0.75, density=True)
 # plot hte origin.
 # plt.hist(C1n_array.astype('float'), bins=bins, label='$C_{1n}$')
 # plt.hist(C2n_array.astype('float'), bins=bins, label='$C_{2n}$')
 plt.legend()
-plt.title('Histogram of $C_n$')
-plt.xlabel('log10 of $C_n$')
+plt.title('Histogram of $C_d$')
+plt.xlabel('log10 of $C_d$')
 plt.savefig('Cn_compare.png')
 plt.show()
 
@@ -191,9 +192,9 @@ plt.show()
 # # plt.ylim([-1, 1])
 # plt.show()
 
-plt.figure()
-plt.bar(['$C_{1n}$', '$C_{2n}$'],height=[np.log10(np.mean(C1n_array)), np.log10(np.mean(C2n_array))])
-plt.show()
+# plt.figure()
+# plt.bar(['$C_{1n}$', '$C_{2n}$'],height=[np.log10(np.mean(C1n_array)), np.log10(np.mean(C2n_array))])
+# plt.show()
 
 # %%-
 # %%-

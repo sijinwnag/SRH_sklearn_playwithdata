@@ -54,6 +54,13 @@ class table_visualization():
         columns=['Et1', 'Sn1', 'Sp1', 'Et2', 'Sn2', 'Sp2'],
         index=['Set11', 'Set10', 'Set01', 'Set00'])
 
+        self.np_R2_table = pd.DataFrame([[0.98, 0.922, 0.9, 0.842, 0.74, 0.9],
+        [0.936, 0.987, 0.941, 0.921, 0.907, 0.923],
+        [0.811, 0.917, 0.726, 0.82, 0.789, 0.93],
+        [0.829, 0.883, 0.74, 0.935, 0.936, 0.934]],
+        columns=['Et1', 'Sn1', 'Sp1', 'Et2', 'Sn2', 'Sp2'],
+        index=['Set11', 'Set10', 'Set01', 'Set00'])
+
 
     def n_p_plot(self):
         '''
@@ -69,6 +76,29 @@ class table_visualization():
         plt.figure(facecolor='white')
         av.plot(kind='bar')
         plt.title('Compare n-type and p-type')
+        plt.ylabel('$R^2$' + ' score')
+        plt.xticks(rotation=0)
+        plt.ylim([0.6, 1])
+        # export the image
+        plt.savefig('npcompare.jpg')
+        plt.show()
+
+
+    def n_p_both_plot(self):
+        '''
+        Take the average of each column and plot a two column bar plot.
+        '''
+        # take the average along y axis
+        n_av = self.n_R2_table.mean(axis=0)
+        p_av = self.p_R2_table.mean(axis=0)
+        np_av = self.np_R2_table.mean(axis=0)
+        av = pd.concat([n_av, p_av, np_av], axis=1)
+        av.columns=['n type', 'p type', 'n type and p type']
+        # print(av)
+        # plot the figure.
+        plt.figure(facecolor='white')
+        av.plot(kind='bar')
+        plt.title('Compare n, p and np together')
         plt.ylabel('$R^2$' + ' score')
         plt.xticks(rotation=0)
         plt.ylim([0.6, 1])
@@ -102,6 +132,6 @@ class table_visualization():
 
 # %%--
 ob1 = table_visualization()
-# ob1.n_p_plot()
-ob1.set_plot(param='Et2')
+ob1.n_p_both_plot()
+# ob1.set_plot(param='Et2')
 # %%-
