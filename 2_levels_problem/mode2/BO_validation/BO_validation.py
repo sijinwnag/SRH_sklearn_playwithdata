@@ -1,9 +1,13 @@
 # %%--
 '''
-trial 1 for 800k: Et=0.3 eV, it is very far from the real value. Maybe the problem is from dataset.
+n-type:
+Try with 8k data: expect the Et1 prediction to be at least accurate: Et1 is predicted to be 0.197 (true value is 0.15).
+
+p-type:
+Try with 8k data: expect the Et1 prediction to be at least accurate: Et1 is predicted to be 0.145 (true value is 0.15).
+Try with 80k data: expect the Et1 prediction to be at least accurate: Et1 is predicted to be 0.145 (true value is 0.15).
 '''
 # %%-
-
 
 # %%--
 import pandas as pd
@@ -33,6 +37,7 @@ import smtplib
 from email.message import EmailMessage
 import os
 import sys
+import math
 # import the function file from another folder:
 # use this line if on hp laptop:
 # sys.path.append(r'C:\Users\budac\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2')
@@ -46,35 +51,43 @@ from MLobject_tlevel import *
 # %%-
 
 # %%--Et1
-sys.stdout = open(r"Bo_validation_Et1.txt", "w")
+
 # load the BO example.
-BO_data = pd.read_csv(r'G:\study\thesis_data_storage\unordered\yan_compare\BO\testset.csv')
+BO_data = pd.read_csv(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\BO_validation\BO_ptype\2022-10-25-11-14-51_advanced example - multi_level_L_datasetID_0.csv')
 # load the trianing data.
 training_data = pd.read_csv(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\yoann_code_new\Savedir_example\outputs\2022-10-23-21-19-53_advanced example - multi_level_L_datasetID_0.csv')
 
 # extract the lifetime.
 BO_lifetime = BO_data.iloc[:,17:-2]
 training_lifetime = training_data.iloc[:, 17:-2]
+# BO_lifetime.head()
+# training_lifetime.head()
+
 
 # take log10
-BO_lifetime_log = np.log10(BO_lifetime)
-training_lifetime_log = np.log10(training_lifetime)
+BO_lifetime_log = BO_lifetime.applymap(math.log10)
+training_lifetime_log = training_lifetime.applymap(math.log10)
+
 
 # go through scaler.
 scaler = MinMaxScaler()
 training_scaled = scaler.fit_transform(training_lifetime_log)
 BO_scaled = scaler.transform(BO_lifetime_log)
 
+
 # define the target variable.
 y_train = training_data['Et_eV_1']
 y_test = BO_data['Et_eV_1']
+# y_train
+# y_test
 
 # define the model.
-model = RandomForestRegressor(n_estimators=100, verbose=1, n_jobs=-1)
+model = RandomForestRegressor(n_estimators=100, verbose=20)
 # train the model.
 model.fit(training_scaled, y_train)
 # predict
 print(model.predict(BO_scaled))
+sys.stdout = open(r"Bo_validation_Et1.txt", "w")
 sys.stdout.close()
 # %%- Et_eV_1
 
