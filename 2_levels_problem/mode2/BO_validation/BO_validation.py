@@ -50,7 +50,7 @@ sys.stdout = open(r"Bo_validation_Et1.txt", "w")
 # load the BO example.
 BO_data = pd.read_csv(r'G:\study\thesis_data_storage\unordered\yan_compare\BO\testset.csv')
 # load the trianing data.
-training_data = pd.read_csv(r'G:\study\thesis_data_storage\unordered\set10\p\800k\set10_800k_p.csv')
+training_data = pd.read_csv(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\yoann_code_new\Savedir_example\outputs\2022-10-23-21-19-53_advanced example - multi_level_L_datasetID_0.csv')
 
 # extract the lifetime.
 BO_lifetime = BO_data.iloc[:,17:-2]
@@ -83,7 +83,7 @@ sys.stdout = open(r"Bo_validation_Et2.txt", "w")
 # load the BO example.
 BO_data = pd.read_csv(r'G:\study\thesis_data_storage\unordered\yan_compare\BO\testset.csv')
 # load the trianing data.
-training_data = pd.read_csv(r'G:\study\thesis_data_storage\unordered\set10\p\800k\set10_800k_p.csv')
+training_data = pd.read_csv(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\yoann_code_new\Savedir_example\outputs\2022-10-23-21-19-53_advanced example - multi_level_L_datasetID_0.csv')
 
 # extract the lifetime.
 BO_lifetime = BO_data.iloc[:,17:-2]
