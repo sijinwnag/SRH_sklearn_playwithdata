@@ -93,11 +93,11 @@ sys.stdout.close()
 # %%- Et_eV_1
 
 # %%--Et2
-sys.stdout = open(r"Bo_validation_Et1.txt", "w")
+sys.stdout = open(r"Bo_validation_Et2.txt", "w")
 # load the BO example.
-BO_data = pd.read_csv(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Et_regression\BO_validation.csv')
+BO_data = pd.read_csv(r'G:\study\thesis_data_storage\unordered\yan_compare\BO\testset.csv')
 # load the trianing data.
-training_data = pd.read_csv(r'C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\simulation_data\Etnonordered\p\set10\2022_08_29_8k\2022-08-29-11-51-36_advanced example - multi_level_L_datasetID_0.csv')
+training_data = pd.read_csv(r'G:\study\thesis_data_storage\unordered\set10\p\800k\set10_800k_p.csv')
 
 # extract the lifetime.
 BO_lifetime = BO_data.iloc[:,17:-2]
@@ -113,8 +113,8 @@ training_scaled = scaler.fit_transform(training_lifetime_log)
 BO_scaled = scaler.transform(BO_lifetime_log)
 
 # define the target variable.
-y_train = training_data['Et_eV_1']
-y_test = BO_data['Et_eV_1']
+y_train = training_data['Et_eV_2']
+y_test = BO_data['Et_eV_2']
 
 # define the model.
 model = RandomForestRegressor(n_estimators=100, verbose=1, n_jobs=-1)
@@ -124,3 +124,59 @@ model.fit(training_scaled, y_train)
 print(model.predict(BO_scaled))
 sys.stdout.close()
 # %%- Et_eV_2
+
+# %%-- Email reminder:
+# becuase google disable allowing less secure app, the code below does not work anymore.
+# def email_reminder():
+#
+#     # who to send to. and the content of the email.
+#     subject='data generation done'
+#     body= 'data generation is done' + ' through the file ' + str(os.getcwd())
+#     to='z5183876@ad.unsw.edu.au'
+#
+#     # email address to be sent from: (you can use this address to send email from)
+#     user = "sijinwang944@gmail.com"
+#     password = 'vjvlqydqtxlpddgz'
+#
+#     msg = EmailMessage()
+#     msg.set_content(body)
+#     msg['subject'] = subject
+#     msg['to'] = to
+#     msg['from'] = user
+#
+#     server = smtplib.SMTP("smtp.gmail.com", 587)
+#     server.starttls()
+#     server.login(user, password)
+#     server.send_message(msg)
+#
+#     server.quit()
+
+def email_reminder():
+
+    # who to send to. and the content of the email.
+    # email title
+    subject='data generation done'
+    # email body
+    body= 'data generation is done' + ' through the file ' + str(os.getcwd())
+    # which email address to sent to:
+    to='z5183876@ad.unsw.edu.au'
+
+    # email address to be sent from: (you can use this address to send email from)
+    user = "sijinwang@yahoo.com"
+    password = 'gdfkzhzhaokjivek'
+
+    msg = EmailMessage()
+    msg.set_content(body)
+    msg['subject'] = subject
+    msg['to'] = to
+    msg['from'] = user
+
+    server = smtplib.SMTP("smtp.mail.yahoo.com", 587)
+    server.starttls()
+    server.login(user, password)
+    server.send_message(msg)
+
+    server.quit()
+
+email_reminder()
+# %%-
