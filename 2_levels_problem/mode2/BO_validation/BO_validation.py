@@ -1,11 +1,24 @@
 # %%--
 '''
+Et1 regression:
+
 n-type:
 Try with 8k data: expect the Et1 prediction to be at least accurate: Et1 is predicted to be 0.197 (true value is 0.15).
 
 p-type:
 Try with 8k data: expect the Et1 prediction to be at least accurate: Et1 is predicted to be 0.145 (true value is 0.15).
 Try with 80k data: expect the Et1 prediction to be at least accurate: Et1 is predicted to be 0.145 (true value is 0.15).
+'''
+
+'''
+One two level defect classification:
+expect to be mode: single two-value.
+
+trial 1: single two-value.
+trial 2: single two-value.
+trial 3: single two-value.
+trial 4: single two-value.
+trial 5: single two-value.
 '''
 # %%-
 
@@ -123,6 +136,46 @@ model.fit(training_scaled, y_train)
 print(model.predict(BO_scaled))
 sys.stdout.close()
 # %%- Et_eV_2
+
+# %%--defect classification: one or two level.
+# load the BO example.
+BO_data = pd.read_csv(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\BO_validation\BO_ptype\2022-10-25-11-14-51_advanced example - multi_level_L_datasetID_0.csv')
+# load the trianing data.
+training_data = pd.read_csv(r'C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\simulation_data\Etnonordered\one_vs_two_level_classification\80k\2022_09_29\2022-09-29-09-45-08_advanced example - multi_level_L_datasetID_0.csv')
+
+# extract the lifetime.
+BO_lifetime = BO_data.iloc[:,17:-2]
+training_lifetime = training_data.iloc[:, 17:-2]
+# BO_lifetime.head()
+# training_lifetime.head()
+
+
+# take log10
+BO_lifetime_log = BO_lifetime.applymap(math.log10)
+training_lifetime_log = training_lifetime.applymap(math.log10)
+
+
+# go through scaler.
+scaler = MinMaxScaler()
+training_scaled = scaler.fit_transform(training_lifetime_log)
+BO_scaled = scaler.transform(BO_lifetime_log)
+
+
+# define the target variable.
+y_train = training_data['Label']
+y_test = BO_data['Label']
+y_train
+y_test
+
+# define the model.
+model = MLPClassifier((100, 100),alpha=0.001, activation = 'relu',verbose=10,learning_rate='adaptive')
+# train the model.
+model.fit(training_scaled, y_train)
+# predict
+print(model.predict(BO_scaled))
+sys.stdout = open(r"Bo_validation_Et1.txt", "w")
+sys.stdout.close()
+# %%-
 
 # %%-- Email reminder:
 # becuase google disable allowing less secure app, the code below does not work anymore.
