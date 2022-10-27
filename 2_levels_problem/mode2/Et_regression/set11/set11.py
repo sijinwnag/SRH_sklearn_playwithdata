@@ -48,7 +48,7 @@ sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn
 sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Savedir_example')
 from MLobject_tlevel import *
 # from dynamic_generation_regression import *
-df1 = MyMLdata_2level(r"G:\study\thesis_data_storage\unordered\set10\p\800k\set10_800k_p.csv", 'bandgap1',1)
+df1 = MyMLdata_2level(r"C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\simulation_data\Etnonordered\p\set10\2022_08_29_8k\2022-08-29-11-51-36_advanced example - multi_level_L_datasetID_0.csv", 'bandgap1',1)
 df1.data.head()
 # %%-
 
@@ -95,7 +95,6 @@ for task in ['Et_eV_1', 'Et_eV_2']:
     print(y)
 sys.stdout.close()
 # %%-
-
 
 # %%-- colour coding:
 for column in ['logSn_2', 'logSp_2', 'Et_eV_2', 'logSn_1', 'logSp_1']:
