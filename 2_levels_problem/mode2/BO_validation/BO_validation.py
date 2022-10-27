@@ -70,13 +70,14 @@ from MLobject_tlevel import *
 # %%--Et1
 
 # load the BO example.
-BO_data = pd.read_csv(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\BO_validation\BO_ptype\2022-10-25-11-14-51_advanced example - multi_level_L_datasetID_0.csv')
+BO_data = pd.read_csv(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\BO_validation\BO_ptype\2022-10-25-11-14-51_advanced example - multi_level_L_datasetID_0.csv')
 # load the trianing data.
-training_data = pd.read_csv(r'G:\study\thesis_data_storage\unordered\set10\p\80k\2022_10_25\2022-10-25-13-57-56_advanced example - multi_level_L_datasetID_0.csv')
+training_data = pd.read_csv(r'D:\study\thesis_data_storage\unordered\set11\p\set11_8k.csv')
 
 # extract the lifetime.
 BO_lifetime = BO_data.iloc[:,17:-2]
 training_lifetime = training_data.iloc[:, 17:-2]
+# training_lifetime = training_data.iloc[:, 17:]
 # BO_lifetime.head()
 # training_lifetime.head()
 
@@ -110,36 +111,45 @@ print(Et1_prediction)
 # %%- Et_eV_1
 
 # %%--Et2
-sys.stdout = open(r"Bo_validation_Et2.txt", "w")
 # load the BO example.
-BO_data = pd.read_csv(r'G:\study\thesis_data_storage\unordered\yan_compare\BO\testset.csv')
+BO_data = pd.read_csv(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\BO_validation\BO_ptype\2022-10-25-11-14-51_advanced example - multi_level_L_datasetID_0.csv')
 # load the trianing data.
-training_data = pd.read_csv(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\yoann_code_new\Savedir_example\outputs\2022-10-23-21-19-53_advanced example - multi_level_L_datasetID_0.csv')
+training_data = pd.read_csv(r'D:\study\thesis_data_storage\unordered\set11\p\set11_8k.csv')
 
 # extract the lifetime.
 BO_lifetime = BO_data.iloc[:,17:-2]
 training_lifetime = training_data.iloc[:, 17:-2]
+# training_lifetime = training_data.iloc[:, 17:]
+# BO_lifetime.head()
+# training_lifetime.head()
+
 
 # take log10
-BO_lifetime_log = np.log10(BO_lifetime)
-training_lifetime_log = np.log10(training_lifetime)
+BO_lifetime_log = BO_lifetime.applymap(math.log10)
+training_lifetime_log = training_lifetime.applymap(math.log10)
+
 
 # go through scaler.
 scaler = MinMaxScaler()
 training_scaled = scaler.fit_transform(training_lifetime_log)
 BO_scaled = scaler.transform(BO_lifetime_log)
 
+
 # define the target variable.
 y_train = training_data['Et_eV_2']
 y_test = BO_data['Et_eV_2']
+# y_train
+# y_test
 
 # define the model.
-model = RandomForestRegressor(n_estimators=100, verbose=1, n_jobs=-1)
+model = RandomForestRegressor(n_estimators=200, verbose=20)
 # train the model.
 model.fit(training_scaled, y_train)
 # predict
-print(model.predict(BO_scaled))
-sys.stdout.close()
+Et2_prediction = model.predict(BO_scaled)
+print(Et2_prediction)
+# sys.stdout = open(r"Bo_validation_Et1.txt", "w")
+# sys.stdout.close()
 # %%- Et_eV_2
 
 # %%--defect classification: one or two level.
@@ -214,7 +224,7 @@ def email_reminder():
     # email title
     subject='BO test is done'
     # email body
-    body= 'BO test is done' + ' through the file ' + str(os.getcwd()) + 'Et1 prediction is ' + str(Et1_prediction)
+    body= 'BO test is done' + ' through the file ' + str(os.getcwd()) + 'Et1 prediction is ' + str(Et2_prediction)
     # which email address to sent to:
     to='z5183876@ad.unsw.edu.au'
 
