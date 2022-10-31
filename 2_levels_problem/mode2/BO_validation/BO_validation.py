@@ -1,5 +1,7 @@
 # %%--
 '''
+Et1 regression:
+
 n-type:
 Try with 8k data: expect the Et1 prediction to be at least accurate: Et1 is predicted to be 0.197 (true value is 0.15).
 
@@ -10,6 +12,17 @@ Try with 80k data trial 2: expect the Et1 prediction to be at least accurate: Et
 Try with 80k data trial 3, this time change the number of tree from 100 to 200. Et1 is predicted to be 0.143 (true value is 0.15). The ML seems to always underestimate it, but better this time.
 Try with 80k data trial 4, number of tree being 300. Et1=0.14.
 Try with 800k data.
+'''
+
+'''
+One two level defect classification:
+expect to be mode: single two-value.
+
+trial 1: single two-value.
+trial 2: single two-value.
+trial 3: single two-value.
+trial 4: single two-value.
+trial 5: single two-value.
 '''
 # %%-
 
@@ -57,13 +70,14 @@ from MLobject_tlevel import *
 # %%--Et1
 
 # load the BO example.
-BO_data = pd.read_csv(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\BO_validation\BO_ptype\2022-10-25-11-14-51_advanced example - multi_level_L_datasetID_0.csv')
+BO_data = pd.read_csv(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\BO_validation\BO_ptype\2022-10-25-11-14-51_advanced example - multi_level_L_datasetID_0.csv')
 # load the trianing data.
 training_data = pd.read_csv(r'G:\study\thesis_data_storage\unordered\set10\p\800k\2022_10_28\2022-10-28-03-08-13_advanced example - multi_level_L_datasetID_0.csv')
 
 # extract the lifetime.
 BO_lifetime = BO_data.iloc[:,17:-2]
 training_lifetime = training_data.iloc[:, 17:-2]
+# training_lifetime = training_data.iloc[:, 17:]
 # BO_lifetime.head()
 # training_lifetime.head()
 
