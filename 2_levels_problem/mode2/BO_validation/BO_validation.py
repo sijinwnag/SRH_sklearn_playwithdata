@@ -9,7 +9,7 @@ Try with 80k data: expect the Et1 prediction to be at least accurate: Et1 is pre
 Try with 80k data trial 2: expect the Et1 prediction to be at least accurate: Et1 is predicted to be 0.138 (true value is 0.15). The ML seems to always underestimate it.
 Try with 80k data trial 3, this time change the number of tree from 100 to 200. Et1 is predicted to be 0.143 (true value is 0.15). The ML seems to always underestimate it, but better this time.
 Try with 80k data trial 4, number of tree being 300. Et1=0.14.
-Try with 80k data trial 5,number of tree is 200.
+Try with 800k data.
 '''
 # %%-
 
@@ -59,7 +59,7 @@ from MLobject_tlevel import *
 # load the BO example.
 BO_data = pd.read_csv(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\BO_validation\BO_ptype\2022-10-25-11-14-51_advanced example - multi_level_L_datasetID_0.csv')
 # load the trianing data.
-training_data = pd.read_csv(r'G:\study\thesis_data_storage\unordered\set10\p\80k\2022_10_25\2022-10-25-13-57-56_advanced example - multi_level_L_datasetID_0.csv')
+training_data = pd.read_csv(r'G:\study\thesis_data_storage\unordered\set10\p\800k\2022_10_28\2022-10-28-03-08-13_advanced example - multi_level_L_datasetID_0.csv')
 
 # extract the lifetime.
 BO_lifetime = BO_data.iloc[:,17:-2]
@@ -86,7 +86,7 @@ y_test = BO_data['Et_eV_1']
 # y_test
 
 # define the model.
-model = RandomForestRegressor(n_estimators=200, verbose=20)
+model = RandomForestRegressor(n_estimators=100, verbose=20)
 # train the model.
 model.fit(training_scaled, y_train)
 # predict
@@ -97,36 +97,42 @@ print(Et1_prediction)
 # %%- Et_eV_1
 
 # %%--Et2
-sys.stdout = open(r"Bo_validation_Et2.txt", "w")
 # load the BO example.
-BO_data = pd.read_csv(r'G:\study\thesis_data_storage\unordered\yan_compare\BO\testset.csv')
+BO_data = pd.read_csv(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\BO_validation\BO_ptype\2022-10-25-11-14-51_advanced example - multi_level_L_datasetID_0.csv')
 # load the trianing data.
-training_data = pd.read_csv(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\yoann_code_new\Savedir_example\outputs\2022-10-23-21-19-53_advanced example - multi_level_L_datasetID_0.csv')
+training_data = pd.read_csv(r'G:\study\thesis_data_storage\unordered\set10\p\800k\2022_10_28\2022-10-28-03-08-13_advanced example - multi_level_L_datasetID_0.csv')
 
 # extract the lifetime.
 BO_lifetime = BO_data.iloc[:,17:-2]
 training_lifetime = training_data.iloc[:, 17:-2]
+# BO_lifetime.head()
+# training_lifetime.head()
+
 
 # take log10
-BO_lifetime_log = np.log10(BO_lifetime)
-training_lifetime_log = np.log10(training_lifetime)
+BO_lifetime_log = BO_lifetime.applymap(math.log10)
+training_lifetime_log = training_lifetime.applymap(math.log10)
+
 
 # go through scaler.
 scaler = MinMaxScaler()
 training_scaled = scaler.fit_transform(training_lifetime_log)
 BO_scaled = scaler.transform(BO_lifetime_log)
 
+
 # define the target variable.
 y_train = training_data['Et_eV_2']
 y_test = BO_data['Et_eV_2']
+# y_train
+# y_test
 
 # define the model.
-model = RandomForestRegressor(n_estimators=100, verbose=1, n_jobs=-1)
+model = RandomForestRegressor(n_estimators=100, verbose=20)
 # train the model.
 model.fit(training_scaled, y_train)
 # predict
-print(model.predict(BO_scaled))
-sys.stdout.close()
+Et2_prediction = model.predict(BO_scaled)
+print(Et2_prediction)
 # %%- Et_eV_2
 
 # %%-- Email reminder:
@@ -148,6 +154,7 @@ sys.stdout.close()
 #     msg['to'] = to
 #     msg['from'] = user
 #
+
 #     server = smtplib.SMTP("smtp.gmail.com", 587)
 #     server.starttls()
 #     server.login(user, password)
@@ -161,7 +168,7 @@ def email_reminder():
     # email title
     subject='BO test is done'
     # email body
-    body= 'BO test is done' + ' through the file ' + str(os.getcwd()) + 'Et1 prediction is ' + str(Et1_prediction)
+    body= 'BO test is done' + ' through the file ' + str(os.getcwd()) + 'Et1 prediction is ' + str(111) + 'Et2' + str(Et1_prediction)
     # which email address to sent to:
     to='z5183876@ad.unsw.edu.au'
 
