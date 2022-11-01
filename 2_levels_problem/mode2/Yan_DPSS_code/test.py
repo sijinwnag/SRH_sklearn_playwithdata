@@ -30,8 +30,8 @@ nxclist=[]
 nxcspace = np.logspace(13,17,50)
 taulist=[]
 
-Et1list=np.linspace(-0.55,0.55,50)
-Et2list=np.linspace(-0.55,0.55,50)
+Et1list=np.linspace(-0.55,0.55,11)
+Et2list=np.linspace(-0.55,0.55,11)
 #Et1list=[0]
 #Et2list=[0]
 
@@ -47,7 +47,7 @@ Nt=1e12
 # %%-
 
 
-# %%-- code to generate the plot:
+# %%-- code for calculation.
 
 # %% Define and calcualte constants:
 matplotlib.pyplot.switch_backend('Qt5Agg')
@@ -203,7 +203,18 @@ k1opt= k1list[optind]
 k2opt= k2list[optind]
 resiopt=residuallist[optind]
 
+# dataprocess 2
+taun1listr = np.reshape(taun1list,(len(Et1list),len(Et2list)))
+taun2listr = np.reshape(taun2list,(len(Et1list),len(Et2list)))
+k1listr = np.reshape(k1list,(len(Et1list),len(Et2list)))
+k2listr = np.reshape(k2list,(len(Et1list),len(Et2list)))
+residuallistr = np.reshape(residuallist,(len(Et1list),len(Et2list)))
+extent = (Et2list[0], Et2list[-1], Et1list[0], Et1list[-1])
+optind = np.argmin(residuallist)
+# %%-
 
+
+# %%-- plot the fitting.
 # Start plotting:
 plt.figure(num='fitting', facecolor='white')
 
@@ -219,39 +230,121 @@ plt.xlabel(r'Excess carrier density [$\rm cm^{-3}$]')
 plt.ylabel(r'Lifetime [s]')
 plt.savefig('fitting curve' + '.png')
 plt.show()
+# %%-
 
+
+# %%--save the parameters.
+np.save('taun1list_diff_d.npy',taun1list)
+np.save('taun2list_diff_d.npy',taun2list)
+np.save('taun1listr_diff_d.npy',taun1listr)
+np.save('taun2listr_diff_d.npy',taun2listr)
+np.save('k1list_diff_d.npy',k1list)
+np.save('k2list_diff_d.npy',k2list)
+np.save('k1listr_diff_d.npy',k1listr)
+np.save('k2listr_diff_d.npy',k2listr)
+np.save('residuallist_diff_d.npy',residuallist)
+np.save('residuallistr_diff_d.npy',residuallistr)
+np.save('Etlist_diff_d.npy',Etlist)
+# %%-
+
+
+# %%--load the saved data (different T)
+taun1list = np.load(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Yan_DPSS_code\taun1list.npy')
+Etlist = np.load(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Yan_DPSS_code\Etlist.npy')
+Et1list = Etlist[:, 0]
+Et2list = Etlist[:, 1]
+taun2list = np.load(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Yan_DPSS_code\taun2list.npy')
+k1list = np.load(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Yan_DPSS_code\k1list.npy')
+k1listr = np.load(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Yan_DPSS_code\k1listr.npy')
+k2list = np.load(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Yan_DPSS_code\k2list.npy')
+k2listr = np.load(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Yan_DPSS_code\k2listr.npy')
+residuallist = np.load(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Yan_DPSS_code\residuallist.npy')
+residuallistr = np.load(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Yan_DPSS_code\residuallistr.npy')
+taun1listr = np.load(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Yan_DPSS_code\taun1listr.npy')
+taun2list = np.load(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Yan_DPSS_code\taun2list.npy')
+taun2listr = np.load(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Yan_DPSS_code\taun2listr.npy')
+# np.shape(Etlist)
 
 # dataprocess 2
-taun1listr = np.reshape(taun1list,(len(Et1list),len(Et2list)))
-taun2listr = np.reshape(taun2list,(len(Et1list),len(Et2list)))
-k1listr = np.reshape(k1list,(len(Et1list),len(Et2list)))
-k2listr = np.reshape(k2list,(len(Et1list),len(Et2list)))
-residuallistr = np.reshape(residuallist,(len(Et1list),len(Et2list)))
-
+# taun1listr = np.reshape(taun1list,(len(Et1list),len(Et2list)))
+# taun2listr = np.reshape(taun2list,(len(Et1list),len(Et2list)))
+# k1listr = np.reshape(k1list,(len(Et1list),len(Et2list)))
+# k2listr = np.reshape(k2list,(len(Et1list),len(Et2list)))
+# residuallistr = np.reshape(residuallist,(len(Et1list),len(Et2list)))
 extent = (Et2list[0], Et2list[-1], Et1list[0], Et1list[-1])
+optind = np.argmin(residuallist)
+# %%-
 
 
-# last plotting:
+# %%-- Lod the save data (low resolution)
+taun1list = np.load(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Yan_DPSS_code\taun1list_diff_d.npy')
+Etlist = np.load(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Yan_DPSS_code\Etlist_diff_d.npy')
+# Et1list = Etlist[:, 0]
+# Et2list = Etlist[:, 1]
+taun2list = np.load(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Yan_DPSS_code\taun2list_diff_d.npy')
+k1list = np.load(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Yan_DPSS_code\k1list_diff_d.npy')
+k1listr = np.load(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Yan_DPSS_code\k1listr_diff_d.npy')
+k2list = np.load(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Yan_DPSS_code\k2list_diff_d.npy')
+k2listr = np.load(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Yan_DPSS_code\k2listr_diff_d.npy')
+residuallist = np.load(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Yan_DPSS_code\residuallist_diff_d.npy')
+residuallistr = np.load(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Yan_DPSS_code\residuallistr_diff_d.npy')
+taun1listr = np.load(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Yan_DPSS_code\taun1listr_diff_d.npy')
+taun2list = np.load(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Yan_DPSS_code\taun2list_diff_d.npy')
+taun2listr = np.load(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Yan_DPSS_code\taun2listr_diff_d.npy')
+# np.shape(Etlist)
+# np.shape(residuallistr)
+# # dataprocess 2
+# taun1listr = np.reshape(taun1list,(len(Et1list),len(Et2list)))
+# taun2listr = np.reshape(taun2list,(len(Et1list),len(Et2list)))
+# k1listr = np.reshape(k1list,(len(Et1list),len(Et2list)))
+# k2listr = np.reshape(k2list,(len(Et1list),len(Et2list)))
+# residuallistr = np.reshape(residuallist,(len(Et1list),len(Et2list)))
+extent = (Et2list[0], Et2list[-1], Et1list[0], Et1list[-1])
+optind = np.argmin(residuallist)
+# %%-
+
+
+# %%--last plotting:
 plt.figure(num='Resudual', facecolor='white')
 im1 = plt.imshow(residuallistr,extent =extent, aspect='equal', origin = 'lower',norm=colors.LogNorm())
-plt.colorbar(im1)
-plt.plot(Etlist[optind][1],Etlist[optind][0],'bo')
-plt.plot([-0.3],[0.18],'r*')
+plt.colorbar(im1, label='Fitting residual')
+# plt.plot(Etlist[optind][1],Etlist[optind][0],'bo')
+# plt.plot([-0.303], [0.145], 'w*')
+# plt.plot([-0.3],[0.15],'r*')
+# plt.annotate('True value', (-0.3, 0.15))
+# plt.annotate('ML prediction', (-0.32, 0.1))
 plt.xlabel(r'$E_{t2}-E_{i} \/\/ \rm [eV]$')
 plt.ylabel(r'$E_{t1}-E_{i} \/\/ \rm [eV]$')
-
-np.save('taun1list.npy',taun1list)
-np.save('taun2list.npy',taun2list)
-np.save('taun1listr.npy',taun1listr)
-np.save('taun2listr.npy',taun2listr)
-np.save('k1list.npy',k1list)
-np.save('k2list.npy',k2list)
-np.save('k1listr.npy',k1listr)
-np.save('k2listr.npy',k2listr)
-np.save('residuallist.npy',residuallist)
-np.save('residuallistr.npy',residuallistr)
-np.save('Etlist.npy',Etlist)
 plt.savefig('residual map' + '.png')
+plt.show()
+# %%-
+
+
+# %%-- select low residual range
+lowresidual = np.argwhere(residuallistr<1e-1)
+# lowresidual
+# residuallist
+Et_low = Etlist[lowresidual]
+Et_low
+# %%-
+
+
+# %%--Zoom in plotting.
+plt.figure(num='Resudual', facecolor='white')
+im1 = plt.imshow(residuallistr,extent =extent, aspect='equal', origin = 'lower',norm=colors.LogNorm())
+plt.colorbar(im1, label='Fitting residual')
+# plt.plot(Etlist[optind][1],Etlist[optind][0],'bo')
+plt.plot([-0.32], [0.145], 'w*', label='pure ML')
+plt.plot([-0.3],[0.15],'r*', label='True solution')
+plt.plot([-0.3], [0.145], 'y*', label='combined method')
+# plt.annotate('True value', (-0.3, 0.15))
+# plt.annotate('ML prediction (800k)', (-0.33, 0.13))
+plt.xlabel(r'$E_{t2}-E_{i} \/\/ \rm [eV]$')
+plt.ylabel(r'$E_{t1}-E_{i} \/\/ \rm [eV]$')
+plt.xlim([-0.4, -0.2])
+plt.ylim([0.1, 0.2])
+plt.legend()
+plt.savefig('residual map zoomed in' + '.png')
 plt.show()
 # %%-
 
