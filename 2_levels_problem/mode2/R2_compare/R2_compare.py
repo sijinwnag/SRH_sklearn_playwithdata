@@ -44,21 +44,21 @@ class table_visualization():
         [0.761, 0.663, 0.835, 0.924, 0.908, 0.924],
         [0.68, 0.76, 0.696, 0.819, 0.731, 0.92],
         [0.61, 0.678, 0.726, 0.934, 0.935, 0.933]],
-        columns=['Et1', 'Sn1', 'Sp1', 'Et2', 'Sn2', 'Sp2'],
+        columns=['$E_{t1}$', '$E_{t2}$', '$\sigma_{n1}$', '$\sigma_{p1}$', '$\sigma_{n2}$', '$\sigma_{p2}$'],
         index=['Set11', 'Set10', 'Set01', 'Set00'])
 
         self.p_R2_table = pd.DataFrame([[0.972, 0.919, 0.939, 0.643, 0.726, 0.726],
         [0.936, 0.987, 0.941, 0.821, 0.807, 0.703],
         [0.813, 0.916, 0.726, 0.693, 0.689, 0.783],
         [0.827, 0.882, 0.739, 0.934, 0.849, 0.766]],
-        columns=['Et1', 'Sn1', 'Sp1', 'Et2', 'Sn2', 'Sp2'],
+        columns=['$E_{t1}$', '$E_{t2}$', '$\sigma_{n1}$', '$\sigma_{p1}$', '$\sigma_{n2}$', '$\sigma_{p2}$'],
         index=['Set11', 'Set10', 'Set01', 'Set00'])
 
         self.np_R2_table = pd.DataFrame([[0.98, 0.922, 0.9, 0.842, 0.74, 0.9],
         [0.936, 0.987, 0.941, 0.921, 0.907, 0.923],
         [0.811, 0.917, 0.726, 0.82, 0.789, 0.93],
         [0.829, 0.883, 0.74, 0.935, 0.936, 0.934]],
-        columns=['Et1', 'Sn1', 'Sp1', 'Et2', 'Sn2', 'Sp2'],
+        columns=['$E_{t1}$', '$E_{t2}$', '$\sigma_{n1}$', '$\sigma_{p1}$', '$\sigma_{n2}$', '$\sigma_{p2}$'],
         index=['Set11', 'Set10', 'Set01', 'Set00'])
 
 
@@ -94,6 +94,7 @@ class table_visualization():
         np_av = self.np_R2_table.mean(axis=0)
         av = pd.concat([n_av, p_av, np_av], axis=1)
         av.columns=['n type', 'p type', 'n type and p type']
+        # bars = ('$E_{t1}$', '$E_{t2}$', '', 'D', 'E')
         # print(av)
         # plot the figure.
         plt.figure(facecolor='white')
@@ -102,6 +103,7 @@ class table_visualization():
         plt.ylabel('$R^2$' + ' score')
         plt.xticks(rotation=0)
         plt.ylim([0.6, 1])
+        # plt.legend(loc='upper right')
         # export the image
         plt.savefig('npcompare.jpg')
         plt.show()
@@ -126,6 +128,7 @@ class table_visualization():
         plt.xticks(rotation=0)
         plt.ylim([0.6, 1])
         # export the image
+        plt.legend(loc='upper right')
         plt.savefig('setscompare.jpg')
         plt.show()
 

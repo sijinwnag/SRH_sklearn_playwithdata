@@ -23,15 +23,15 @@ import matplotlib.colors as colors
 
 
 # %%--- Things to change.
-Doplist = [1e15,1e15,1e15,1e15, 1e15, 1e15]
+Doplist = [1e15, 1e15, 1e15, 1e15, 1e15, 1e15]
 Tlist = [150, 200, 250, 300, 350, 400]
-Typelist=['p','p','p', 'p', 'p', 'p']
+Typelist=['p', 'p', 'p', 'p', 'p', 'p']
 nxclist=[]
 nxcspace = np.logspace(13,17,50)
 taulist=[]
 
-Et1list=np.linspace(-0.55,0.55,11)
-Et2list=np.linspace(-0.55,0.55,11)
+Et1list=np.linspace(0,0.55,3)
+Et2list=np.linspace(-0.55,0,3)
 #Et1list=[0]
 #Et2list=[0]
 
@@ -279,8 +279,8 @@ optind = np.argmin(residuallist)
 # %%-- Lod the save data (low resolution)
 taun1list = np.load(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Yan_DPSS_code\taun1list_diff_d.npy')
 Etlist = np.load(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Yan_DPSS_code\Etlist_diff_d.npy')
-# Et1list = Etlist[:, 0]
-# Et2list = Etlist[:, 1]
+Et1list = Etlist[:, 0]
+Et2list = Etlist[:, 1]
 taun2list = np.load(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Yan_DPSS_code\taun2list_diff_d.npy')
 k1list = np.load(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Yan_DPSS_code\k1list_diff_d.npy')
 k1listr = np.load(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Yan_DPSS_code\k1listr_diff_d.npy')
@@ -309,13 +309,32 @@ plt.figure(num='Resudual', facecolor='white')
 im1 = plt.imshow(residuallistr,extent =extent, aspect='equal', origin = 'lower',norm=colors.LogNorm())
 plt.colorbar(im1, label='Fitting residual')
 # plt.plot(Etlist[optind][1],Etlist[optind][0],'bo')
-# plt.plot([-0.303], [0.145], 'w*')
-# plt.plot([-0.3],[0.15],'r*')
-# plt.annotate('True value', (-0.3, 0.15))
-# plt.annotate('ML prediction', (-0.32, 0.1))
+plt.plot([-0.33], [0.145], 'w*')
+plt.plot([-0.3],[0.15],'r*')
+plt.annotate('True value', (-0.3, 0.18), color='red')
+plt.annotate('ML prediction', (-0.4, 0.08), color='white')
+plt.xlabel(r'$E_{t2}-E_{i} \/\/ \rm (eV)$')
+plt.ylabel(r'$E_{t1}-E_{i} \/\/ \rm (eV)$')
+plt.savefig('residual map low res' + '.png')
+plt.show()
+# %%-
+
+
+# %%-- Combined method plotting.
+plt.figure(num='Resudual', facecolor='white')
+im1 = plt.imshow(residuallistr,extent =extent, aspect='equal', origin = 'lower',norm=colors.LogNorm())
+plt.colorbar(im1, label='Fitting residual')
+# plt.plot(Etlist[optind][1],Etlist[optind][0],'bo')
+plt.plot([-0.303], [0.146], 'w*', label='Combined method')
+plt.plot([-0.3],[0.15],'r*', label='True value')
+plt.plot([-0.32], [0.145], 'k*', label='Pure ML')
+# plt.annotate('True value', (-0.3, 0.17), color='red')
+# plt.annotate('Combined method', (-0.25, 0.1), color='white')
+# plt.annotate('Pure ML', (-0.5, 0.1), color='black')
 plt.xlabel(r'$E_{t2}-E_{i} \/\/ \rm [eV]$')
 plt.ylabel(r'$E_{t1}-E_{i} \/\/ \rm [eV]$')
-plt.savefig('residual map' + '.png')
+plt.legend(facecolor='gray')
+plt.savefig('residual map low res' + '.png')
 plt.show()
 # %%-
 
@@ -334,16 +353,17 @@ plt.figure(num='Resudual', facecolor='white')
 im1 = plt.imshow(residuallistr,extent =extent, aspect='equal', origin = 'lower',norm=colors.LogNorm())
 plt.colorbar(im1, label='Fitting residual')
 # plt.plot(Etlist[optind][1],Etlist[optind][0],'bo')
-plt.plot([-0.32], [0.145], 'w*', label='pure ML')
-plt.plot([-0.3],[0.15],'r*', label='True solution')
-plt.plot([-0.3], [0.145], 'y*', label='combined method')
-# plt.annotate('True value', (-0.3, 0.15))
-# plt.annotate('ML prediction (800k)', (-0.33, 0.13))
-plt.xlabel(r'$E_{t2}-E_{i} \/\/ \rm [eV]$')
-plt.ylabel(r'$E_{t1}-E_{i} \/\/ \rm [eV]$')
+plt.plot([-0.303], [0.146], 'y*')
+plt.plot([-0.3],[0.15],'r*')
+plt.plot([-0.32], [0.145], 'w*')
+plt.annotate('True value', (-0.3, 0.16), color='red')
+plt.annotate('Combined method', (-0.3, 0.14), color='yellow')
+plt.annotate('Pure ML', (-0.34, 0.13), color='white')
+plt.xlabel(r'$E_{t2}-E_{i} \/\/ \rm (eV)$')
+plt.ylabel(r'$E_{t1}-E_{i} \/\/ \rm (eV)$')
 plt.xlim([-0.4, -0.2])
 plt.ylim([0.1, 0.2])
-plt.legend()
+plt.xticks(rotation=45)
 plt.savefig('residual map zoomed in' + '.png')
 plt.show()
 # %%-

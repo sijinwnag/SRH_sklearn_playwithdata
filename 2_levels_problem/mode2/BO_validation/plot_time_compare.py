@@ -30,16 +30,21 @@ import math
 # %%-
 
 
-real_Et1 = 0.15
-real_Et2 = -0.3
-predicted_Et1 = 0.145
-predicted_Et2 = -0.39
 
-# for the four value into pd dataframe.
-data = pd.DataFrame([[real_Et1, real_Et2], [predicted_Et1, predicted_Et2]], columns=['Et1', 'Et2'], index=['Literature value', 'ML prediction'])
-data = np.transpose(data)
-# %%--
-plt.figure()
-data.plot(kind='bar')
+# %%--Plot the preperation time
+plt.figure(facecolor = 'white')
+plt.bar(x = ['pure residual', 'pure ML'], height = [3200, 1300])
+plt.ylabel('Computational time (min)')
+plt.title('Computation time when ML is training')
+plt.savefig('Time_compare.png')
+plt.show()
+# %%-
+
+# %%-- Plot the predict time.
+plt.figure(facecolor = 'white')
+plt.bar(x = ['pure residual', 'pure ML'], height = [3200, 0.1/60])
+plt.ylabel('Computational time (min)')
+plt.title('Computation time after ML finish training')
+plt.savefig('Time_compare.png')
 plt.show()
 # %%-
