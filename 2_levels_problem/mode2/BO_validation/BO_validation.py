@@ -11,7 +11,7 @@ Try with 80k data: expect the Et1 prediction to be at least accurate: Et1 is pre
 Try with 80k data trial 2: expect the Et1 prediction to be at least accurate: Et1 is predicted to be 0.138 (true value is 0.15). The ML seems to always underestimate it.
 Try with 80k data trial 3, this time change the number of tree from 100 to 200. Et1 is predicted to be 0.143 (true value is 0.15). The ML seems to always underestimate it, but better this time.
 Try with 80k data trial 4, number of tree being 300. Et1=0.14.
-Try with 80k data trial 5,number of tree is 200.
+Try with 800k data.
 '''
 
 '''
@@ -100,7 +100,7 @@ y_test = BO_data['Et_eV_1']
 # y_test
 
 # define the model.
-model = RandomForestRegressor(n_estimators=200, verbose=20)
+model = RandomForestRegressor(n_estimators=100, verbose=20)
 # train the model.
 model.fit(training_scaled, y_train)
 # predict
@@ -112,14 +112,13 @@ print(Et1_prediction)
 
 # %%--Et2
 # load the BO example.
-BO_data = pd.read_csv(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\BO_validation\BO_ptype\2022-10-25-11-14-51_advanced example - multi_level_L_datasetID_0.csv')
+BO_data = pd.read_csv(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\BO_validation\BO_ptype\2022-10-25-11-14-51_advanced example - multi_level_L_datasetID_0.csv')
 # load the trianing data.
 training_data = pd.read_csv(r'C:\Users\sijin wang\Documents\GitHub\yoann_code_new\Savedir_example\outputs\2022-10-29-20-15-56_advanced example - multi_level_L_datasetID_0.csv')
 
 # extract the lifetime.
 BO_lifetime = BO_data.iloc[:,17:-2]
 training_lifetime = training_data.iloc[:, 17:-2]
-# training_lifetime = training_data.iloc[:, 17:]
 # BO_lifetime.head()
 # training_lifetime.head()
 
@@ -142,55 +141,13 @@ y_test = BO_data['Et_eV_2']
 # y_test
 
 # define the model.
-model = RandomForestRegressor(n_estimators=200, verbose=20)
+model = RandomForestRegressor(n_estimators=100, verbose=20)
 # train the model.
 model.fit(training_scaled, y_train)
 # predict
 Et2_prediction = model.predict(BO_scaled)
 print(Et2_prediction)
-# sys.stdout = open(r"Bo_validation_Et1.txt", "w")
-# sys.stdout.close()
 # %%- Et_eV_2
-
-# %%--defect classification: one or two level.
-# load the BO example.
-BO_data = pd.read_csv(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\BO_validation\BO_ptype\2022-10-25-11-14-51_advanced example - multi_level_L_datasetID_0.csv')
-# load the trianing data.
-training_data = pd.read_csv(r'C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\simulation_data\Etnonordered\one_vs_two_level_classification\80k\2022_09_29\2022-09-29-09-45-08_advanced example - multi_level_L_datasetID_0.csv')
-
-# extract the lifetime.
-BO_lifetime = BO_data.iloc[:,17:-2]
-training_lifetime = training_data.iloc[:, 17:-2]
-# BO_lifetime.head()
-# training_lifetime.head()
-
-
-# take log10
-BO_lifetime_log = BO_lifetime.applymap(math.log10)
-training_lifetime_log = training_lifetime.applymap(math.log10)
-
-
-# go through scaler.
-scaler = MinMaxScaler()
-training_scaled = scaler.fit_transform(training_lifetime_log)
-BO_scaled = scaler.transform(BO_lifetime_log)
-
-
-# define the target variable.
-y_train = training_data['Label']
-y_test = BO_data['Label']
-y_train
-y_test
-
-# define the model.
-model = MLPClassifier((100, 100),alpha=0.001, activation = 'relu',verbose=10,learning_rate='adaptive')
-# train the model.
-model.fit(training_scaled, y_train)
-# predict
-print(model.predict(BO_scaled))
-sys.stdout = open(r"Bo_validation_Et1.txt", "w")
-sys.stdout.close()
-# %%-
 
 # %%-- Email reminder:
 # becuase google disable allowing less secure app, the code below does not work anymore.
@@ -211,6 +168,7 @@ sys.stdout.close()
 #     msg['to'] = to
 #     msg['from'] = user
 #
+
 #     server = smtplib.SMTP("smtp.gmail.com", 587)
 #     server.starttls()
 #     server.login(user, password)
