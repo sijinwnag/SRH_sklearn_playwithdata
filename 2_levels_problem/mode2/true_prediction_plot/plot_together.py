@@ -172,9 +172,9 @@ plt.plot(true, true, color='r')
 plt.xlabel('True', fontsize=20)
 plt.ylabel('Prediction', fontsize=20)
 ax.set_aspect("equal")
-# plt.text(0, 0.5, alphabet[k], fontsize=20)
-# plt.title('$E_{t1}$', fontsize=25)
-plt.title('True vs prediction plot', fontsize=20)
+# # plt.text(0, 0.5, alphabet[k], fontsize=20)
+# # # plt.title('$E_{t1}$', fontsize=25)
+# # plt.title('True vs prediction plot', fontsize=20)
 # plt.legend(loc=4, framealpha=0.1, fontsize=20)
 plt.xticks(fontsize=15)
 plt.yticks(fontsize=15)
@@ -185,15 +185,37 @@ plt.show()
 
 # %%-- Plot all parameters together
 filetnamelist = ['Et1', 'Et2', 'Sn1', 'Sn2', 'Sp1', 'Sp2', 'k1', 'k2']
-title1 = '$E_{t1}$' + ' (eV)'
+title1 = r'$E_{\rm t1}$' + ' (eV)'
+# title1 = r'Primary T$_{\rm eff}$'
+title2 = r'$E_{\rm t2}$' + ' (eV)'
+title3 = r'log$(\sigma_{\rm n1})$ ' + r'($\rm cm^{-3}$)'
+title4 = r'log$(\sigma_{\rm n2})$ ' + r'($\rm cm^{-3}$)'
+title5 = r'log$(\sigma_{\rm p1})$ ' + r'($\rm cm^{-3}$)'
+title6 = r'log$(\sigma_{\rm p2})$ ' + r'($\rm cm^{-3}$)'
+title7 = r'log$(k_1)$'
+title8 = r'log$(k_2)$'
+textlist = ['(a)', '(d)', '(b)', '(e)', '(c)', '(f)', '(g)', '(h)']
+titlelist = [title1, title2, title3, title4, title5, title6, title7, title8]
+xlabels = []
+ylabels = []
+titlelist2 = []
+for title in titlelist:
+    xlabels.append('True ' + title)
+    ylabels.append('Predicted ' + title)
+
+title1 = r'$E_{\rm t1}$' + ' (eV)'
 title2 = '$E_{t2}$' + ' (eV)'
-title3 = 'log$(\sigma_{n1})$'
-title4 = 'log$(\sigma_{n2})$'
-title5 = 'log$(\sigma_{p1})$'
-title6 = 'log$(\sigma_{p2})$'
+title3 = 'log$(\sigma_{n1})$ ' + r'($\rm cm^{-3}$)'
+title4 = 'log$(\sigma_{n2})$ ' + r'($\rm cm^{-3}$)'
+title5 = 'log$(\sigma_{p1})$ ' + r'($\rm cm^{-3}$)'
+title6 = 'log$(\sigma_{p2})$ ' + r'($\rm cm^{-3}$)'
 title7 = 'log$(k_1)$'
 title8 = 'log$(k_2)$'
-titlelist = [title1, title2, title3, title4, title5, title6, title7, title8]
+titlelist2 = [title1, title2, title3, title4, title5, title6, title7, title8]
+titlelist = []
+for title in titlelist2:
+    titlelist.append('RF ' + title + ' prediction')
+
 counter = 0
 for task in [Et1list, Et2list, Sn1list, Sn2list, Sp1list, Sp2list, k1list, k2list]:
     # extract the dataset.
@@ -225,45 +247,52 @@ for task in [Et1list, Et2list, Sn1list, Sn2list, Sp1list, Sp2list, k1list, k2lis
     print(MAE)
 
     # plotting without centre line.
-    fig= plt.figure(facecolor='white', figsize=(6, 6))
+    fig= plt.figure(facecolor='white', figsize=(5, 5))
     ax = fig.add_subplot(111)
     true = Truelist
     prediction = predictionlist
     plt.scatter(true, prediction, label=('$R^2$' + '=' + str(round(R2, 3))) + ('; $MAE$' + '=' + str(round(MAE, 3))), alpha=0.01, color='green')
     # plt.plot(true, true, color='r')
-    plt.xlabel('True', fontsize=20)
-    plt.ylabel('Prediction', fontsize=20)
+    plt.xlabel(xlabels[counter], fontsize=22)
+    plt.ylabel(ylabels[counter], fontsize=22)
     ax.set_aspect("equal")
-    # plt.text(0, 0.5, alphabet[k], fontsize=20)
-    plt.title(str(titlelist[counter]), fontsize=25)
-    plt.legend(loc=4, framealpha=0.1, fontsize=20)
+    # # plt.text(0, 0.5, alphabet[k], fontsize=20)
+    # # plt.title(str(titlelist[counter]), fontsize=25)
+    plt.legend(loc=4, framealpha=0.1, fontsize=15)
     plt.xticks(fontsize=15)
     plt.yticks(fontsize=15)
+    # plt.text(0.05, 0.9, textlist[counter], transform=ax.transAxes, fontsize=22)
     if filename[0] == 'S':
         plt.xticks(range(-17, -12))
         plt.yticks(range(-17, -12))
+    if filename[0] == 'E':
+        plt.xticks([-0.6, -0.4, -0.2, 0, 0.2, 0.4, 0.6])
+        plt.yticks([-0.6, -0.4, -0.2, 0, 0.2, 0.4, 0.6])
     plt.savefig(fname=str(filetnamelist[counter]) + 'without center line' + '.png', bbox_inches='tight')
     plt.show()
 
     # plotting with centre line.
-    fig= plt.figure(facecolor='white', figsize=(6, 6))
+    fig= plt.figure(facecolor='white', figsize=(5, 5))
     ax = fig.add_subplot(111)
     true = Truelist
     prediction = predictionlist
     plt.scatter(true, prediction, label=('$R^2$' + '=' + str(round(R2, 3))) + ('; $MAE$' + '=' + str(round(MAE, 3))), alpha=0.01, color='green')
     plt.plot(true, true, color='r')
-    plt.xlabel('True', fontsize=20)
-    plt.ylabel('Prediction', fontsize=20)
+    plt.xlabel(xlabels[counter], fontsize=22)
+    plt.ylabel(ylabels[counter], fontsize=22)
     ax.set_aspect("equal")
-    # plt.text(0, 0.5, alphabet[k], fontsize=20)
-    plt.title(str(titlelist[counter]), fontsize=25)
-    plt.legend(loc=4, framealpha=0.1, fontsize=20)
+    # # plt.text(0, 0.5, alphabet[k], fontsize=20)
+    # # # plt.title(str(titlelist[counter]), fontsize=25)
+    plt.legend(loc=4, framealpha=0.1, fontsize=15)
     plt.xticks(fontsize=15)
     plt.yticks(fontsize=15)
     if filename[0] == 'S':
         # print(filename)
         plt.xticks(range(-17, -12))
         plt.yticks(range(-17, -12))
+    if filename[0] == 'E':
+        plt.xticks([-0.6, -0.4, -0.2, 0, 0.2, 0.4, 0.6])
+        plt.yticks([-0.6, -0.4, -0.2, 0, 0.2, 0.4, 0.6])
     plt.savefig(fname=str(filetnamelist[counter]) + 'with center line' + '.png', bbox_inches='tight')
     plt.show()
 
@@ -317,8 +346,8 @@ for task in [Et1list, Et2list, Sn1list, Sn2list, Sp1list, Sp2list]:
     plt.xlabel('Value', fontsize=20)
     plt.ylabel('Prediction error', fontsize=20)
     ax.set_aspect("equal")
-    # plt.text(0, 0.5, alphabet[k], fontsize=20)
-    plt.title(str(titlelist[counter]), fontsize=25)
+    # # plt.text(0, 0.5, alphabet[k], fontsize=20)
+    # # plt.title(str(titlelist[counter]), fontsize=25)
     # plt.legend(loc=4, framealpha=0.1, fontsize=20)
     plt.xticks(fontsize=15)
     plt.yticks(fontsize=15)

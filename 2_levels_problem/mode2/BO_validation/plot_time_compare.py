@@ -48,3 +48,14 @@ plt.title('Computation time after ML finish training')
 plt.savefig('Time_compare.png')
 plt.show()
 # %%-
+
+# %%-- Plot together
+plt.figure(facecolor = 'white')
+plt.bar(x = ['residual map', 'only ML', 'Combined'], height = [3200, 1300, 30])
+plt.ylabel('Time (min)', fontsize=22)
+plt.xticks(fontsize=18)
+plt.yticks(fontsize=15)
+# plt.title('Computation time after ML finish training')
+plt.savefig('Time_compare.png', bbox_inches='tight')
+plt.show()
+# %%-
