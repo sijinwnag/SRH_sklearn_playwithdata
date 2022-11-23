@@ -72,7 +72,7 @@ from MLobject_tlevel import *
 # load the BO example.
 BO_data = pd.read_csv(r'C:\Users\sijin wang\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\BO_validation\BO_ptype\2022-10-25-11-14-51_advanced example - multi_level_L_datasetID_0.csv')
 # load the trianing data.
-training_data = pd.read_csv(r'G:\study\thesis_data_storage\unordered\set10\p\800k\2022_10_28\2022-10-28-03-08-13_advanced example - multi_level_L_datasetID_0.csv')
+training_data = pd.read_csv(r'C:\Users\sijin wang\Documents\GitHub\yoann_code_new\Savedir_example\outputs\2022-10-29-20-15-56_advanced example - multi_level_L_datasetID_0.csv')
 
 # extract the lifetime.
 BO_lifetime = BO_data.iloc[:,17:-2]
@@ -114,7 +114,7 @@ print(Et1_prediction)
 # load the BO example.
 BO_data = pd.read_csv(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\BO_validation\BO_ptype\2022-10-25-11-14-51_advanced example - multi_level_L_datasetID_0.csv')
 # load the trianing data.
-training_data = pd.read_csv(r'G:\study\thesis_data_storage\unordered\set10\p\800k\2022_10_28\2022-10-28-03-08-13_advanced example - multi_level_L_datasetID_0.csv')
+training_data = pd.read_csv(r'C:\Users\sijin wang\Documents\GitHub\yoann_code_new\Savedir_example\outputs\2022-10-29-20-15-56_advanced example - multi_level_L_datasetID_0.csv')
 
 # extract the lifetime.
 BO_lifetime = BO_data.iloc[:,17:-2]
@@ -182,7 +182,7 @@ def email_reminder():
     # email title
     subject='BO test is done'
     # email body
-    body= 'BO test is done' + ' through the file ' + str(os.getcwd()) + 'Et1 prediction is ' + str(111) + 'Et2' + str(Et1_prediction)
+    body= 'BO test is done' + ' through the file ' + str(os.getcwd()) + 'Et1 prediction is ' + str(Et1_prediction) + 'Et2 prediction is ' + str(Et2_prediction)
     # which email address to sent to:
     to='z5183876@ad.unsw.edu.au'
 

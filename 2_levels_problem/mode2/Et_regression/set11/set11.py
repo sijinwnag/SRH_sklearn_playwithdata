@@ -48,7 +48,7 @@ sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn
 sys.path.append(r'C:\Users\z5183876\OneDrive - UNSW\Documents\GitHub\SRH_sklearn_playwithdata\2_levels_problem\mode2\Savedir_example')
 from MLobject_tlevel import *
 # from dynamic_generation_regression import *
-df1 = MyMLdata_2level(r"G:\study\thesis_data_storage\unordered\set01\n\set01_800k_n.csv", 'bandgap1',1)
+df1 = MyMLdata_2level(r"C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\simulation_data\Etnonordered\p\set11\set11_8k.csv", 'bandgap1',1)
 df1.data.head()
 # %%-
 
@@ -146,7 +146,7 @@ df1.pre_processor_insert_all_known()
 # this eqution works for lifetime data that vary both T and doping.
 C2n_list, C2d_list, C1n_list, C1d_list = df1.C1n_C2n_C1d_C2d_calculator(return_C=True, export=False, sanity_check=False, playmusic=False)
 
-# %%--this session will plot the histogram of them.
+# %%--this session will plot the histogram of Cn.
 C1n_array = np.array(C1n_list)[4:, :]
 C2n_array = np.array(C2n_list)[4:, :]
 # flattern hte array.
@@ -166,15 +166,18 @@ C1n_array.astype(float)
 bins = 100
 plt.figure(facecolor='white')
 # plot hte log.
-plt.hist(np.log10(C1n_array.astype('float')) , bins=bins, label='$C_{1d}$', alpha=0.75, density=True)
-plt.hist(np.log10(C2n_array.astype('float')) , bins=bins, label='$C_{2d}$', alpha=0.75, density=True)
+plt.hist(np.log10(C1n_array.astype('float')) , bins=bins, label=r'$C_{\rm 1n}$', alpha=0.75, density=True)
+plt.hist(np.log10(C2n_array.astype('float')) , bins=bins, label=r'$C_{\rm 2n}$', alpha=0.75, density=True)
 # plot hte origin.
 # plt.hist(C1n_array.astype('float'), bins=bins, label='$C_{1n}$')
 # plt.hist(C2n_array.astype('float'), bins=bins, label='$C_{2n}$')
-plt.legend()
-plt.title('Histogram of $C_d$')
-plt.xlabel('log10 of $C_d$')
-plt.savefig('Cn_compare.png')
+plt.legend(fontsize=15)
+# plt.title('Histogram of $C_d$')
+plt.xlabel(r'log$_{\rm 10}$ of $C_{\rm n}$', fontsize=22)
+plt.ylabel('Probability density', fontsize=22)
+plt.xticks(fontsize=22)
+plt.yticks([0, 0.05, 0.1, 0.15, 0.2], fontsize=22)
+plt.savefig('Cn_compare.png', bbox_inches='tight')
 plt.show()
 
 # plot the boxplot.
@@ -194,6 +197,60 @@ plt.show()
 # plt.bar(['$C_{1n}$', '$C_{2n}$'],height=[np.log10(np.mean(C1n_array)), np.log10(np.mean(C2n_array))])
 # plt.show()
 
+# %%-
+
+# %%--this session will plot the histogram of Cd.
+C1d_array = np.array(C1n_list)[4:, :]
+C2d_array = np.array(C2n_list)[4:, :]
+# C1d_array = np.array(C1d_list)[4:, :]
+# C2d_array = np.array(C2d_list)[4:, :]
+# flattern hte array.
+C1d_array = np.reshape(C1d_array, (-1, ))
+print(np.mean(C1d_array))
+print(np.max(C1d_array))
+C2d_array = np.reshape(C2d_array, (-1, ))
+print(np.mean(C2d_array))
+print(np.max(C2d_array))
+# remove the outliers
+# C1d_array = C1d_array[abs(C1d_array - np.mean(C1d_array)) < 1 * np.std(C1d_array)]
+# C2d_array = C2d_array[abs(C2d_array - np.mean(C2d_array)) < 1 * np.std(C2d_array)]
+# take the log.
+C1d_array.astype(float)
+
+# plot the histogram
+bins = 100
+plt.figure(facecolor='white')
+# plot hte log.
+plt.hist(np.log10(C1d_array.astype('float')) , bins=bins, label=r'$C_{\rm 1d}$', alpha=0.75, density=True)
+plt.hist(np.log10(C2d_array.astype('float')) , bins=bins, label=r'$C_{\rm 2d}$', alpha=0.75, density=True)
+# plot hte origin.
+# plt.hist(C1d_array.astype('float'), bins=bins, label='$C_{1d}$')
+# plt.hist(C2d_array.astype('float'), bins=bins, label='$C_{2d}$')
+plt.legend(fontsize=15)
+# plt.title('Histogram of $C_d$')
+plt.xlabel(r'log$_{\rm 10}$ of $C_{\rm d}$', fontsize=22)
+plt.ylabel('Probability density', fontsize=22)
+plt.xticks(fontsize=22)
+plt.yticks([0, 0.05, 0.1, 0.15, 0.2], fontsize=22)
+plt.savefig('Cd_compare.png', bbox_inches='tight')
+plt.show()
+
+# plot the boxplot.
+# plt.figure()
+# # plot hte log.
+# plt.boxplot([np.log10(C1n_array.astype('float')),np.log10(C2n_array.astype('float'))])
+# # plot hte origin.
+# # plt.hist(C1n_array.astype('float'), bins=bins, label='$C_{1n}$')
+# # plt.hist(C2n_array.astype('float'), bins=bins, label='$C_{2n}$')
+# # plt.legend(['$C_{1n}$', '$C_{2n}$'])
+# plt.title('Distribution of Cn')
+# plt.ylabel('log10 of Cn')
+# # plt.ylim([-1, 1])
+# plt.show()
+
+# plt.figure()
+# plt.bar(['$C_{1n}$', '$C_{2n}$'],height=[np.log10(np.mean(C1n_array)), np.log10(np.mean(C2n_array))])
+# plt.show()
 # %%-
 # %%-
 
