@@ -36,11 +36,15 @@ Et1_one_path = r'C:\Users\sijin wang\Desktop\research\thesiswork\thesis3\Et1_Et2
 Et1_two_path = r'C:\Users\sijin wang\Desktop\research\thesiswork\thesis3\Et1_Et2_cover\Et1_dominate\two_level.csv'
 Et2_one_path = r'C:\Users\sijin wang\Desktop\research\thesiswork\thesis3\Et1_Et2_cover\Et2_dominate\Et2_one_level_defect.csv'
 Et2_two_path = r'C:\Users\sijin wang\Desktop\research\thesiswork\thesis3\Et1_Et2_cover\Et2_dominate\two_level_defect.csv'
+Et2_0_1_path = r'C:\Users\sijin wang\Desktop\research\thesiswork\thesis3\Et1_Et2_cover\Et2_not_sensitive\Et2_0_1.csv'
+Et2_0_path = r'C:\Users\sijin wang\Desktop\research\thesiswork\thesis3\Et1_Et2_cover\Et2_not_sensitive\Et2_0.csv'
 
 Et1_one_lifetime = pd.read_csv(Et1_one_path)
 Et1_two_lifetime = pd.read_csv(Et1_two_path)
 Et2_one_lifetime = pd.read_csv(Et2_one_path)
 Et2_two_lifetime = pd.read_csv(Et2_two_path)
+Et2_0_1_lifetime = pd.read_csv(Et2_0_1_path)
+Et2_0_lifetime = pd.read_csv(Et2_0_path)
 # %%-
 
 
@@ -48,6 +52,7 @@ Et2_two_lifetime = pd.read_csv(Et2_two_path)
 plt.figure(facecolor='white', figsize=(5, 5))
 plt.plot(Et1_one_lifetime.iloc[:, 0], Et1_one_lifetime.iloc[:, 1], label='One level defect lifetime of $E_{t1}$')
 plt.plot(Et1_two_lifetime.iloc[:, 0], Et1_two_lifetime.iloc[:, 1], label='Two level defect')
+print(np.max(Et1_one_lifetime.iloc[:, 1]-Et1_two_lifetime.iloc[:, 1]))
 plt.legend(fontsize=13)
 plt.xscale('log')
 plt.yscale('log')
@@ -83,6 +88,40 @@ plt.show()
 plt.figure(facecolor='white', figsize=(5, 5))
 plt.plot(Et2_one_lifetime.iloc[:, 0], Et2_one_lifetime.iloc[:, 1], label='One level defect lifetime of $E_{t2}$')
 plt.plot(Et2_two_lifetime.iloc[:, 0], Et2_two_lifetime.iloc[:, 1], label='Two level defect')
+plt.legend(fontsize=13)
+plt.xscale('log')
+plt.yscale('log')
+plt.xlabel(r'Excess carrer concentration ($\rm cm^{-3}$)', fontsize=22)
+plt.ylabel('Lifetime(s)', fontsize=22)
+# plt.title('$E_{t1}=-0.5 eV$; $E_{t2}=-0.5 eV$' )
+# plt.xlim([10**(16.9), 1e17])
+# plt.ylim([1e-5, 10**-4.6])
+plt.xticks(fontsize=20)
+plt.yticks(fontsize=20)
+plt.savefig('Et2_dominate.png', bbox_inches='tight')
+plt.show()
+
+plt.figure(facecolor='white')
+plt.plot(Et2_one_lifetime.iloc[:, 0], Et2_one_lifetime.iloc[:, 1], label='One level defect lifetime of $E_{t2}$ only')
+plt.plot(Et2_two_lifetime.iloc[:, 0], Et2_two_lifetime.iloc[:, 1], label='Two level defect')
+plt.legend(fontsize=15)
+plt.xscale('log')
+plt.yscale('log')
+plt.xlabel('Excess carrer concentration ($cm^{-3}$)', fontsize=22)
+plt.ylabel('Lifetime(s)', fontsize=22)
+# plt.title('$E_{t1}=-0.5 eV$; $E_{t2}=-0.5 eV$' )
+plt.xlim([10**(16.9), 1e17])
+plt.ylim([1e-5, 10**-4.6])
+plt.savefig('Et2_dominate_zoomin.png', bbox_inches='tight')
+plt.show()
+# %%-
+
+
+# %%-- Plot Et2 not sensitive.
+plt.figure(facecolor='white', figsize=(5, 5))
+plt.plot(Et2_0_1_lifetime.iloc[:, 0], Et2_0_1_lifetime.iloc[:, 1], label=r'$E_{\rm t2}$ = 0.1 eV')
+plt.plot(Et2_0_lifetime.iloc[:, 0], Et2_0_lifetime.iloc[:, 1], label=r'$E_{\rm t2}$ = 0 eV')
+print(np.max(Et2_0_1_lifetime.iloc[:, 1]-Et2_0_lifetime.iloc[:, 1]))
 plt.legend(fontsize=13)
 plt.xscale('log')
 plt.yscale('log')

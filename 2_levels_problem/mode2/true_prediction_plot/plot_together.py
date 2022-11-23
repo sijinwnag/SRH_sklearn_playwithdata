@@ -112,14 +112,14 @@ path_Sp2_00_n = r'C:\Users\sijin wang\Desktop\research\thesiswork\ML_results\wit
 # Sp1list = [path_Sp1_11_p, path_Sp1_11_n, path_Sp1_10_p, path_Sp1_10_n, path_Sp1_01_p, path_Sp1_01_n, path_Sp1_00_p, path_Sp1_00_n]
 # Sp2list = [path_Sp2_11_p, path_Sp2_11_n, path_Sp2_10_p, path_Sp2_10_n, path_Sp2_01_p, path_Sp2_01_n, path_Sp2_00_p, path_Sp2_00_n]
 # p.
-Et1list = [path_Et1_11_p, path_Et1_10_p, path_Et1_01_p, path_Et1_00_p]
-Et2list = [path_Et2_11_p, path_Et2_10_p, path_Et2_01_p, path_Et2_00_p]
-Sn1list = [path_Sn1_11_p,  path_Sn1_10_p,path_Sn1_01_p, path_Sn1_00_p]
-Sn2list = [path_Sn2_11_p, path_Sn2_10_p, path_Sn2_01_p, path_Sn2_00_p]
-Sp1list = [path_Sp1_11_p, path_Sp1_10_p, path_Sp1_01_p, path_Sp1_00_p]
-Sp2list = [path_Sp2_11_p, path_Sp2_10_p, path_Sp2_01_p, path_Sp2_00_p]
-k1list = [path_k1_11_p, path_k1_10_p, path_k1_01_p, path_k1_00_p]
-k2list = [path_k2_11_p, path_k2_10_p, path_k2_01_p, path_k2_00_p]
+# Et1list = [path_Et1_11_p, path_Et1_10_p, path_Et1_01_p, path_Et1_00_p]
+# Et2list = [path_Et2_11_p, path_Et2_10_p, path_Et2_01_p, path_Et2_00_p]
+# Sn1list = [path_Sn1_11_p,  path_Sn1_10_p,path_Sn1_01_p, path_Sn1_00_p]
+# Sn2list = [path_Sn2_11_p, path_Sn2_10_p, path_Sn2_01_p, path_Sn2_00_p]
+# Sp1list = [path_Sp1_11_p, path_Sp1_10_p, path_Sp1_01_p, path_Sp1_00_p]
+# Sp2list = [path_Sp2_11_p, path_Sp2_10_p, path_Sp2_01_p, path_Sp2_00_p]
+# k1list = [path_k1_11_p, path_k1_10_p, path_k1_01_p, path_k1_00_p]
+# k2list = [path_k2_11_p, path_k2_10_p, path_k2_01_p, path_k2_00_p]
 # n
 # Et1list = [path_Et1_11_n, path_Et1_10_n, path_Et1_01_n, path_Et1_00_n]
 # Et2list = [path_Et2_11_n, path_Et2_10_n, path_Et2_01_n, path_Et2_00_n]
@@ -129,6 +129,15 @@ k2list = [path_k2_11_p, path_k2_10_p, path_k2_01_p, path_k2_00_p]
 # Sp2list = [path_Sp2_11_n, path_Sp2_10_n, path_Sp2_01_n, path_Sp2_00_n]
 # k1list = [path_k1_11_n, path_k1_10_n, path_k1_01_n, path_k1_00_n]
 # k2list = [path_k2_11_n, path_k2_10_n, path_k2_01_n, path_k2_00_n]
+# p set 11:
+Et1list = [path_Et1_11_p]
+Et2list = [path_Et2_11_p]
+Sn1list = [path_Sn1_11_p]
+Sn2list = [path_Sn2_11_p]
+Sp1list = [path_Sp1_11_p]
+Sp2list = [path_Sp2_11_p]
+k1list = [path_k1_11_p]
+k2list = [path_k2_11_p]
 # %%-
 
 
@@ -256,18 +265,22 @@ for task in [Et1list, Et2list, Sn1list, Sn2list, Sp1list, Sp2list, k1list, k2lis
     plt.xlabel(xlabels[counter], fontsize=22)
     plt.ylabel(ylabels[counter], fontsize=22)
     ax.set_aspect("equal")
-    # # plt.text(0, 0.5, alphabet[k], fontsize=20)
     # # plt.title(str(titlelist[counter]), fontsize=25)
     plt.legend(loc=4, framealpha=0.1, fontsize=15)
     plt.xticks(fontsize=15)
     plt.yticks(fontsize=15)
-    # plt.text(0.05, 0.9, textlist[counter], transform=ax.transAxes, fontsize=22)
+    plt.text(0.05, 0.9, textlist[counter], transform=ax.transAxes, fontsize=22)
     if filename[0] == 'S':
         plt.xticks(range(-17, -12))
         plt.yticks(range(-17, -12))
     if filename[0] == 'E':
-        plt.xticks([-0.6, -0.4, -0.2, 0, 0.2, 0.4, 0.6])
-        plt.yticks([-0.6, -0.4, -0.2, 0, 0.2, 0.4, 0.6])
+        # plt.xticks([-0.6, -0.4, -0.2, 0, 0.2, 0.4, 0.6])
+        # plt.yticks([-0.6, -0.4, -0.2, 0, 0.2, 0.4, 0.6])
+        plt.xticks([0, 0.2, 0.4, 0.6])
+        plt.yticks([0, 0.2, 0.4, 0.6])
+        # plt.xticks([-0.6, -0.4, -0.2, 0])
+        # plt.yticks([-0.6, -0.4, -0.2, 0])
+
     plt.savefig(fname=str(filetnamelist[counter]) + 'without center line' + '.png', bbox_inches='tight')
     plt.show()
 
@@ -290,7 +303,7 @@ for task in [Et1list, Et2list, Sn1list, Sn2list, Sp1list, Sp2list, k1list, k2lis
         # print(filename)
         plt.xticks(range(-17, -12))
         plt.yticks(range(-17, -12))
-    if filename[0] == 'E':
+    if filename[0] == 'E' and len(task)>1:
         plt.xticks([-0.6, -0.4, -0.2, 0, 0.2, 0.4, 0.6])
         plt.yticks([-0.6, -0.4, -0.2, 0, 0.2, 0.4, 0.6])
     plt.savefig(fname=str(filetnamelist[counter]) + 'with center line' + '.png', bbox_inches='tight')
