@@ -27,10 +27,10 @@ df1 = MyMLdata_2level(r'G:\study\thesis_data_storage\unordered\set11\p\set11_8k.
 # path2 = r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\Etnonordered\p\for_classification\set00_80k_p.csv"
 # path3 = r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\Etnonordered\p\for_classification\set01_80k.csv"
 # path4 = r"C:\Users\sijin wang\Desktop\Thesis\thesiswork\simulation_data\Etnonordered\p\for_classification\set10.csv"
-path1 = r"G:\study\thesis_data_storage\unordered\set00\p\set00_800k.csv"
-path2 = r"G:\study\thesis_data_storage\unordered\set01\p\set01_800k_p.csv"
-path3 = r"G:\study\thesis_data_storage\unordered\set10\p\800k\set10_800k_p.csv"
-path4 = r"G:\study\thesis_data_storage\unordered\set11\p\set11_p_800k.csv"
+# path1 = r"G:\study\thesis_data_storage\unordered\set00\p\set00_800k.csv"
+# path2 = r"G:\study\thesis_data_storage\unordered\set01\p\set01_800k_p.csv"
+# path3 = r"G:\study\thesis_data_storage\unordered\set10\p\800k\2022_10_28\2022-10-28-03-08-13_advanced example - multi_level_L_datasetID_0.csv"
+# path4 = r"G:\study\thesis_data_storage\unordered\set11\p\set11_800k.csv"
 df1.dataset_integrator(path1, path2, path3, path4)
 df1.email_reminder()
 # %%-
