@@ -27,6 +27,7 @@ from email.message import EmailMessage
 import os
 from sklearn.inspection import permutation_importance
 import sympy as sym
+import matplotlib.font_manager as font_manager
 # %%-
 
 
@@ -185,8 +186,8 @@ ax.set_aspect("equal")
 # # # plt.title('$E_{t1}$', fontsize=25)
 # # plt.title('True vs prediction plot', fontsize=20)
 # plt.legend(loc=4, framealpha=0.1, fontsize=20)
-plt.xticks(fontsize=15)
-plt.yticks(fontsize=15)
+plt.xticks(fontsize=15, font='Cambria')
+plt.yticks(fontsize=15, font='Cambria')
 plt.savefig(fname=str('Et1') + '.png', bbox_inches='tight')
 plt.show()
 # %%-
@@ -194,15 +195,15 @@ plt.show()
 
 # %%-- Plot all parameters together
 filetnamelist = ['Et1', 'Et2', 'Sn1', 'Sn2', 'Sp1', 'Sp2', 'k1', 'k2']
-title1 = r'$E_{\rm t1}$' + ' (eV)'
+title1 = r'E$_{\rm t1}$' + ' (eV)'
 # title1 = r'Primary T$_{\rm eff}$'
-title2 = r'$E_{\rm t2}$' + ' (eV)'
-title3 = r'log$(\sigma_{\rm n1})$ ' + r'($\rm cm^{-3}$)'
-title4 = r'log$(\sigma_{\rm n2})$ ' + r'($\rm cm^{-3}$)'
-title5 = r'log$(\sigma_{\rm p1})$ ' + r'($\rm cm^{-3}$)'
-title6 = r'log$(\sigma_{\rm p2})$ ' + r'($\rm cm^{-3}$)'
-title7 = r'log$(k_1)$'
-title8 = r'log$(k_2)$'
+title2 = r'E$_{\rm t2}$' + ' (eV)'
+title3 = r'log$(\sigma_{\rm n1})$ ' + r'(cm$^{-3}$)'
+title4 = r'log$(\sigma_{\rm n2})$ ' + r'(cm$^{-3}$)'
+title5 = r'log$(\sigma_{\rm p1})$ ' + r'(cm$^{-3}$)'
+title6 = r'log$(\sigma_{\rm p2})$ ' + r'(cm$^{-3}$)'
+title7 = 'log$(k_1)$'
+title8 = 'log$(k_2)$'
 textlist = ['(a)', '(d)', '(b)', '(e)', '(c)', '(f)', '(g)', '(h)']
 titlelist = [title1, title2, title3, title4, title5, title6, title7, title8]
 xlabels = []
@@ -212,14 +213,14 @@ for title in titlelist:
     xlabels.append('True ' + title)
     ylabels.append('Predicted ' + title)
 
-title1 = r'$E_{\rm t1}$' + ' (eV)'
-title2 = '$E_{t2}$' + ' (eV)'
-title3 = 'log$(\sigma_{n1})$ ' + r'($\rm cm^{-3}$)'
-title4 = 'log$(\sigma_{n2})$ ' + r'($\rm cm^{-3}$)'
-title5 = 'log$(\sigma_{p1})$ ' + r'($\rm cm^{-3}$)'
-title6 = 'log$(\sigma_{p2})$ ' + r'($\rm cm^{-3}$)'
-title7 = 'log$(k_1)$'
-title8 = 'log$(k_2)$'
+title1 = r'E$_{\rm t1}$' + ' (eV)'
+title2 = r'E$_{t2}$' + ' (eV)'
+title3 = 'log$(\sigma_{n1})$ ' + r'(cm$^{-3}$)'
+title4 = 'log$(\sigma_{n2})$ ' + r'(cm$^{-3}$)'
+title5 = 'log$(\sigma_{p1})$ ' + r'(cm$^{-3}$)'
+title6 = 'log$(\sigma_{p2})$ ' + r'(cm$^{-3}$)'
+title7 = 'log(k$_1)$'
+title8 = 'log(k$_2)$'
 titlelist2 = [title1, title2, title3, title4, title5, title6, title7, title8]
 titlelist = []
 for title in titlelist2:
@@ -260,16 +261,17 @@ for task in [Et1list, Et2list, Sn1list, Sn2list, Sp1list, Sp2list, k1list, k2lis
     ax = fig.add_subplot(111)
     true = Truelist
     prediction = predictionlist
-    plt.scatter(true, prediction, label=('$R^2$' + '=' + str(round(R2, 3))) + ('; $MAE$' + '=' + str(round(MAE, 3))), alpha=0.01, color='green')
+    plt.scatter(true, prediction, label=('R$^2$' + '=' + str(round(R2, 3))) + ('; MAE' + '=' + str(round(MAE, 3))), alpha=0.01, color='green')
     # plt.plot(true, true, color='r')
-    plt.xlabel(xlabels[counter], fontsize=22)
-    plt.ylabel(ylabels[counter], fontsize=22)
+    plt.xlabel(xlabels[counter], fontsize=22, font='Cambria')
+    plt.ylabel(ylabels[counter], fontsize=22, font='Cambria')
     ax.set_aspect("equal")
     # # plt.title(str(titlelist[counter]), fontsize=25)
-    plt.legend(loc=4, framealpha=0.1, fontsize=15)
-    plt.xticks(fontsize=15)
-    plt.yticks(fontsize=15)
-    plt.text(0.05, 0.9, textlist[counter], transform=ax.transAxes, fontsize=22)
+    font = font_manager.FontProperties(family='Cambria', style='normal', size=20)
+    plt.legend(loc=4, framealpha=0.1, prop=font)
+    plt.xticks(fontsize=22, font='Cambria')
+    plt.yticks(fontsize=22, font='Cambria')
+    # plt.text(0.05, 0.9, textlist[counter], transform=ax.transAxes, fontsize=22, font='Cambria')
     if filename[0] == 'S':
         plt.xticks(range(-17, -12))
         plt.yticks(range(-17, -12))
@@ -289,16 +291,17 @@ for task in [Et1list, Et2list, Sn1list, Sn2list, Sp1list, Sp2list, k1list, k2lis
     ax = fig.add_subplot(111)
     true = Truelist
     prediction = predictionlist
-    plt.scatter(true, prediction, label=('$R^2$' + '=' + str(round(R2, 3))) + ('; $MAE$' + '=' + str(round(MAE, 3))), alpha=0.01, color='green')
+    plt.scatter(true, prediction, label=('R$^2$' + '=' + str(round(R2, 3))) + ('; MAE' + '=' + str(round(MAE, 3))), alpha=0.01, color='green')
     plt.plot(true, true, color='r')
-    plt.xlabel(xlabels[counter], fontsize=22)
-    plt.ylabel(ylabels[counter], fontsize=22)
+    plt.xlabel(xlabels[counter], fontsize=22, font='Cambria')
+    plt.ylabel(ylabels[counter], fontsize=22, font='Cambria')
     ax.set_aspect("equal")
     # # plt.text(0, 0.5, alphabet[k], fontsize=20)
     # # # plt.title(str(titlelist[counter]), fontsize=25)
-    plt.legend(loc=4, framealpha=0.1, fontsize=15)
-    plt.xticks(fontsize=15)
-    plt.yticks(fontsize=15)
+    font = font_manager.FontProperties(family='Cambria', style='normal', size=20)
+    plt.legend(loc=4, framealpha=0.1, prop=font)
+    plt.xticks(fontsize=15, font='Cambria')
+    plt.yticks(fontsize=15, font='Cambria')
     if filename[0] == 'S':
         # print(filename)
         plt.xticks(range(-17, -12))
@@ -362,8 +365,8 @@ for task in [Et1list, Et2list, Sn1list, Sn2list, Sp1list, Sp2list]:
     # # plt.text(0, 0.5, alphabet[k], fontsize=20)
     # # plt.title(str(titlelist[counter]), fontsize=25)
     # plt.legend(loc=4, framealpha=0.1, fontsize=20)
-    plt.xticks(fontsize=15)
-    plt.yticks(fontsize=15)
+    plt.xticks(fontsize=15, font='Cambria')
+    plt.yticks(fontsize=15, font='Cambria')
     plt.savefig(fname=str(filetnamelist[counter]) + 'error' + '.png', bbox_inches='tight')
     plt.show()
 
